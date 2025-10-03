@@ -1,0 +1,67 @@
+﻿@{
+	ViewData["Title"] = "Login";
+}
+@model E_Commerce.ViewModels.Login
+
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+	<h1 class="text-center text-white display-6">Shop</h1>
+	<ol class="breadcrumb justify-content-center mb-0">
+		<li class="breadcrumb-item"><a href="#">Home</a></li>
+		<li class="breadcrumb-item"><a href="#">User</a></li>
+		<li class="breadcrumb-item active text-white">Login</li>
+	</ol>
+</div>
+<!-- Single Page Header End -->
+
+<div class="container-fluid py-5 bg-light">
+	<div class="container py-5">
+		<h1 class="mb-4 text-center text-primary">Login</h1>
+
+		<div class="row justify-content-center">
+			<form asp-action="Login" method="post" class="col-lg-8">
+				<!-- Validation Summary -->
+				<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert" style="list-style: none;"></div>
+
+				<div class="row g-4">
+					<!-- Phone Field -->
+					<div class="col-md-6">
+						<div class="form-item w-100">
+							<label asp-for="@Model.Phone" class="form-label fw-bold">Phone</label><sup>*</sup>
+							<input asp-for="@Model.Phone" class="form-control form-control-lg" placeholder="Phone"
+								type="number">
+							<span asp-validation-for="@Model.Phone" class="text-danger"></span>
+						</div>
+					</div>
+
+					<!-- Password Field -->
+					<div class="col-md-6">
+						<div class="form-item w-100">
+							<label asp-for="@Model.Password" class="form-label fw-bold">Password</label><sup>*</sup>
+							<input asp-for="@Model.Password" class="form-control form-control-lg" type="password"
+								placeholder="Password">
+							<span asp-validation-for="@Model.Password" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Buttons -->
+				<div class="row text-center align-items-center justify-content-center pt-4">
+					<div class="col-md-6">
+						<button type="submit" class="btn btn-primary btn-lg w-100">Login</button>
+					</div>
+				</div>
+
+				<!-- Already have an account -->
+				<div class="row text-center mt-4">
+					<div class="col-md-12">
+						<p class="mb-0">Don't have an account?
+							<a asp-action="Register" class="text-primary fw-bold">Register here</a>
+						</p>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>

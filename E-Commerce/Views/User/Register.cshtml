@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Register";
+}
+@model E_Commerce.ViewModels.Register
+
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Shop</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">User</a></li>
+        <li class="breadcrumb-item active text-white">Register</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<div class="container-fluid py-5 bg-light">
+    <div class="container py-5">
+        <h1 class="mb-4 text-center text-primary">Register</h1>
+
+        <div class="row justify-content-center">
+            <form asp-action="Register" method="post" class="col-lg-8">
+                <!-- Validation Summary -->
+				<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert" style="list-style: none;"></div>
+
+                <div class="row g-4">
+                    <!-- Name Field -->
+                    <div class="col-md-6">
+                        <div class="form-item w-100">
+                            <label asp-for="@Model.HoTen" class="form-label fw-bold">Username</label><sup>*</sup>
+                            <input asp-for="@Model.HoTen" class="form-control form-control-lg" placeholder="Username">
+                            <span asp-validation-for="@Model.HoTen" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div class="col-md-6">
+                        <div class="form-item w-100">
+                            <label asp-for="@Model.MatKhau" class="form-label fw-bold">Password</label><sup>*</sup>
+                            <input asp-for="@Model.MatKhau" class="form-control form-control-lg" type="password"
+                                placeholder="Nhập mật khẩu">
+                            <span asp-validation-for="@Model.MatKhau" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Address Field -->
+                    <div class="col-md-6">
+                        <div class="form-item w-100">
+                            <label asp-for="@Model.DiaChi" class="form-label fw-bold">Address</label><sup>*</sup>
+                            <input asp-for="@Model.DiaChi" class="form-control form-control-lg" placeholder="Address">
+                            <span asp-validation-for="@Model.DiaChi" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Phone Field -->
+                    <div class="col-md-6">
+                        <div class="form-item w-100">
+                            <label asp-for="@Model.DienThoai" class="form-label fw-bold">Phone</label><sup>*</sup>
+                            <input asp-for="@Model.DienThoai" class="form-control form-control-lg" placeholder="Phone" type="number">
+                            <span asp-validation-for="@Model.DienThoai" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="row text-center align-items-center justify-content-center pt-4">
+                    <div class="col-md-6">
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Register</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Already have an account -->
+            <div class="row text-center mt-4">
+                <div class="col-md-12">
+                    <p class="mb-0">Already have an account?
+                        <a asp-action="Login" class="text-primary fw-bold">Login here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

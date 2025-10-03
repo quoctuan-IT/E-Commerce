@@ -1,49 +1,530 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - E_Commerce</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/E_Commerce.styles.css" asp-append-version="true" />
+    <title>@ViewData["Title"]</title>
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="~/lib/lightbox/css/lightbox.min.css" rel="stylesheet">
+    <link href="~/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="~/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="~/css/style.css" rel="stylesheet">
+
+    @RenderSection("Styles", required: false)
 </head>
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">E_Commerce</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
+        <div class="spinner-grow text-primary" role="status"></div>
+    </div>
+    <!-- Spinner End -->
+
+
+    <!-- Navbar start -->
+    <div class="container-fluid fixed-top">
+        <div class="container topbar bg-primary d-none d-lg-block">
+            <div class="d-flex justify-content-between">
+                <div class="top-info ps-2">
+                    <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#"
+                            class="text-white">123 Street, New York</a></small>
+                    <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#"
+                            class="text-white">Email@Example.com</a></small>
+                </div>
+
+                <div class="top-link pe-2">
+                    <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
+                    <a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
                 </div>
             </div>
-        </nav>
-    </header>
+        </div>
+
+        <div class="container px-0">
+            <nav class="navbar navbar-light bg-white navbar-expand-xl">
+                <a href="index.html" class="navbar-brand">
+                    <h1 class="text-primary display-6">SaiGonUni</h1>
+                </a>
+
+                <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse">
+                    <span class="fa fa-bars text-primary"></span>
+                </button>
+
+                <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
+                    <div class="navbar-nav mx-auto">
+                        <a asp-controller="Home" asp-action="Index" class="nav-item nav-link active">Home</a>
+                        <a asp-controller="Product" asp-action="Index" class="nav-item nav-link">Shop</a>
+                    </div>
+
+                    <div class="d-flex m-3 me-0">
+                        <button
+                            class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4"
+                            data-bs-toggle="modal" data-bs-target="#searchModal">
+                            <i class="fas fa-search text-primary"></i>
+                        </button>
+
+                        <a asp-controller="Cart" asp-action="Index" class="position-relative me-4 my-auto">
+                            <i class="fa fa-shopping-bag fa-2x"></i>
+                        </a>
+
+                        <a asp-controller="User" asp-action="Index" class="my-auto">
+                            <i class="fas fa-user fa-2x"></i>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- Navbar End -->
+
+
+    <!-- Modal Search Start -->
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Search</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body d-flex align-items-center">
+                    <div class="input-group w-75 mx-auto d-flex">
+                        <input id="searchText" type="search" class="form-control p-3" placeholder="keywords"
+                            aria-describedby="search-icon-1">
+                        <span id="searchButton" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Search End -->
+
+
+    @RenderBody()
+
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-white-50 footer pt-5">
+        <div class="container py-5">
+            <div class="pb-4 mb-4" style="border-bottom: 1px solid rgba(226, 175, 24, 0.5) ;">
+                <div class="row g-4">
+                    <div class="col-lg-3">
+                        <a href="#">
+                            <h1 class="text-primary mb-0">Fruitables</h1>
+                            <p class="text-secondary mb-0">Fresh products</p>
+                        </a>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="position-relative mx-auto">
+                            <input class="form-control border-0 w-100 py-3 px-4 rounded-pill" type="number"
+                                placeholder="Your Email">
+                            <button type="submit"
+                                class="btn btn-primary border-0 border-secondary py-3 px-4 position-absolute rounded-pill text-white"
+                                style="top: 0; right: 0;">Subscribe Now</button>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="d-flex justify-content-end pt-3">
+                            <a class="btn  btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-twitter"></i></a>
+                            <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-facebook-f"></i></a>
+                            <a class="btn btn-outline-secondary me-2 btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-youtube"></i></a>
+                            <a class="btn btn-outline-secondary btn-md-square rounded-circle" href=""><i
+                                    class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-item">
+                        <h4 class="text-light mb-3">Why People Like us!</h4>
+                        <p class="mb-4">typesetting, remaining essentially unchanged. It was
+                            popularised in the 1960s with the like Aldus PageMaker including of Lorem Ipsum.</p>
+                        <a href="" class="btn border-secondary py-2 px-4 rounded-pill text-primary">Read More</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="d-flex flex-column text-start footer-item">
+                        <h4 class="text-light mb-3">Shop Info</h4>
+                        <a class="btn-link" href="">About Us</a>
+                        <a class="btn-link" href="">Contact Us</a>
+                        <a class="btn-link" href="">Privacy Policy</a>
+                        <a class="btn-link" href="">Terms & Condition</a>
+                        <a class="btn-link" href="">Return Policy</a>
+                        <a class="btn-link" href="">FAQs & Help</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="d-flex flex-column text-start footer-item">
+                        <h4 class="text-light mb-3">Account</h4>
+                        <a class="btn-link" href="">My Account</a>
+                        <a class="btn-link" href="">Shop details</a>
+                        <a class="btn-link" href="">Shopping Cart</a>
+                        <a class="btn-link" href="">Wishlist</a>
+                        <a class="btn-link" href="">Order History</a>
+                        <a class="btn-link" href="">International Orders</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-item">
+                        <h4 class="text-light mb-3">Contact</h4>
+                        <p>Address: 1429 Netus Rd, NY 48247</p>
+                        <p>Email: Example@gmail.com</p>
+                        <p>Phone: +0123 4567 8910</p>
+                        <p>Payment Accepted</p>
+                        <img src="img/payment.png" class="img-fluid" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Copyright Start -->
+    <div class="container-fluid copyright bg-dark py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    <span class="text-light"><a href="#"><i class="fas fa-copyright text-light me-2"></i>Your Site
+                            Name</a>, All right reserved.</span>
+                </div>
+                <div class="col-md-6 my-auto text-center text-md-end text-white">
+                    Designed By PQT
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Copyright End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i
+            class="fa fa-arrow-up"></i></a>
+
+
+
+    <!-- AI Chatbot Flask -->
+    <style>
+    /* CHATBOX
+    =============== */
+    .chatbox {
+        position: absolute;
+        bottom: 30px;
+        right: 30px;
+    }
+
+    /* CONTENT IS CLOSE */
+    .chatbox__support {
+        display: flex;
+        flex-direction: column;
+        background: #eee;
+        width: 300px;
+        height: 350px;
+        z-index: -123456;
+        opacity: 0;
+        transition: all .5s ease-in-out;
+    }
+
+    /* CONTENT ISOPEN */
+    .chatbox--active {
+        transform: translateY(-40px);
+        z-index: 123456;
+        opacity: 1;
+    }
+
+    /* BUTTON */
+    .chatbox__button {
+        text-align: right;
+    }
+
+    .send__button {
+        padding: 6px;
+        background: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+    }
+
+
+    /* HEADER */
+    .chatbox__header {
+        position: sticky;
+        top: 0;
+        background: orange;
+    }
+
+    /* MESSAGES */
+    .chatbox__messages {
+        margin-top: auto;
+        display: flex;
+        overflow-y: scroll;
+        flex-direction: column-reverse;
+    }
+
+    .messages__item {
+        background: orange;
+        max-width: 60.6%;
+        width: fit-content;
+    }
+
+    .messages__item--operator {
+        margin-left: auto;
+    }
+
+    .messages__item--visitor {
+        margin-right: auto;
+    }
+
+    /* FOOTER */
+    .chatbox__footer {
+        position: sticky;
+        bottom: 0;
+    }
+
+    .chatbox__support {
+        background:rgb(0, 0, 0);
+        height: 450px;
+        width: 350px;
+        box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+    }
+
+    /* HEADER */
+    .chatbox__header {
+        background: var(--primaryGradient);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 15px 20px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        box-shadow: var(--primaryBoxShadow);
+    }
+
+    .chatbox__image--header {
+        margin-right: 10px;
+    }
+
+    .chatbox__heading--header {
+        font-size: 1.2rem;
+        color: white;
+    }
+
+    .chatbox__description--header {
+        font-size: .9rem;
+        color: white;
+    }
+
+    /* Messages */
+    .chatbox__messages {
+        padding: 0 20px;
+    }
+
+    .messages__item {
+        margin-top: 10px;
+        background: #E0E0E0;
+        padding: 8px 12px;
+        max-width: 70%;
+    }
+
+    .messages__item--visitor,
+    .messages__item--typing {
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+
+    .messages__item--operator {
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        border-bottom-left-radius: 20px;
+        background: var(--primary);
+        color: white;
+    }
+
+    /* FOOTER */
+    .chatbox__footer {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 20px;
+        background: var(--secondaryGradient);
+        box-shadow: var(--secondaryBoxShadow);
+        border-bottom-right-radius: 10px;
+        border-bottom-left-radius: 10px;
+        margin-top: 20px;
+    }
+
+    .chatbox__footer input {
+        width: 80%;
+        border: none;
+        padding: 10px 10px;
+        border-radius: 30px;
+        text-align: left;
+    }
+
+    .chatbox__send--footer {
+        color: white;
+    }
+
+    .chatbox__button button,
+    .chatbox__button button:focus,
+    .chatbox__button button:visited {
+        padding: 10px;
+        background: white;
+        border: none;
+        outline: none;
+        border-top-left-radius: 50px;
+        border-top-right-radius: 50px;
+        border-bottom-left-radius: 50px;
+        box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+    }
+    </style>
+
     <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
+        <div class="chatbox">
+            <div class="chatbox__support">
+                <div class="chatbox__header">
+                    <div class="chatbox__image--header">
+                        <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-5--v1.png" alt="image">
+                    </div>
+                    <div class="chatbox__content--header">
+                        <h4 class="chatbox__heading--header">Chat support</h4>
+                        <p class="chatbox__description--header">Hi. My name is Sam. How can I help you?</p>
+                    </div>
+                </div>
+                <div class="chatbox__messages">
+                    <div></div>
+                </div>
+                <div class="chatbox__footer">
+                    <input type="text" placeholder="Write a message...">
+                    <button class="chatbox__send--footer send__button">Send</button>
+                </div>
+            </div>
+            <div class="chatbox__button">
+                <button><img src="img/chatbox-icon.svg" /></button> <!-- Tự dùng local asset -->
+            </div>
+        </div>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - E_Commerce - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+    <script>
+    class Chatbox {
+        constructor() {
+            this.args = {
+                openButton: document.querySelector('.chatbox__button'),
+                chatBox: document.querySelector('.chatbox__support'),
+                sendButton: document.querySelector('.send__button')
+            };
+            this.state = false;
+            this.messages = [];
+            this.apiUrl = "http://localhost:5000/predict"; // <-- Cập nhật domain API khác
+        }
+
+        display() {
+            const { openButton, chatBox, sendButton } = this.args;
+
+            openButton.addEventListener('click', () => this.toggleState(chatBox));
+            sendButton.addEventListener('click', () => this.onSendButton(chatBox));
+
+            const inputNode = chatBox.querySelector('input');
+            inputNode.addEventListener('keyup', ({ key }) => {
+                if (key === "Enter") {
+                    this.onSendButton(chatBox);
+                }
+            });
+        }
+
+        toggleState(chatbox) {
+            this.state = !this.state;
+            chatbox.classList.toggle('chatbox--active', this.state);
+        }
+
+        onSendButton(chatbox) {
+            const textField = chatbox.querySelector('input');
+            const text1 = textField.value.trim();
+            if (text1 === "") return;
+
+            let msg1 = { name: "User", message: text1 };
+            this.messages.push(msg1);
+            this.updateChatText(chatbox);
+
+            fetch(this.apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text1 })
+            })
+            .then(res => res.json())
+            .then(data => {
+                let msg2 = { name: "Sam", message: data.answer };
+                this.messages.push(msg2);
+                this.updateChatText(chatbox);
+                textField.value = '';
+            })
+            .catch(err => {
+                console.error('Lỗi:', err);
+                this.messages.push({ name: "Sam", message: "Không thể kết nối tới server." });
+                this.updateChatText(chatbox);
+                textField.value = '';
+            });
+        }
+
+        updateChatText(chatbox) {
+            const messagesContainer = chatbox.querySelector('.chatbox__messages');
+            messagesContainer.innerHTML = this.messages.map(msg => {
+                return `<div class="messages__item messages__item--${msg.name === "Sam" ? "visitor" : "operator"}">${msg.message}</div>`;
+            }).join("");
+        }
+    }
+
+    const chatbox = new Chatbox();
+    chatbox.display();
+    </script>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/easing/easing.min.js"></script>
+    <script src="~/lib/waypoints/waypoints.min.js"></script>
+    <script src="~/lib/lightbox/js/lightbox.min.js"></script>
+    <script src="~/lib/owlcarousel/owl.carousel.min.js"></script>
+    <script src="~/js/main.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#searchButton").click(function () {
+                let url = `/Product/Search?searchKeyword=` + $("#searchText").val();
+                window.location.href = url;
+            });
+        });
+    </script>
+
+    @RenderSection("Scripts", required: false)
 </body>
+
 </html>

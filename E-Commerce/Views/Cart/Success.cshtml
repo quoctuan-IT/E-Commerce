@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Success";
+}
+
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Shop</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item"><a href="#">Cart</a></li>
+        <li class="breadcrumb-item"><a href="#">Checkout</a></li>
+        <li class="breadcrumb-item active text-white">Checkout Success</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<div class="container my-5">
+    <div class="alert alert-success text-center p-4 rounded shadow">
+        <h3 class="fw-bold mb-3">
+            <i class="bi bi-check-circle-fill me-2"></i>Đặt hàng thành công!
+        </h3>
+        <p class="fs-5">Thanks You!</p>
+        <a asp-controller="Product" asp-action="Index" class="btn btn-primary mt-3">
+            <i class="bi bi-arrow-left-circle me-2"></i>Continue Shopping
+        </a>
+    </div>
+</div>

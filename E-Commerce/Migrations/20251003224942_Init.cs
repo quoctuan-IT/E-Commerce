@@ -45,30 +45,16 @@ namespace E_Commerce.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "HoaDon",
+                name: "TrangThai",
                 columns: table => new
                 {
-                    MaHD = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MaKH = table.Column<int>(type: "int", nullable: false),
-                    NgayDat = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
-                    HoTen = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    DiaChi = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
-                    CachThanhToan = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, defaultValue: "Cash"),
-                    CachVanChuyen = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, defaultValue: "Airline"),
-                    PhiVanChuyen = table.Column<double>(type: "float", nullable: false),
-                    GhiChu = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    DienThoai = table.Column<string>(type: "nvarchar(24)", maxLength: 24, nullable: true)
+                    MaTrangThai = table.Column<int>(type: "int", nullable: false),
+                    TenTrangThai = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    MoTa = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Orders", x => x.MaHD);
-                    table.ForeignKey(
-                        name: "FK_Orders_Customers",
-                        column: x => x.MaKH,
-                        principalTable: "KhachHang",
-                        principalColumn: "MaKH",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_TrangThai", x => x.MaTrangThai);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,6 +77,39 @@ namespace E_Commerce.Migrations
                         column: x => x.MaLoai,
                         principalTable: "Loai",
                         principalColumn: "MaLoai",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HoaDon",
+                columns: table => new
+                {
+                    MaHD = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    MaKH = table.Column<int>(type: "int", nullable: false),
+                    NgayDat = table.Column<DateTime>(type: "datetime", nullable: false, defaultValueSql: "(getdate())"),
+                    HoTen = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    DiaChi = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
+                    CachThanhToan = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, defaultValue: "Cash"),
+                    CachVanChuyen = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, defaultValue: "Airline"),
+                    PhiVanChuyen = table.Column<double>(type: "float", nullable: false),
+                    GhiChu = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    DienThoai = table.Column<string>(type: "nvarchar(24)", maxLength: 24, nullable: true),
+                    MaTrangThai = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Orders", x => x.MaHD);
+                    table.ForeignKey(
+                        name: "FK_HoaDon_TrangThai",
+                        column: x => x.MaTrangThai,
+                        principalTable: "TrangThai",
+                        principalColumn: "MaTrangThai");
+                    table.ForeignKey(
+                        name: "FK_Orders_Customers",
+                        column: x => x.MaKH,
+                        principalTable: "KhachHang",
+                        principalColumn: "MaKH",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -140,6 +159,11 @@ namespace E_Commerce.Migrations
                 name: "IX_HoaDon_MaKH",
                 table: "HoaDon",
                 column: "MaKH");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_HoaDon_MaTrangThai",
+                table: "HoaDon",
+                column: "MaTrangThai");
         }
 
         /// <inheritdoc />
@@ -153,6 +177,9 @@ namespace E_Commerce.Migrations
 
             migrationBuilder.DropTable(
                 name: "HangHoa");
+
+            migrationBuilder.DropTable(
+                name: "TrangThai");
 
             migrationBuilder.DropTable(
                 name: "KhachHang");

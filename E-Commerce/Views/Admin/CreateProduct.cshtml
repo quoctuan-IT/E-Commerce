@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Create Product";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+@model E_Commerce.Models.HangHoa
+
+
+<div class="container my-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Create Product</h2>
+        </div>
+
+        <div class="card-body">
+            <form asp-action="CreateProduct" method="post" enctype="multipart/form-data">
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="TenHh" class="form-label fw-bold">Product Name</label>
+                        <input asp-for="TenHh" class="form-control" placeholder="Enter product name" />
+                    </div>
+                </div>
+
+                @if (ViewData["Loais"] is List < E_Commerce.Models.Loai > loais)
+                {
+                    <div class="mb-3">
+                        <label asp-for="MaLoai" class="form-label fw-bold">Category</label>
+                        <select asp-for="MaLoai" class="form-select">
+                            <option value="">-- Select Category --</option>
+                            @foreach (var item in loais)
+                            {
+                                <option value="@item.MaLoai">@item.TenLoai</option>
+                            }
+                        </select>
+                    </div>
+                }
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="DonGia" class="form-label fw-bold">Price</label>
+                        <input asp-for="DonGia" class="form-control" placeholder="Enter price" />
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="MoTa" class="form-label fw-bold">Product Description</label>
+                    <textarea asp-for="MoTa" class="form-control" rows="3"
+                        placeholder="Enter product description"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Hinh" class="form-label fw-bold">Image</label>
+                    <div class="d-flex align-items-center">
+                        <input asp-for="Hinh" class="form-control" type="file" placeholder="Enter image path" />
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4">
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="bi bi-save"></i> Save Changes
+                    </button>
+                    <a asp-action="Products" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

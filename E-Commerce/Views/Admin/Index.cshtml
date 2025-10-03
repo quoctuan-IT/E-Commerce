@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+
+
+<div class="container my-4">
+    <div class="col py-3 bg-light rounded shadow-sm d-flex align-items-center">
+        <h4 class="m-0">
+            <i class="bi bi-person-circle me-2 text-primary"></i>Xin chào, <b
+                class="text-success">@Context.User.Identity.Name</b>!
+        </h4>
+    </div>
+</div>

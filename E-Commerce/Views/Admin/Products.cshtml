@@ -1,0 +1,55 @@
+﻿@{
+    ViewData["Title"] = "Products";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+@model IEnumerable<E_Commerce.Models.HangHoa>
+
+
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">List of Products</h2>
+
+        <a asp-action="CreateProduct" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> Add New Product
+        </a>
+    </div>
+
+    <table class="table table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Mã HH</th>
+                <th>Tên Hàng Hóa</th>
+                <th>Mã Loại</th>
+                <th>Đơn Giá</th>
+                <th>Hình Ảnh</th>
+                <th>Ngày Sản Xuất</th>
+                <th>Mô Tả</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var hh in Model)
+            {
+                <tr>
+                    <td>@hh.MaHh</td>
+                    <td>@hh.TenHh</td>
+                    <td>@hh.MaLoai</td>
+                    <td>@hh.DonGia</td>
+                    <td>
+                        <img src="~/hinh/HangHoa/@hh.Hinh" alt="@hh.TenHh" class="img-thumbnail"
+                            style="width: 80px; height: 80px;">
+                    </td>
+                    <td>
+                        <a asp-action="EditProduct" asp-route-id="@hh.MaHh" class="btn btn-sm btn-primary">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                        <a asp-action="DeleteProduct" asp-route-id="@hh.MaHh" class="btn btn-sm btn-danger">
+                            <i class="bi bi-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

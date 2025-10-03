@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Categories";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+@model E_Commerce.Models.Loai
+
+
+<div class="container my-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Create New Category</h2>
+        </div>
+
+        <div class="card-body">
+            <form asp-action="CreateCategory" method="post">
+                <div class="mb-4">
+                    <label asp-for="TenLoai" class="form-label fw-bold">Category Name</label>
+                    <input asp-for="TenLoai" class="form-control" placeholder="Enter category name" />
+                    <span asp-validation-for="TenLoai" class="text-danger"></span>
+                </div>
+
+                <div class="mb-4">
+                    <label asp-for="MoTa" class="form-label fw-bold">Description</label>
+                    <textarea asp-for="MoTa" class="form-control" rows="4" placeholder="Enter description"></textarea>
+                    <span asp-validation-for="MoTa" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="bi bi-check-circle"></i> Create
+                    </button>
+                    <a asp-action="Categories" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

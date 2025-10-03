@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace E_Commerce.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20251003211435_Init")]
+    [Migration("20251003224942_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -142,6 +142,9 @@ namespace E_Commerce.Migrations
                         .HasColumnType("int")
                         .HasColumnName("MaKH");
 
+                    b.Property<int>("MaTrangThai")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("NgayDat")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
@@ -154,6 +157,8 @@ namespace E_Commerce.Migrations
                         .HasName("PK_Orders");
 
                     b.HasIndex("MaKh");
+
+                    b.HasIndex("MaTrangThai");
 
                     b.ToTable("HoaDon", (string)null);
                 });
@@ -228,6 +233,25 @@ namespace E_Commerce.Migrations
                     b.ToTable("Loai", (string)null);
                 });
 
+            modelBuilder.Entity("E_Commerce.Models.TrangThai", b =>
+                {
+                    b.Property<int>("MaTrangThai")
+                        .HasColumnType("int");
+
+                    b.Property<string>("MoTa")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("TenTrangThai")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("MaTrangThai");
+
+                    b.ToTable("TrangThai", (string)null);
+                });
+
             modelBuilder.Entity("E_Commerce.Models.VChiTietHoaDon", b =>
                 {
                     b.Property<double>("DonGia")
@@ -300,7 +324,15 @@ namespace E_Commerce.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Orders_Customers");
 
+                    b.HasOne("E_Commerce.Models.TrangThai", "MaTrangThaiNavigation")
+                        .WithMany("HoaDons")
+                        .HasForeignKey("MaTrangThai")
+                        .IsRequired()
+                        .HasConstraintName("FK_HoaDon_TrangThai");
+
                     b.Navigation("MaKhNavigation");
+
+                    b.Navigation("MaTrangThaiNavigation");
                 });
 
             modelBuilder.Entity("E_Commerce.Models.HangHoa", b =>
@@ -321,6 +353,11 @@ namespace E_Commerce.Migrations
             modelBuilder.Entity("E_Commerce.Models.Loai", b =>
                 {
                     b.Navigation("HangHoas");
+                });
+
+            modelBuilder.Entity("E_Commerce.Models.TrangThai", b =>
+                {
+                    b.Navigation("HoaDons");
                 });
 #pragma warning restore 612, 618
         }

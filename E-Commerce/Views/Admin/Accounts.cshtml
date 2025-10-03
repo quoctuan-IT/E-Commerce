@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Accounts";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+@model IEnumerable<E_Commerce.Models.KhachHang>
+
+
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="mb-0">List of Categories</h2>
+        <a asp-action="CreateAccount" class="btn btn-success">
+            <i class="bi bi-plus-lg"></i> Add New Account
+        </a>
+    </div>
+
+    <table class="table table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>MaKh</th>
+                <th>Mật Khẩu</th>
+                <th>Họ Tên</th>
+                <th>Ngày Sinh</th>
+                <th>Địa Chỉ</th>
+                <th>Điện Thoại</th>
+                <th>Hiệu Lực</th>
+                <th>Vai Trò</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var kh in Model)
+            {
+                <tr class="@(kh.HieuLuc ? (kh.VaiTro == 0 ? "table-success" : "") : "table-warning")">
+                    <td>@kh.MaKh</td>
+                    <td>@kh.MatKhau</td>
+                    <td>@kh.HoTen</td>
+                    <td>@kh.DiaChi</td>
+                    <td>@kh.DienThoai</td>
+                    <td>@(kh.HieuLuc ? "ACTIVE" : "BLOCKED")</td>
+                    <td>@(kh.VaiTro == 0 ? "ADMIN" : "CUSTOMER")</td>
+                    <td>
+                        <a asp-action="EditAccount" asp-route-id="@kh.MaKh" class="btn btn-sm btn-primary">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                        @if (kh.HieuLuc)
+                        {
+                            <a asp-action="BlockAccount" asp-route-id="@kh.MaKh" class="btn btn-danger btn-sm">
+                                Block
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

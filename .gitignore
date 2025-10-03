@@ -1,0 +1,56 @@
+## Build results
+bin/
+obj/
+out/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## ASP.NET Core secrets
+secrets.json
+
+## IIS / local web server settings
+.vs/
+*.vspscc
+*.vssscc
+*.dbmdl
+*.dbproj.schemaview
+
+## Rider / JetBrains / VS Code
+.idea/
+.vscode/
+*.code-workspace
+
+## Logs
+*.log
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Package management
+packages/
+*.nupkg
+project.lock.json
+project.fragment.lock.json
+
+## Publish
+*.Publish.xml
+*.pubxml
+*.publishproj
+
+## EF Core
+
+## Others
+.env
+.env.*
+
+# Cursor
+.cursorignore
+.cursorindexingignore
+
+# Project specific
+NOTE.txt

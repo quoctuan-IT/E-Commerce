@@ -103,17 +103,6 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("FK_HoaDon_TrangThai");
         });
 
-        modelBuilder.Entity<TrangThai>(entity =>
-        {
-            entity.HasKey(e => e.MaTrangThai);
-
-            entity.ToTable("TrangThai");
-
-            entity.Property(e => e.MaTrangThai).ValueGeneratedNever();
-            entity.Property(e => e.MoTa).HasMaxLength(500);
-            entity.Property(e => e.TenTrangThai).HasMaxLength(50);
-        });
-
         modelBuilder.Entity<KhachHang>(entity =>
         {
             entity.HasKey(e => e.MaKh).HasName("PK_Customers");

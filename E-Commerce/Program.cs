@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,63 +40,24 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-=======
-=======
->>>>>>> f08b466 (Setup peoject)
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddControllersWithViews();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-<<<<<<< HEAD
->>>>>>> f08b466 (Setup peoject)
-=======
->>>>>>> f08b466 (Setup peoject)
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
-<<<<<<< HEAD
-<<<<<<< HEAD
 
-=======
->>>>>>> f08b466 (Setup peoject)
-=======
->>>>>>> f08b466 (Setup peoject)
 app.UseStaticFiles();
 
 app.UseRouting();
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 app.UseSession();
 
 app.UseAuthentication();
 
-=======
->>>>>>> f08b466 (Setup peoject)
-=======
->>>>>>> f08b466 (Setup peoject)
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-<<<<<<< HEAD
-<<<<<<< HEAD
     pattern: "{controller=Home}/{action=Index}/{id?}"
 );
-=======
-    pattern: "{controller=Home}/{action=Index}/{id?}");
->>>>>>> f08b466 (Setup peoject)
-=======
-    pattern: "{controller=Home}/{action=Index}/{id?}");
->>>>>>> f08b466 (Setup peoject)
 
 app.Run();

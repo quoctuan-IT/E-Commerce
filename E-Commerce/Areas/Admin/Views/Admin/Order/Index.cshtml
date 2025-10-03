@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "Orders";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+@model IEnumerable<E_Commerce.Models.HoaDon>
+
+
+<div class="container my-4">
+    <h2 class="mb-4">List Orders</h2>
+    
+    <table class="table table-hover table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>HĐ</th>
+                <th>KH</th>
+                <th>Tên KH</th>
+                <th>Ngày Đặt</th>
+                <th>Địa Chỉ</th>
+                <th>Điện Thoại</th>
+                <th>Thanh Toán</th>
+                <th>Vận Chuyển</th>
+                <th>Status</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+            @foreach (var hd in Model)
+            {
+                <tr>
+                    <td>@hd.MaHd</td>
+                    <td>@hd.MaKh</td>
+                    <td>@hd.HoTen</td>
+                    <td>@hd.NgayDat</td>
+                    <td>@hd.DiaChi</td>
+                    <td>@hd.DienThoai</td>
+                    <td>@hd.CachThanhToan</td>
+                    <td>@hd.CachVanChuyen</td>
+                    <td>
+                        @switch (hd.MaTrangThai)
+                        {
+                            case 0:
+                                <span class="badge bg-warning text-dark">Chờ xử lý</span>
+                                break;
+                            case 1:
+                                <span class="badge bg-primary">Đang giao</span>
+                                break;
+                            case 2:
+                                <span class="badge bg-success">Đã giao</span>
+                                break;
+                            case 3:
+                                <span class="badge bg-danger">Đã hủy</span>
+                                break;
+
+                            default:
+                                <span class="badge bg-secondary">Không xác định</span>
+                                break;
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="EditOrderStatus" asp-route-id="@hd.MaHd" class="btn btn-sm btn-primary">
+                            <i class="bi bi-pencil-square"></i> Edit
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

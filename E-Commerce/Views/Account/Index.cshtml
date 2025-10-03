@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Shop</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="#">Home</a></li>
+        <li class="breadcrumb-item active text-white">User</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<div class="container my-4">
+    <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded shadow-sm">
+        <h4 class="m-0">
+            Welcome, <b class="text-primary">@Context.User.Identity.Name</b>
+        </h4>
+        <a asp-action="Logout" class="btn btn-danger">Logout</a>
+    </div>
+</div>

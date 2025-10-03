@@ -1,102 +1,79 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-
+﻿using E_Commerce.Data;
 using E_Commerce.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Controllers
 {
-	public class ProductController(AppDbContext context) : Controller
-	{
+    public class ProductController(AppDbContext context) : Controller
+    {
+        private readonly AppDbContext _context = context;
 
-		private readonly AppDbContext _context = context;
+        public async Task<IActionResult> Index()
+        {
+            var products = await _context.Products.Include(p => p.Category).ToListAsync();
 
-		private async Task LoadCategory()
-		{
-			var loais = await _context.Loais.ToListAsync();
-			ViewData["Loais"] = loais;
-		}
+            return View(products);
+        }
 
-		public async Task<IActionResult> Index()
-		{
-			// List Danh Mục.
-			await LoadCategory();
+        [HttpGet]
+        public async Task<IActionResult> Detail(int idProduct)
+        {
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .SingleOrDefaultAsync(p => p.ProductId == idProduct);
 
-			// List Sản Phẩm.
-			var hangHoas = await _context.HangHoas.Include(h => h.MaLoaiNavigation).ToListAsync();
+            return View(product);
+        }
 
-			return View(hangHoas);
-		}
+        [HttpGet]
+        public async Task<IActionResult> FilterByCategory(int idCategory)
+        {
+            var products = await _context.Products
+                .Include(p => p.Category)
+                .Where(p => p.CategoryId == idCategory)
+                .ToListAsync();
 
-		public async Task<IActionResult> FilterByCategory(int idCategory)
-		{
-			// List Danh Mục.
-			await LoadCategory();
+            return View("Index", products);
+        }
 
-			var hangHoas = await _context.HangHoas
-				.Include(h => h.MaLoaiNavigation)
-				.Where(h => h.MaLoai == idCategory)
-				.ToListAsync();
+        [HttpGet]
+        public async Task<IActionResult> Search(string searchKeyword)
+        {
+            var products = await _context.Products
+                .Include(p => p.Category)
+                .Where(p => p.ProductName.Contains(searchKeyword))
+                .ToListAsync();
 
-			return View("Index", hangHoas);
-		}
+            return View("Index", products);
+        }
 
-		[HttpGet]
-		public async Task<IActionResult> Search(string searchKeyword)
-		{
-			// List Danh Mục.
-			await LoadCategory();
+        [HttpGet]
+        public async Task<IActionResult> FilterPrice(string filterOption)
+        {
+            ViewData["FilterOption"] = "";
 
-			var hangHoas = await _context.HangHoas
-				.Include(h => h.MaLoaiNavigation)
-				.Where(h => h.TenHh.Contains(searchKeyword))
-				.ToListAsync();
+            var data = _context.Products.Include(p => p.Category).AsQueryable();
 
-			return View("Index", hangHoas);
-		}
+            if (!string.IsNullOrEmpty(filterOption))
+            {
+                switch (filterOption)
+                {
+                    case "minToMaxPrice":
+                        data = data.OrderBy(p => p.UnitPrice);
+                        break;
+                    case "maxToMinPrice":
+                        data = data.OrderByDescending(p => p.UnitPrice);
+                        break;
+                }
+            }
 
-		public async Task<IActionResult> Details(int idProduct)
-		{
-			// List Danh Mục.
-			await LoadCategory();
+            var products = await data.ToListAsync();
 
-			var hangHoas = await _context.HangHoas
-				.Include(h => h.MaLoaiNavigation)
-				.SingleOrDefaultAsync(h => h.MaHh == idProduct);
+            // Select - Option
+            ViewData["FilterOption"] = filterOption;
 
-			return View(hangHoas);
-		}
-
-		[HttpGet]
-		public async Task<IActionResult> FilterPrice(string filterOption)
-		{
-			// Lưu giá trị filterOption để giữ trạng thái dropdown
-			ViewData["FilterOption"] = "";
-
-			// List Danh Mục.
-			await LoadCategory();
-
-			// List Sản Phẩm.
-			var hangHoasQuery = _context.HangHoas.Include(h => h.MaLoaiNavigation).AsQueryable();
-
-			// Áp dụng bộ lọc theo tùy chọn
-			if (!string.IsNullOrEmpty(filterOption))
-			{
-				switch (filterOption)
-				{
-					case "minToMaxPrice":
-						hangHoasQuery = hangHoasQuery.OrderBy(h => h.DonGia);
-						break;
-					case "maxToMinPrice":
-						hangHoasQuery = hangHoasQuery.OrderByDescending(h => h.DonGia);
-						break;
-				}
-			}
-
-			var hangHoas = await hangHoasQuery.ToListAsync();
-
-			ViewData["FilterOption"] = filterOption;
-
-			return View("Index", hangHoas);
-		}
-	}
+            return View("Index", products);
+        }
+    }
 }

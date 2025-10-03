@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Edit Order";
+    Layout = "~/Views/Shared/_Layout_Admin.cshtml";
+}
+@model E_Commerce.Models.HoaDon
+
+
+<div class="container my-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white">
+            <h2 class="mb-0">Edit Order</h2>
+        </div>
+        
+        <div class="card-body">
+            <form asp-action="EditOrderStatus" method="post">
+                <input type="hidden" asp-for="MaHd" />
+
+                <div class="mb-4">
+                    <label for="maTrangThai" class="form-label fw-bold">Order Status</label>
+                    <select name="maTrangThai" class="form-select">
+                        <option value="0" selected="@(Model.MaTrangThai == 0)">Pending</option>
+                        <option value="1" selected="@(Model.MaTrangThai == 1)">In Transit</option>
+                        <option value="2" selected="@(Model.MaTrangThai == 2)">Delivered</option>
+                        <option value="3" selected="@(Model.MaTrangThai == 3)">Cancelled</option>
+                    </select>
+                </div>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-success me-2">
+                        <i class="bi bi-save"></i> Save Changes
+                    </button>
+                    <a asp-action="Orders" class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

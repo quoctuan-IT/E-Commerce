@@ -1,8 +1,6 @@
-using System.Diagnostics;
-
-using Microsoft.AspNetCore.Mvc;
-
 using E_Commerce.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace E_Commerce.Controllers
 {

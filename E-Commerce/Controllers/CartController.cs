@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-using E_Commerce.Models;
+﻿using E_Commerce.Data;
 using E_Commerce.Helpers;
+using E_Commerce.Models;
 using E_Commerce.Models.ViewModels;
-using E_Commerce.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
 {

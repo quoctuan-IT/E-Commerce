@@ -1,13 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using E_Commerce.Data;
+using E_Commerce.Helpers;
+using E_Commerce.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-using E_Commerce.Models;
-using E_Commerce.Helpers;
-using E_Commerce.Data;
-
-namespace E_Commerce.Controllers
+namespace E_Commerce.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     [Authorize(Roles = "1")]
     public class AdminController : Controller
     {
@@ -44,7 +44,7 @@ namespace E_Commerce.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateCategory([Bind("TenLoai,MoTa")] Loai newCategory)
+        public async Task<IActionResult> CreateCategory([Bind("TenLoai")] Loai newCategory)
         {
             if (ModelState.IsValid)
             {
@@ -71,7 +71,7 @@ namespace E_Commerce.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> EditCategory(int id, [Bind("TenLoai,MoTa")] Loai updatedCategory)
+        public async Task<IActionResult> EditCategory(int id, [Bind("TenLoai")] Loai updatedCategory)
         {
             var category = await _context.Loais.FindAsync(id);
 

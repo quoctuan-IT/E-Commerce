@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-using E_Commerce.Models;
+﻿using E_Commerce.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Data;

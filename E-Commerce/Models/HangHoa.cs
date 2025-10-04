@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace E_Commerce.Models;
+﻿namespace E_Commerce.Models;
 public partial class HangHoa
 {
     public int MaHh { get; set; }

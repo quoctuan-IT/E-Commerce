@@ -1,101 +1,102 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using E_Commerce.Data;
 using Microsoft.AspNetCore.Mvc;
-using E_Commerce.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Controllers
 {
-	public class ProductController(AppDbContext context) : Controller
-	{
+    public class ProductController(AppDbContext context) : Controller
+    {
 
-		private readonly AppDbContext _context = context;
+        private readonly AppDbContext _context = context;
 
-		private async Task LoadCategory()
-		{
-			var loais = await _context.Loais.ToListAsync();
-			ViewData["Loais"] = loais;
-		}
+        private async Task LoadCategory()
+        {
+            var loais = await _context.Loais.ToListAsync();
 
-		public async Task<IActionResult> Index()
-		{
-			// List Danh Mục.
-			await LoadCategory();
+            ViewData["Loais"] = loais;
+        }
 
-			// List Sản Phẩm.
-			var hangHoas = await _context.HangHoas.Include(h => h.MaLoaiNavigation).ToListAsync();
+        public async Task<IActionResult> Index()
+        {
+            // List Danh Mục.
+            await LoadCategory();
 
-			return View(hangHoas);
-		}
+            // List Sản Phẩm.
+            var hangHoas = await _context.HangHoas.Include(h => h.MaLoaiNavigation).ToListAsync();
 
-		public async Task<IActionResult> FilterByCategory(int idCategory)
-		{
-			// List Danh Mục.
-			await LoadCategory();
+            return View(hangHoas);
+        }
 
-			var hangHoas = await _context.HangHoas
-				.Include(h => h.MaLoaiNavigation)
-				.Where(h => h.MaLoai == idCategory)
-				.ToListAsync();
+        public async Task<IActionResult> FilterByCategory(int idCategory)
+        {
+            // List Danh Mục.
+            await LoadCategory();
 
-			return View("Index", hangHoas);
-		}
+            var hangHoas = await _context.HangHoas
+                .Include(h => h.MaLoaiNavigation)
+                .Where(h => h.MaLoai == idCategory)
+                .ToListAsync();
 
-		[HttpGet]
-		public async Task<IActionResult> Search(string searchKeyword)
-		{
-			// List Danh Mục.
-			await LoadCategory();
+            return View("Index", hangHoas);
+        }
 
-			var hangHoas = await _context.HangHoas
-				.Include(h => h.MaLoaiNavigation)
-				.Where(h => h.TenHh.Contains(searchKeyword))
-				.ToListAsync();
+        [HttpGet]
+        public async Task<IActionResult> Search(string searchKeyword)
+        {
+            // List Danh Mục.
+            await LoadCategory();
 
-			return View("Index", hangHoas);
-		}
+            var hangHoas = await _context.HangHoas
+                .Include(h => h.MaLoaiNavigation)
+                .Where(h => h.TenHh.Contains(searchKeyword))
+                .ToListAsync();
 
-		public async Task<IActionResult> Detail(int idProduct)
-		{
-			// List Danh Mục.
-			await LoadCategory();
+            return View("Index", hangHoas);
+        }
 
-			var hangHoas = await _context.HangHoas
-				.Include(h => h.MaLoaiNavigation)
-				.SingleOrDefaultAsync(h => h.MaHh == idProduct);
+        public async Task<IActionResult> Detail(int idProduct)
+        {
+            // List Danh Mục.
+            await LoadCategory();
 
-			return View(hangHoas);
-		}
+            var hangHoas = await _context.HangHoas
+                .Include(h => h.MaLoaiNavigation)
+                .SingleOrDefaultAsync(h => h.MaHh == idProduct);
 
-		[HttpGet]
-		public async Task<IActionResult> FilterPrice(string filterOption)
-		{
-			// Lưu giá trị filterOption để giữ trạng thái dropdown
-			ViewData["FilterOption"] = "";
+            return View(hangHoas);
+        }
 
-			// List Danh Mục.
-			await LoadCategory();
+        [HttpGet]
+        public async Task<IActionResult> FilterPrice(string filterOption)
+        {
+            // Lưu giá trị filterOption để giữ trạng thái dropdown
+            ViewData["FilterOption"] = "";
 
-			// List Sản Phẩm.
-			var hangHoasQuery = _context.HangHoas.Include(h => h.MaLoaiNavigation).AsQueryable();
+            // List Danh Mục.
+            await LoadCategory();
 
-			// Áp dụng bộ lọc theo tùy chọn
-			if (!string.IsNullOrEmpty(filterOption))
-			{
-				switch (filterOption)
-				{
-					case "minToMaxPrice":
-						hangHoasQuery = hangHoasQuery.OrderBy(h => h.DonGia);
-						break;
-					case "maxToMinPrice":
-						hangHoasQuery = hangHoasQuery.OrderByDescending(h => h.DonGia);
-						break;
-				}
-			}
+            // List Sản Phẩm.
+            var hangHoasQuery = _context.HangHoas.Include(h => h.MaLoaiNavigation).AsQueryable();
 
-			var hangHoas = await hangHoasQuery.ToListAsync();
+            // Áp dụng bộ lọc theo tùy chọn
+            if (!string.IsNullOrEmpty(filterOption))
+            {
+                switch (filterOption)
+                {
+                    case "minToMaxPrice":
+                        hangHoasQuery = hangHoasQuery.OrderBy(h => h.DonGia);
+                        break;
+                    case "maxToMinPrice":
+                        hangHoasQuery = hangHoasQuery.OrderByDescending(h => h.DonGia);
+                        break;
+                }
+            }
 
-			ViewData["FilterOption"] = filterOption;
+            var hangHoas = await hangHoasQuery.ToListAsync();
 
-			return View("Index", hangHoas);
-		}
-	}
+            ViewData["FilterOption"] = filterOption;
+
+            return View("Index", hangHoas);
+        }
+    }
 }

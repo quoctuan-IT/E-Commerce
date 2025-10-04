@@ -1,24 +1,17 @@
-﻿using System.Security.Claims;
-
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
-using AutoMapper;
-
+﻿using E_Commerce.Data;
 using E_Commerce.Models;
 using E_Commerce.Models.ViewModels;
-using E_Commerce.Data;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace E_Commerce.Controllers
 {
-    public class AccountController(AppDbContext context, IMapper mapper) : Controller
+    public class AccountController(AppDbContext context) : Controller
     {
-
         private readonly AppDbContext _context = context;
-        
-        private readonly IMapper _mapper = mapper;
 
         [Authorize]
         public IActionResult Index()
@@ -47,8 +40,11 @@ namespace E_Commerce.Controllers
                 {
                     try
                     {
-                        khachHang = _mapper.Map<KhachHang>(model);
-
+                        khachHang = new KhachHang();
+                        khachHang.MatKhau = model.MatKhau;
+                        khachHang.HoTen = model.HoTen;
+                        khachHang.DienThoai = model.DienThoai;
+                        khachHang.DiaChi = model.DiaChi;
                         khachHang.HieuLuc = true;
 
                         _context.Add(khachHang);
@@ -66,7 +62,6 @@ namespace E_Commerce.Controllers
             return View();
         }
 
-        [HttpGet]
         public IActionResult Success()
         {
             return View();

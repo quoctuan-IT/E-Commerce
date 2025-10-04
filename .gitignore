@@ -9,17 +9,20 @@ out/
 *.userosscache
 *.sln.docstates
 
-## ASP.NET Core secrets
-secrets.json
-
-## IIS / local web server settings
+## Visual Studio
 .vs/
+
+## ASP.NET Core secrets & configs
+secrets.json
+#**/appsettings.Development.json
+
+## IIS / local server settings
 *.vspscc
 *.vssscc
 *.dbmdl
 *.dbproj.schemaview
 
-## Rider / JetBrains / VS Code
+## JetBrains Rider / VS Code
 .idea/
 .vscode/
 *.code-workspace
@@ -37,20 +40,25 @@ packages/
 project.lock.json
 project.fragment.lock.json
 
-## Publish
-*.Publish.xml
-*.pubxml
-*.publishproj
+## Publish output (keep publish configs)
+publish/
+*.zip
+!*.pubxml
+!*.Publish.xml
+!*.publishproj
 
-## EF Core
+## Entity Framework Core
+# Migrations/
 
-## Others
+## Environment files
 .env
 .env.*
 
-# Cursor
+/wwwroot/uploads/
+
+## Cursor (IDE plugin)
 .cursorignore
 .cursorindexingignore
 
-# Project specific
+## Project specific
 NOTE.txt

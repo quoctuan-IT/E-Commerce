@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace E_Commerce.Models;
+﻿namespace E_Commerce.Models;
 public partial class KhachHang
 {
     public int MaKh { get; set; }

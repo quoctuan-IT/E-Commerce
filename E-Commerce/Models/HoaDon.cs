@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 namespace E_Commerce.Models;
-
 public partial class HoaDon
 {
     public int MaHd { get; set; }
@@ -18,10 +17,6 @@ public partial class HoaDon
     public string CachThanhToan { get; set; } = null!;
 
     public string CachVanChuyen { get; set; } = null!;
-
-    public double PhiVanChuyen { get; set; }
-
-    public string? GhiChu { get; set; }
 
     public string? DienThoai { get; set; }
 

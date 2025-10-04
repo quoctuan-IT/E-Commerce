@@ -8,10 +8,12 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 
 using E_Commerce.Models;
+using E_Commerce.Models.ViewModels;
+using E_Commerce.Data;
 
 namespace E_Commerce.Controllers
 {
-    public class UserController(AppDbContext context, IMapper mapper) : Controller
+    public class AccountController(AppDbContext context, IMapper mapper) : Controller
     {
 
         private readonly AppDbContext _context = context;
@@ -31,7 +33,7 @@ namespace E_Commerce.Controllers
         }
 
         [HttpPost]
-        public IActionResult Register(ViewModels.Register model)
+        public IActionResult Register(Register model)
         {
             if (ModelState.IsValid)
             {
@@ -77,7 +79,7 @@ namespace E_Commerce.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(ViewModels.Login model)
+        public async Task<IActionResult> Login(Login model)
         {
             if (ModelState.IsValid)
             {
@@ -134,6 +136,11 @@ namespace E_Commerce.Controllers
             await HttpContext.SignOutAsync();
 
             return Redirect("/");
+        }
+
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

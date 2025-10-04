@@ -1,4 +1,4 @@
-﻿namespace E_Commerce.ViewModels
+﻿namespace E_Commerce.Models.ViewModels
 {
 	public class Checkout
 	{

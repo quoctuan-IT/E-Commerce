@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
-
-using E_Commerce.Models;
+using E_Commerce.Data;
 
 namespace E_Commerce.Controllers
 {
@@ -54,7 +53,7 @@ namespace E_Commerce.Controllers
 			return View("Index", hangHoas);
 		}
 
-		public async Task<IActionResult> Details(int idProduct)
+		public async Task<IActionResult> Detail(int idProduct)
 		{
 			// List Danh Mục.
 			await LoadCategory();

@@ -4,10 +4,11 @@ using Microsoft.EntityFrameworkCore;
 
 using E_Commerce.Models;
 using E_Commerce.Helpers;
+using E_Commerce.Data;
 
 namespace E_Commerce.Controllers
 {
-    [Authorize(Policy = "AdminOnly")]
+    [Authorize(Roles = "1")]
     public class AdminController : Controller
     {
 
@@ -82,7 +83,6 @@ namespace E_Commerce.Controllers
             if (ModelState.IsValid)
             {
                 category.TenLoai = updatedCategory.TenLoai;
-                category.MoTa = updatedCategory.MoTa;
 
                 _context.Update(category);
                 await _context.SaveChangesAsync();

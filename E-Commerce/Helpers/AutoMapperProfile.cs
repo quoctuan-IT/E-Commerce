@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 
 using E_Commerce.Models;
-using E_Commerce.ViewModels;
+using E_Commerce.Models.ViewModels;
 
 namespace E_Commerce.Helpers
 {

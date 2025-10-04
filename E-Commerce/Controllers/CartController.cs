@@ -2,11 +2,13 @@
 using Microsoft.AspNetCore.Mvc;
 
 using E_Commerce.Models;
-using E_Commerce.ViewModels;
 using E_Commerce.Helpers;
+using E_Commerce.Models.ViewModels;
+using E_Commerce.Data;
 
 namespace E_Commerce.Controllers
 {
+    [Authorize]
     public class CartController(AppDbContext context) : Controller
     {
 
@@ -72,7 +74,6 @@ namespace E_Commerce.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public IActionResult Checkout()
         {
             if (Cart.Count == 0)
@@ -83,7 +84,6 @@ namespace E_Commerce.Controllers
             return View(Cart);
         }
 
-        [Authorize]
         [HttpPost]
         public IActionResult Checkout(Checkout model)
         {
@@ -107,7 +107,6 @@ namespace E_Commerce.Controllers
                     CachThanhToan = "COD",
                     CachVanChuyen = "ShoppeExpress",
                     MaTrangThai = 0,
-                    GhiChu = model.GhiChu
                 };
 
                 _context.Database.BeginTransaction();
@@ -146,7 +145,6 @@ namespace E_Commerce.Controllers
             return View(Cart);
         }
 
-        [Authorize]
         public IActionResult Success()
         {
             return View();

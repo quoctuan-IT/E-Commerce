@@ -17,13 +17,12 @@ namespace E_Commerce.Migrations
                 {
                     MaKH = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MatKhau = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     HoTen = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    DiaChi = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     DienThoai = table.Column<string>(type: "nvarchar(24)", maxLength: 24, nullable: false),
-                    HieuLuc = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    MatKhau = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    DiaChi = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     VaiTro = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
-                    RandomKey = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    HieuLuc = table.Column<bool>(type: "bit", nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -36,8 +35,7 @@ namespace E_Commerce.Migrations
                 {
                     MaLoai = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TenLoai = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    MoTa = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    TenLoai = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -49,8 +47,7 @@ namespace E_Commerce.Migrations
                 columns: table => new
                 {
                     MaTrangThai = table.Column<int>(type: "int", nullable: false),
-                    TenTrangThai = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    MoTa = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true)
+                    TenTrangThai = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -92,8 +89,6 @@ namespace E_Commerce.Migrations
                     DiaChi = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     CachThanhToan = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, defaultValue: "Cash"),
                     CachVanChuyen = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false, defaultValue: "Airline"),
-                    PhiVanChuyen = table.Column<double>(type: "float", nullable: false),
-                    GhiChu = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     DienThoai = table.Column<string>(type: "nvarchar(24)", maxLength: 24, nullable: true),
                     MaTrangThai = table.Column<int>(type: "int", nullable: false)
                 },

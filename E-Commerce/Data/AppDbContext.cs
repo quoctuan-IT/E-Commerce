@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+
+using E_Commerce.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace E_Commerce.Models;
-
+namespace E_Commerce.Data;
 public partial class AppDbContext : DbContext
 {
     public AppDbContext()
     {
-
     }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
-
     }
 
     public virtual DbSet<ChiTietHd> ChiTietHds { get; set; }
@@ -27,8 +26,6 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<Loai> Loais { get; set; }
 
     public virtual DbSet<TrangThai> TrangThais { get; set; }
-
-    public virtual DbSet<VChiTietHoaDon> VChiTietHoaDons { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -86,7 +83,6 @@ public partial class AppDbContext : DbContext
                 .HasDefaultValue("Airline");
             entity.Property(e => e.DiaChi).HasMaxLength(60);
             entity.Property(e => e.DienThoai).HasMaxLength(24);
-            entity.Property(e => e.GhiChu).HasMaxLength(50);
             entity.Property(e => e.HoTen).HasMaxLength(50);
             entity.Property(e => e.MaKh).HasColumnName("MaKH");
             entity.Property(e => e.NgayDat)
@@ -110,7 +106,6 @@ public partial class AppDbContext : DbContext
             entity.ToTable("TrangThai");
 
             entity.Property(e => e.MaTrangThai).ValueGeneratedNever();
-            entity.Property(e => e.MoTa).HasMaxLength(500);
             entity.Property(e => e.TenTrangThai).HasMaxLength(50);
         });
 
@@ -136,20 +131,6 @@ public partial class AppDbContext : DbContext
             entity.ToTable("Loai");
 
             entity.Property(e => e.TenLoai).HasMaxLength(50);
-        });
-
-        modelBuilder.Entity<VChiTietHoaDon>(entity =>
-        {
-            entity
-                .HasNoKey()
-                .ToView("vChiTietHoaDon");
-
-            entity.Property(e => e.MaCt).HasColumnName("MaCT");
-            entity.Property(e => e.MaHd).HasColumnName("MaHD");
-            entity.Property(e => e.MaHh).HasColumnName("MaHH");
-            entity.Property(e => e.TenHh)
-                .HasMaxLength(50)
-                .HasColumnName("TenHH");
         });
 
         OnModelCreatingPartial(modelBuilder);

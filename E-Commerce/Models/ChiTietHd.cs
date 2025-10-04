@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 namespace E_Commerce.Models;
-
 public partial class ChiTietHd
 {
     public int MaCt { get; set; }

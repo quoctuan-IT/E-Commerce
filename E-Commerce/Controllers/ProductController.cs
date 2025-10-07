@@ -1,4 +1,5 @@
 ﻿using E_Commerce.Data;
+using E_Commerce.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,14 +7,14 @@ namespace E_Commerce.Controllers
 {
     public class ProductController(AppDbContext context) : Controller
     {
-
         private readonly AppDbContext _context = context;
 
         private async Task LoadCategory()
         {
-            var loais = await _context.Loais.ToListAsync();
+            var categories = await _context.Categories.ToListAsync();
 
-            ViewData["Loais"] = loais;
+            // Keep key name to avoid view changes for now
+            ViewData["Loais"] = categories;
         }
 
         public async Task<IActionResult> Index()
@@ -22,9 +23,9 @@ namespace E_Commerce.Controllers
             await LoadCategory();
 
             // List Sản Phẩm.
-            var hangHoas = await _context.HangHoas.Include(h => h.MaLoaiNavigation).ToListAsync();
+            var products = await _context.Products.Include(p => p.Category).ToListAsync();
 
-            return View(hangHoas);
+            return View(products);
         }
 
         public async Task<IActionResult> FilterByCategory(int idCategory)
@@ -32,12 +33,12 @@ namespace E_Commerce.Controllers
             // List Danh Mục.
             await LoadCategory();
 
-            var hangHoas = await _context.HangHoas
-                .Include(h => h.MaLoaiNavigation)
-                .Where(h => h.MaLoai == idCategory)
+            var products = await _context.Products
+                .Include(p => p.Category)
+                .Where(p => p.CategoryId == idCategory)
                 .ToListAsync();
 
-            return View("Index", hangHoas);
+            return View("Index", products);
         }
 
         [HttpGet]
@@ -46,12 +47,12 @@ namespace E_Commerce.Controllers
             // List Danh Mục.
             await LoadCategory();
 
-            var hangHoas = await _context.HangHoas
-                .Include(h => h.MaLoaiNavigation)
-                .Where(h => h.TenHh.Contains(searchKeyword))
+            var products = await _context.Products
+                .Include(p => p.Category)
+                .Where(p => p.ProductName.Contains(searchKeyword))
                 .ToListAsync();
 
-            return View("Index", hangHoas);
+            return View("Index", products);
         }
 
         public async Task<IActionResult> Detail(int idProduct)
@@ -59,11 +60,11 @@ namespace E_Commerce.Controllers
             // List Danh Mục.
             await LoadCategory();
 
-            var hangHoas = await _context.HangHoas
-                .Include(h => h.MaLoaiNavigation)
-                .SingleOrDefaultAsync(h => h.MaHh == idProduct);
+            var product = await _context.Products
+                .Include(p => p.Category)
+                .SingleOrDefaultAsync(p => p.ProductId == idProduct);
 
-            return View(hangHoas);
+            return View(product);
         }
 
         [HttpGet]
@@ -76,7 +77,7 @@ namespace E_Commerce.Controllers
             await LoadCategory();
 
             // List Sản Phẩm.
-            var hangHoasQuery = _context.HangHoas.Include(h => h.MaLoaiNavigation).AsQueryable();
+            var productsQuery = _context.Products.Include(p => p.Category).AsQueryable();
 
             // Áp dụng bộ lọc theo tùy chọn
             if (!string.IsNullOrEmpty(filterOption))
@@ -84,19 +85,19 @@ namespace E_Commerce.Controllers
                 switch (filterOption)
                 {
                     case "minToMaxPrice":
-                        hangHoasQuery = hangHoasQuery.OrderBy(h => h.DonGia);
+                        productsQuery = productsQuery.OrderBy(p => p.UnitPrice);
                         break;
                     case "maxToMinPrice":
-                        hangHoasQuery = hangHoasQuery.OrderByDescending(h => h.DonGia);
+                        productsQuery = productsQuery.OrderByDescending(p => p.UnitPrice);
                         break;
                 }
             }
 
-            var hangHoas = await hangHoasQuery.ToListAsync();
+            var products = await productsQuery.ToListAsync();
 
             ViewData["FilterOption"] = filterOption;
 
-            return View("Index", hangHoas);
+            return View("Index", products);
         }
     }
 }

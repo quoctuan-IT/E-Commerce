@@ -10,12 +10,11 @@ namespace E_Commerce.Controllers
     [Authorize]
     public class CartController(AppDbContext context) : Controller
     {
-
         private readonly AppDbContext _context = context;
 
-        const string CART_KEY = "MYCART";
+        private const string CartKey = "CartSession";
 
-        public List<CartItem> Cart => HttpContext.Session.Get<List<CartItem>>(CART_KEY) ?? [];
+        public List<CartItem> Cart => HttpContext.Session.Get<List<CartItem>>(CartKey) ?? [];
 
         public IActionResult Index()
         {
@@ -30,19 +29,19 @@ namespace E_Commerce.Controllers
 
             if (item == null)
             {
-                var hangHoa = _context.HangHoas.SingleOrDefault(p => p.MaHh == idProduct);
+                var product = _context.Products.SingleOrDefault(p => p.ProductId == idProduct);
 
-                if (hangHoa == null)
+                if (product == null)
                 {
                     return NotFound();
                 }
 
                 item = new CartItem
                 {
-                    MaHh = hangHoa.MaHh,
-                    TenHh = hangHoa.TenHh,
-                    DonGia = hangHoa.DonGia ?? 0,
-                    Hinh = hangHoa.Hinh ?? "img.png",
+                    MaHh = product.ProductId,
+                    TenHh = product.ProductName,
+                    DonGia = product.UnitPrice ?? 0,
+                    Hinh = product.Image ?? "img.png",
                     SoLuong = quantity
                 };
 
@@ -53,7 +52,7 @@ namespace E_Commerce.Controllers
                 item.SoLuong += quantity;
             }
 
-            HttpContext.Session.Set(CART_KEY, gioHang);
+            HttpContext.Session.Set(CartKey, gioHang);
 
             return RedirectToAction("Index");
         }
@@ -66,7 +65,7 @@ namespace E_Commerce.Controllers
             if (item != null)
             {
                 gioHang.Remove(item);
-                HttpContext.Session.Set(CART_KEY, gioHang);
+                HttpContext.Session.Set(CartKey, gioHang);
             }
 
             return RedirectToAction("Index");
@@ -75,78 +74,18 @@ namespace E_Commerce.Controllers
         [HttpGet]
         public IActionResult Checkout()
         {
-            if (Cart.Count == 0)
-            {
-                return RedirectToAction("Index");
-            }
-
-            return View(Cart);
+            return RedirectToAction("Checkout", "Order");
         }
 
         [HttpPost]
         public IActionResult Checkout(Checkout model)
         {
-            if (ModelState.IsValid)
-            {
-                var customerId = int.Parse(HttpContext.User.Claims.SingleOrDefault(p => p.Type == "ID").Value);
-                var khachHang = new KhachHang();
-
-                if (model.DefaultAddress)
-                {
-                    khachHang = _context.KhachHangs.SingleOrDefault(kh => kh.MaKh == customerId);
-                }
-
-                var hoadon = new HoaDon
-                {
-                    MaKh = customerId,
-                    HoTen = model.HoTen ?? khachHang.HoTen,
-                    DiaChi = model.DiaChi ?? khachHang.DiaChi,
-                    DienThoai = model.DienThoai ?? khachHang.DienThoai,
-                    NgayDat = DateTime.Now,
-                    CachThanhToan = "COD",
-                    CachVanChuyen = "ShoppeExpress",
-                    MaTrangThai = 0,
-                };
-
-                _context.Database.BeginTransaction();
-
-                try
-                {
-                    _context.Add(hoadon);
-                    _context.SaveChanges();
-
-                    var cthds = new List<ChiTietHd>();
-                    foreach (var item in Cart)
-                    {
-                        cthds.Add(new ChiTietHd
-                        {
-                            MaHd = hoadon.MaHd,
-                            SoLuong = item.SoLuong,
-                            DonGia = item.DonGia,
-                            MaHh = item.MaHh,
-                        });
-                    }
-                    _context.AddRange(cthds);
-                    _context.SaveChanges();
-
-                    _context.Database.CommitTransaction();
-
-                    HttpContext.Session.Set<List<CartItem>>("MYCART", []);
-
-                    return Redirect("/Cart/Success");
-                }
-                catch
-                {
-                    _context.Database.RollbackTransaction();
-                }
-            }
-
-            return View(Cart);
+            return RedirectToAction("Checkout", "Order", model);
         }
 
         public IActionResult Success()
         {
-            return View();
+            return RedirectToAction("Success", "Order");
         }
     }
 }

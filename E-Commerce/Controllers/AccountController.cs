@@ -30,9 +30,9 @@ namespace E_Commerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                var khachHang = _context.KhachHangs.SingleOrDefault(kh => kh.DienThoai == model.DienThoai);
+                var user = _context.AppUser.SingleOrDefault(u => u.Phone == model.DienThoai);
 
-                if (khachHang != null)
+                if (user != null)
                 {
                     ModelState.AddModelError(string.Empty, "PhoneNumber already exists!");
                 }
@@ -40,14 +40,13 @@ namespace E_Commerce.Controllers
                 {
                     try
                     {
-                        khachHang = new KhachHang();
-                        khachHang.MatKhau = model.MatKhau;
-                        khachHang.HoTen = model.HoTen;
-                        khachHang.DienThoai = model.DienThoai;
-                        khachHang.DiaChi = model.DiaChi;
-                        khachHang.HieuLuc = true;
+                        user = new AppUser();
+                        user.Password = model.MatKhau;
+                        user.FullName = model.HoTen;
+                        user.Phone = model.DienThoai;
+                        user.Address = model.DiaChi;
 
-                        _context.Add(khachHang);
+                        _context.Add(user);
                         _context.SaveChanges();
 
                         return RedirectToAction("Success");
@@ -78,26 +77,26 @@ namespace E_Commerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                var khachHang = _context.KhachHangs.SingleOrDefault(kh => kh.DienThoai == model.Phone);
+                var user = _context.AppUser.SingleOrDefault(u => u.Phone == model.Phone);
 
-                if (khachHang != null)
+                if (user != null)
                 {
-                    if (khachHang.HieuLuc == false)
+                    if (user.IsActive == false)
                     {
                         ModelState.AddModelError(string.Empty, "Account has been locked!");
                     }
                     else
                     {
-                        if (khachHang.MatKhau != model.Password)
+                        if (user.Password != model.Password)
                         {
                             ModelState.AddModelError(string.Empty, "Login failed!");
                         }
                         else
                         {
                             var claims = new List<Claim> {
-                                new(ClaimTypes.Name, khachHang.HoTen),
-                                new(ClaimTypes.Role, khachHang.VaiTro.ToString()),
-                                new("ID", khachHang.MaKh.ToString())
+                                new("ID", user.CustomerId.ToString()),
+                                new(ClaimTypes.Name, user.FullName),
+                                new(ClaimTypes.Role, user.Role.ToString())
                             };
 
                             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -105,7 +104,7 @@ namespace E_Commerce.Controllers
 
                             await HttpContext.SignInAsync(claimsPrincipal);
 
-                            if (khachHang.VaiTro == 0)
+                            if (user.Role == 0)
                             {
                                 return Redirect("/Admin/");
                             }

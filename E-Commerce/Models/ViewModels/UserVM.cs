@@ -1,8 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace E_Commerce.Models.ViewModels
 {
-    public class RegisterVM
+    public class UserVM
     {
         public string Phone { get; set; } = null!;
 

@@ -1,6 +1,6 @@
 ﻿namespace E_Commerce.Models.ViewModels
 {
-    public class Checkout
+    public class CheckoutVM
     {
         public bool DefaultAddress { get; set; }
 

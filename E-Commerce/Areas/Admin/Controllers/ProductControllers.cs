@@ -1,6 +1,7 @@
-using E_Commerce.Data;
+﻿using E_Commerce.Data;
 using E_Commerce.Helpers;
 using E_Commerce.Models;
+using E_Commerce.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,20 +29,23 @@ namespace E_Commerce.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductName,CategoryId,UnitPrice,Image,Description")] Product newProduct, IFormFile uploadedImage)
+        public async Task<IActionResult> Create(ProductVM vm)
         {
-            if (uploadedImage != null && uploadedImage.Length > 0)
-            {
-                var imageName = MyUtil.UploadHinh(uploadedImage, "HangHoa");
+            if (!ModelState.IsValid)
+                return View(vm);
 
-                newProduct.Image = imageName;
-            }
-            else
-            {
-                newProduct.Image = "41Pg1ahql8L._AA300_.jpg";
-            }
+            var imagePath = await Utils.SaveImageAsync(vm.UploadedImage);
 
-            _context.Products.Add(newProduct);
+            var product = new Product
+            {
+                ProductName = vm.ProductName,
+                CategoryId = vm.CategoryId,
+                UnitPrice = vm.UnitPrice,
+                Description = vm.Description,
+                Image = imagePath
+            };
+
+            _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
@@ -50,35 +54,35 @@ namespace E_Commerce.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
+            var categories = await _context.Categories.ToListAsync();
+            ViewData["categories"] = categories;
+         
             var product = await _context.Products.FindAsync(id);
 
             if (product == null)
-            {
                 return NotFound();
-            }
-
-            var categories = await _context.Categories.ToListAsync();
-            ViewData["Loais"] = categories;
 
             return View(product);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int id, [Bind("ProductName,CategoryId,UnitPrice,Image,Description")] Product updatedProduct)
+        public async Task<IActionResult> Update(int id, ProductVM vm)
         {
+            if (!ModelState.IsValid)
+                return View(vm);
+
             var product = await _context.Products.FindAsync(id);
-
             if (product == null)
-            {
                 return NotFound();
-            }
 
-            product.ProductName = updatedProduct.ProductName;
-            product.CategoryId = updatedProduct.CategoryId;
-            product.UnitPrice = updatedProduct.UnitPrice;
-            product.Description = updatedProduct.Description;
-            product.Image = updatedProduct.Image;
+            var imagePath = await Utils.SaveImageAsync(vm.UploadedImage);
+
+            product.ProductName = vm.ProductName;
+            product.CategoryId = vm.CategoryId;
+            product.UnitPrice = vm.UnitPrice;
+            product.Description = vm.Description;
+            product.Image = imagePath;
 
             _context.Update(product);
             await _context.SaveChangesAsync();
@@ -91,7 +95,6 @@ namespace E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Delete(int id)
         {
             var product = await _context.Products.FindAsync(id);
-
             if (product != null)
             {
                 _context.Products.Remove(product);

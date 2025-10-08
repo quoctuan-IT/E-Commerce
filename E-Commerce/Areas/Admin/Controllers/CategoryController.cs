@@ -30,9 +30,7 @@ namespace E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Create([Bind("CategoryName")] Category newCategory)
         {
             if (!ModelState.IsValid)
-            {
                 return View(newCategory);
-            }
 
             _context.Categories.Add(newCategory);
             await _context.SaveChangesAsync();
@@ -44,11 +42,8 @@ namespace E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Update(int id)
         {
             var category = await _context.Categories.FindAsync(id);
-
             if (category == null)
-            {
                 return NotFound();
-            }
 
             return View(category);
         }
@@ -58,11 +53,8 @@ namespace E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Update(int id, [Bind("CategoryName")] Category updatedCategory)
         {
             var category = await _context.Categories.FindAsync(id);
-
             if (category == null)
-            {
                 return NotFound();
-            }
 
             if (!ModelState.IsValid)
             {

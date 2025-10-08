@@ -1,6 +1,7 @@
 using E_Commerce.Data;
 using E_Commerce.Helpers;
 using E_Commerce.Models;
+using E_Commerce.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -28,51 +29,51 @@ namespace E_Commerce.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FullName,Password,Address,Phone")] AppUser newAccount)
+        public async Task<IActionResult> Create(UserVM vm)
         {
-            newAccount.IsActive = true;
-
             if (ModelState.IsValid)
             {
-                _context.AppUser.Add(newAccount);
+                var user = new AppUser
+                {
+                    FullName = vm.FullName,
+                    Phone = vm.Phone,
+                    Password = vm.Password,
+                    Address = vm.Address
+                };
+
+                _context.AppUser.Add(user);
                 await _context.SaveChangesAsync();
 
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(newAccount);
+            return View(vm);
         }
 
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
             var account = await _context.AppUser.FindAsync(id);
-            
             if (account == null)
-            {
                 return NotFound();
-            }
 
             return View(account);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int id, [Bind("FullName,Password,Address,Phone")] AppUser updatedAccount)
+        public async Task<IActionResult> Update(int id, UserVM vm)
         {
             var account = await _context.AppUser.FindAsync(id);
-
             if (account == null)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
-                account.FullName = updatedAccount.FullName;
-                account.Password = updatedAccount.Password;
-                account.Address = updatedAccount.Address;
-                account.Phone = updatedAccount.Phone;
+                account.FullName = vm.FullName;
+                account.Phone = vm.Phone;
+                account.Password = vm.Password;
+                account.Address = vm.Address;
 
                 _context.Update(account);
                 await _context.SaveChangesAsync();
@@ -80,17 +81,14 @@ namespace E_Commerce.Areas.Admin.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(updatedAccount);
+            return View(account);
         }
 
         public async Task<IActionResult> Block(int id)
         {
             var account = await _context.AppUser.FindAsync(id);
-
             if (account == null)
-            {
                 return NotFound();
-            }
 
             account.IsActive = false;
 

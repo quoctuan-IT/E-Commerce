@@ -1,14 +1,14 @@
 ﻿namespace E_Commerce.Models.ViewModels
 {
-    public class CartItem
+    public class CartItemVM
     {
         public int ProductId { get; set; }
 
-        public required string ProductName { get; set; }
+        public string ProductName { get; set; } = null!;
 
         public double UnitPrice { get; set; }
 
-        public required string Image { get; set; }
+        public string Image { get; set; } = null!;
 
         public int Quantity { get; set; }
 

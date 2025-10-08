@@ -24,11 +24,8 @@ namespace E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Update(int id)
         {
             var order = await _context.Orders.FindAsync(id);
-
             if (order == null)
-            {
                 return NotFound();
-            }
 
             return View(order);
         }
@@ -38,11 +35,8 @@ namespace E_Commerce.Areas.Admin.Controllers
         public async Task<IActionResult> Update(int id, int orderStatusId)
         {
             var order = await _context.Orders.FindAsync(id);
-
             if (order == null)
-            {
                 return NotFound();
-            }
 
             order.OrderStatusId = orderStatusId;
             _context.Update(order);

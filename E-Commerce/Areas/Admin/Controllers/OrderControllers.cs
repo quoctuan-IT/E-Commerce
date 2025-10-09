@@ -1,5 +1,3 @@
-using E_Commerce.Data;
-using E_Commerce.Helpers;
 using E_Commerce.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

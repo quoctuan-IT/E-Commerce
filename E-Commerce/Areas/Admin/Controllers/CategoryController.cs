@@ -1,5 +1,5 @@
-using E_Commerce.Data;
 using E_Commerce.Models;
+using E_Commerce.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

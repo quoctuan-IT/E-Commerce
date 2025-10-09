@@ -1,9 +1,5 @@
-﻿using E_Commerce.Data;
-using E_Commerce.Models;
-using E_Commerce.Service;
+﻿using E_Commerce.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace E_Commerce.Controllers
 {

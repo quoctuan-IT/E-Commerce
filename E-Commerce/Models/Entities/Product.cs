@@ -1,4 +1,4 @@
-﻿namespace E_Commerce.Models;
+﻿namespace E_Commerce.Models.Entities;
 public partial class Product
 {
     public int ProductId { get; set; }

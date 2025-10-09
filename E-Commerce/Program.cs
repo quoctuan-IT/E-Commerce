@@ -1,9 +1,7 @@
-using E_Commerce.Data;
 using E_Commerce.Models;
-using E_Commerce.Service;
+using E_Commerce.Service.Implementations;
+using E_Commerce.Service.Interfaces;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Cors.Infrastructure;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -39,11 +37,11 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 });
 
 // Service
-builder.Services.AddScoped<IAccountService, AccountService>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
-builder.Services.AddScoped<ICartService, CartService>();
-builder.Services.AddScoped<IOrderService, OrderService>();
+//builder.Services.AddScoped<IUserService, UserService>();
+//builder.Services.AddScoped<ICategoryService, CategoryService>();
+//builder.Services.AddScoped<ICartService, CartService>();
+//builder.Services.AddScoped<IOrderService, OrderService>();
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////

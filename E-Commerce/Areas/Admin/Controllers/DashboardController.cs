@@ -1,9 +1,5 @@
-﻿using E_Commerce.Data;
-using E_Commerce.Helpers;
-using E_Commerce.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Areas.Admin.Controllers
 {
@@ -14,7 +10,7 @@ namespace E_Commerce.Areas.Admin.Controllers
         public DashboardController()
         {
         }
-        
+
         public IActionResult Dashboard()
         {
             return View();

@@ -1,6 +1,6 @@
-using E_Commerce.Models;
+using E_Commerce.Models.Entities;
 
-namespace E_Commerce.Service
+namespace E_Commerce.Service.Interfaces
 {
     public interface IProductService
     {

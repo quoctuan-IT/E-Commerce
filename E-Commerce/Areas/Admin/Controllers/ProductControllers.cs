@@ -1,11 +1,9 @@
-﻿using E_Commerce.Data;
-using E_Commerce.Helpers;
-using E_Commerce.Models;
+﻿using E_Commerce.Helpers;
+using E_Commerce.Models.Entities;
 using E_Commerce.Models.ViewModels;
-using E_Commerce.Service;
+using E_Commerce.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Areas.Admin.Controllers
 {
@@ -35,7 +33,7 @@ namespace E_Commerce.Areas.Admin.Controllers
             var imagePath = await Utils.SaveImageAsync(vm.UploadedImage);
             if (imagePath == null)
                 return NotFound();
-                
+
             var product = new Product
             {
                 ProductName = vm.ProductName,

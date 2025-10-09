@@ -1,5 +1,5 @@
-﻿using E_Commerce.Data;
-using E_Commerce.Models;
+﻿using E_Commerce.Models;
+using E_Commerce.Models.Entities;
 using E_Commerce.Models.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;

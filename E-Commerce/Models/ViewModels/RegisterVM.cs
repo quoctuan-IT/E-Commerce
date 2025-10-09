@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace E_Commerce.Models.ViewModels
+﻿namespace E_Commerce.Models.ViewModels
 {
     public class RegisterVM
     {

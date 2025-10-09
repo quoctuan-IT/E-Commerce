@@ -1,5 +1,4 @@
-﻿using E_Commerce.Data;
-using E_Commerce.Helpers;
+﻿using E_Commerce.Helpers;
 using E_Commerce.Models;
 using E_Commerce.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
@@ -41,7 +40,7 @@ namespace E_Commerce.Controllers
                         Image = product.Image,
                         Quantity = quantity
                     };
-                    
+
                     cart.Add(item);
                 }
             }

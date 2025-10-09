@@ -1,7 +1,7 @@
-﻿using E_Commerce.Models;
+﻿using E_Commerce.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace E_Commerce.Data;
+namespace E_Commerce.Models;
 public partial class AppDbContext : DbContext
 {
     public AppDbContext()

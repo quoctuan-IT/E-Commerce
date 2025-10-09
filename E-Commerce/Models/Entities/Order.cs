@@ -1,4 +1,4 @@
-﻿namespace E_Commerce.Models;
+﻿namespace E_Commerce.Models.Entities;
 public partial class Order
 {
     public int OrderId { get; set; }
@@ -7,15 +7,15 @@ public partial class Order
 
     public DateTime OrderDate { get; set; }
 
-    public string FullName { get; set; }  = null!;
+    public string FullName { get; set; } = null!;
 
-    public string Address { get; set; }  = null!;
+    public string Address { get; set; } = null!;
 
-    public string PaymentMethod { get; set; }  = null!;
+    public string PaymentMethod { get; set; } = null!;
 
-    public string ShippingMethod { get; set; }  = null!;
+    public string ShippingMethod { get; set; } = null!;
 
-    public string Phone { get; set; }  = null!;
+    public string Phone { get; set; } = null!;
 
     public int OrderStatusId { get; set; }
 

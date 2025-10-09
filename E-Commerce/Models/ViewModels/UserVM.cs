@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace E_Commerce.Models.ViewModels
 {
     public class UserVM

@@ -2,6 +2,7 @@
 using E_Commerce.Helpers;
 using E_Commerce.Models;
 using E_Commerce.Models.ViewModels;
+using E_Commerce.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -10,22 +11,19 @@ namespace E_Commerce.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "1")]
-    public class ProductControllers(AppDbContext context) : Controller
+    public class ProductControllers(IProductService productService) : Controller
     {
-        private readonly AppDbContext _context = context;
+        private readonly IProductService _productService = productService;
 
         public async Task<IActionResult> Index()
         {
-            var products = await _context.Products.Include(p => p.Category).ToListAsync();
+            var products = await _productService.GetAllAsync();
 
             return View(products);
         }
 
         [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -35,7 +33,9 @@ namespace E_Commerce.Areas.Admin.Controllers
                 return View(vm);
 
             var imagePath = await Utils.SaveImageAsync(vm.UploadedImage);
-
+            if (imagePath == null)
+                return NotFound();
+                
             var product = new Product
             {
                 ProductName = vm.ProductName,
@@ -45,8 +45,7 @@ namespace E_Commerce.Areas.Admin.Controllers
                 Image = imagePath
             };
 
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
+            await _productService.CreateAsync(product);
 
             return RedirectToAction(nameof(Index));
         }
@@ -54,13 +53,11 @@ namespace E_Commerce.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
-            var categories = await _context.Categories.ToListAsync();
-            ViewData["categories"] = categories;
-         
-            var product = await _context.Products.FindAsync(id);
-
+            var product = await _productService.GetByIdAsync(id);
             if (product == null)
                 return NotFound();
+
+            //ViewData["categories"] = await _context.Categories.ToListAsync();
 
             return View(product);
         }
@@ -72,11 +69,13 @@ namespace E_Commerce.Areas.Admin.Controllers
             if (!ModelState.IsValid)
                 return View(vm);
 
-            var product = await _context.Products.FindAsync(id);
+            var product = await _productService.GetByIdAsync(id);
             if (product == null)
                 return NotFound();
 
             var imagePath = await Utils.SaveImageAsync(vm.UploadedImage);
+            if (imagePath == null)
+                return NotFound();
 
             product.ProductName = vm.ProductName;
             product.CategoryId = vm.CategoryId;
@@ -84,8 +83,7 @@ namespace E_Commerce.Areas.Admin.Controllers
             product.Description = vm.Description;
             product.Image = imagePath;
 
-            _context.Update(product);
-            await _context.SaveChangesAsync();
+            await _productService.UpdateAsync(product);
 
             return RedirectToAction(nameof(Index));
         }
@@ -94,11 +92,10 @@ namespace E_Commerce.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            var product = await _context.Products.FindAsync(id);
+            var product = await _productService.GetByIdAsync(id);
             if (product != null)
             {
-                _context.Products.Remove(product);
-                await _context.SaveChangesAsync();
+                await _productService.DeleteAsync(id);
 
                 return RedirectToAction(nameof(Index));
             }

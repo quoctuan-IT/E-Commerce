@@ -14,78 +14,57 @@ namespace E_Commerce.Controllers
 
         private const string CartKey = "CartSession";
 
-        public List<CartItem> Cart => HttpContext.Session.Get<List<CartItem>>(CartKey) ?? [];
+        public List<CartItemVM> Cart => HttpContext.Session.Get<List<CartItemVM>>(CartKey) ?? [];
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View(Cart);
         }
 
-        public IActionResult AddToCart(int idProduct, int quantity = 1)
+        public IActionResult AddToCart(int productId, int quantity = 1)
         {
-            var gioHang = Cart;
-            // check item exist in CART
-            var item = gioHang.SingleOrDefault(p => p.MaHh == idProduct);
+            var cart = Cart;
+            var item = cart.SingleOrDefault(c => c.ProductId == productId);
 
             if (item == null)
             {
-                var product = _context.Products.SingleOrDefault(p => p.ProductId == idProduct);
+                var product = _context.Products.SingleOrDefault(p => p.ProductId == productId);
 
-                if (product == null)
+                if (product != null)
                 {
-                    return NotFound();
+                    item = new CartItemVM
+                    {
+                        ProductId = product.ProductId,
+                        ProductName = product.ProductName,
+                        UnitPrice = product.UnitPrice,
+                        Image = product.Image,
+                        Quantity = quantity
+                    };
+                    
+                    cart.Add(item);
                 }
-
-                item = new CartItem
-                {
-                    MaHh = product.ProductId,
-                    TenHh = product.ProductName,
-                    DonGia = product.UnitPrice ?? 0,
-                    Hinh = product.Image ?? "img.png",
-                    SoLuong = quantity
-                };
-
-                gioHang.Add(item);
             }
             else
-            {
-                item.SoLuong += quantity;
-            }
+                item.Quantity += quantity;
 
-            HttpContext.Session.Set(CartKey, gioHang);
+            HttpContext.Session.Set(CartKey, cart);
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult RemoveCart(int idProduct)
+        public IActionResult RemoveCart(int productId)
         {
-            var gioHang = Cart;
-            var item = gioHang.SingleOrDefault(p => p.MaHh == idProduct);
+            var cart = Cart;
+            var item = cart.SingleOrDefault(c => c.ProductId == productId);
 
             if (item != null)
             {
-                gioHang.Remove(item);
-                HttpContext.Session.Set(CartKey, gioHang);
+                cart.Remove(item);
+                HttpContext.Session.Set(CartKey, cart);
             }
 
-            return RedirectToAction("Index");
-        }
-
-        [HttpGet]
-        public IActionResult Checkout()
-        {
-            return RedirectToAction("Checkout", "Order");
-        }
-
-        [HttpPost]
-        public IActionResult Checkout(Checkout model)
-        {
-            return RedirectToAction("Checkout", "Order", model);
-        }
-
-        public IActionResult Success()
-        {
-            return RedirectToAction("Success", "Order");
+            return RedirectToAction(nameof(Index));
         }
     }
 }

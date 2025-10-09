@@ -14,42 +14,45 @@ namespace E_Commerce.Controllers
 
         private const string CartKey = "CartSession";
 
-        private List<CartItem> Cart => HttpContext.Session.Get<List<CartItem>>(CartKey) ?? [];
+        private List<CartItemVM> Cart => HttpContext.Session.Get<List<CartItemVM>>(CartKey) ?? [];
 
         [HttpGet]
-        public IActionResult Checkout()
+        public IActionResult Index()
         {
             if (Cart.Count == 0)
             {
                 return RedirectToAction("Index", "Cart");
             }
 
-            return View("~/Views/Cart/Checkout.cshtml", Cart);
+            return View(Cart);
         }
 
         [HttpPost]
-        public IActionResult Checkout(Checkout model)
+        [ValidateAntiForgeryToken]
+        public IActionResult Checkout(CheckoutVM vm)
         {
             if (ModelState.IsValid)
             {
-                var customerId = int.Parse(HttpContext.User.Claims.SingleOrDefault(p => p.Type == "ID").Value);
-                var appUser = new AppUser();
+                var claim = HttpContext.User.Claims.SingleOrDefault(u => u.Type == "ID");
+                if (claim == null)
+                    return Unauthorized();
 
-                if (model.DefaultAddress)
-                {
-                    appUser = _context.AppUser.SingleOrDefault(kh => kh.CustomerId == customerId);
-                }
+                var userId = int.Parse(claim.Value);
+
+                // (Optional) - Default address
+                var user = new AppUser();
+                if (vm.DefaultAddress)
+                    user = _context.AppUser.SingleOrDefault(u => u.UserId == userId)
+                           ?? throw new InvalidOperationException("User not found");
 
                 var order = new Order
                 {
-                    CustomerId = customerId,
-                    FullName = model.HoTen ?? appUser.FullName,
-                    Address = model.DiaChi ?? appUser.Address,
-                    Phone = model.DienThoai ?? appUser.Phone,
-                    OrderDate = DateTime.Now,
-                    PaymentMethod = "COD",
-                    ShippingMethod = "ShoppeExpress",
-                    OrderStatusId = 0,
+                    UserId = userId,
+                    FullName = vm.FullName ?? user.FullName,
+                    Address = vm.Address ?? user.Address,
+                    Phone = vm.Phone ?? user.Phone,
+                    PaymentMethod = vm.PaymentMethod,
+                    ShippingMethod = vm.ShippingMethod
                 };
 
                 _context.Database.BeginTransaction();
@@ -65,19 +68,18 @@ namespace E_Commerce.Controllers
                         orderDetails.Add(new OrderDetail
                         {
                             OrderId = order.OrderId,
-                            Quantity = item.SoLuong,
-                            UnitPrice = item.DonGia,
-                            ProductId = item.MaHh,
+                            Quantity = item.Quantity,
+                            UnitPrice = item.UnitPrice,
+                            ProductId = item.ProductId,
                         });
                     }
                     _context.AddRange(orderDetails);
                     _context.SaveChanges();
-
                     _context.Database.CommitTransaction();
 
-                    HttpContext.Session.Set<List<CartItem>>(CartKey, []);
+                    HttpContext.Session.Set<List<CartItemVM>>(CartKey, []);
 
-                    return RedirectToAction("Success");
+                    return RedirectToAction(nameof(Success));
                 }
                 catch
                 {
@@ -85,12 +87,12 @@ namespace E_Commerce.Controllers
                 }
             }
 
-            return View("~/Views/Cart/Checkout.cshtml", Cart);
+            return View(nameof(Index));
         }
 
         public IActionResult Success()
         {
-            return View("~/Views/Cart/Success.cshtml");
+            return View();
         }
     }
 }

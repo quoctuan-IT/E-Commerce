@@ -1,7 +1,7 @@
 ﻿namespace E_Commerce.Models;
 public partial class AppUser
 {
-    public int CustomerId { get; set; }
+    public int UserId { get; set; }
 
     public string FullName { get; set; } = null!;
 
@@ -9,7 +9,7 @@ public partial class AppUser
 
     public string Password { get; set; } = null!;
 
-    public string? Address { get; set; }
+    public string Address { get; set; } = null!;
 
     public int Role { get; set; }
 

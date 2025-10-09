@@ -29,7 +29,7 @@ public partial class AppDbContext : DbContext
         // AppUser
         modelBuilder.Entity<AppUser>(entity =>
         {
-            entity.HasKey(e => e.CustomerId).HasName("PK_Customers");
+            entity.HasKey(e => e.UserId).HasName("PK_Customers");
 
             entity.ToTable("AppUsers");
 
@@ -73,12 +73,14 @@ public partial class AppDbContext : DbContext
                 .HasDefaultValue("Cash");
             entity.Property(e => e.ShippingMethod)
                 .HasDefaultValue("ShippingExpress");
+            entity.Property(e => e.OrderStatus)
+                .HasDefaultValue(0);
             entity.Property(e => e.OrderDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
             entity.HasOne(d => d.AppUser).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.CustomerId)
+                .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_Orders_Customers");
 
             entity.HasOne(d => d.OrderStatus).WithMany(p => p.Orders)

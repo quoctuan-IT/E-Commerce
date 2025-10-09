@@ -1,97 +1,82 @@
-using E_Commerce.Data;
 using E_Commerce.Helpers;
-using E_Commerce.Models;
+using E_Commerce.Models.Entities;
 using E_Commerce.Models.ViewModels;
+using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
 {
     [Authorize]
-    public class OrderController(AppDbContext context) : Controller
+    public class OrderController(
+        IOrderService orderService,
+        IAccountService accountService) : Controller
     {
-        private readonly AppDbContext _context = context;
+        private readonly IOrderService _orderService = orderService;
+
+        private readonly IAccountService _accountService = accountService;
 
         private const string CartKey = "CartSession";
 
-        private List<CartItem> Cart => HttpContext.Session.Get<List<CartItem>>(CartKey) ?? [];
+        private List<CartItemVM> Cart => HttpContext.Session.Get<List<CartItemVM>>(CartKey) ?? [];
 
         [HttpGet]
-        public IActionResult Checkout()
+        public IActionResult Index()
         {
-            if (Cart.Count == 0)
-            {
-                return RedirectToAction("Index", "Cart");
-            }
+            if (Cart.Count == 0) return RedirectToAction("Index", "Cart");
 
-            return View("~/Views/Cart/Checkout.cshtml", Cart);
+            return View(Cart);
         }
 
         [HttpPost]
-        public IActionResult Checkout(Checkout model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Checkout(CheckoutVM vm)
         {
             if (ModelState.IsValid)
             {
-                var customerId = int.Parse(HttpContext.User.Claims.SingleOrDefault(p => p.Type == "ID").Value);
-                var appUser = new AppUser();
+                var userId = _accountService.GetCurrentUserId(User);
 
-                if (model.DefaultAddress)
+                if (userId == null) return Unauthorized();
+
+                var success = await _orderService.CreateOrderAsync(userId, vm, Cart);
+
+                if (success)
                 {
-                    appUser = _context.AppUser.SingleOrDefault(kh => kh.CustomerId == customerId);
-                }
-
-                var order = new Order
-                {
-                    CustomerId = customerId,
-                    FullName = model.HoTen ?? appUser.FullName,
-                    Address = model.DiaChi ?? appUser.Address,
-                    Phone = model.DienThoai ?? appUser.Phone,
-                    OrderDate = DateTime.Now,
-                    PaymentMethod = "COD",
-                    ShippingMethod = "ShoppeExpress",
-                    OrderStatusId = 0,
-                };
-
-                _context.Database.BeginTransaction();
-
-                try
-                {
-                    _context.Add(order);
-                    _context.SaveChanges();
-
-                    var orderDetails = new List<OrderDetail>();
-                    foreach (var item in Cart)
-                    {
-                        orderDetails.Add(new OrderDetail
-                        {
-                            OrderId = order.OrderId,
-                            Quantity = item.SoLuong,
-                            UnitPrice = item.DonGia,
-                            ProductId = item.MaHh,
-                        });
-                    }
-                    _context.AddRange(orderDetails);
-                    _context.SaveChanges();
-
-                    _context.Database.CommitTransaction();
-
-                    HttpContext.Session.Set<List<CartItem>>(CartKey, []);
-
-                    return RedirectToAction("Success");
-                }
-                catch
-                {
-                    _context.Database.RollbackTransaction();
+                    HttpContext.Session.Set<List<CartItemVM>>(CartKey, []);
+                    
+                    return RedirectToAction(nameof(Success));
                 }
             }
 
-            return View("~/Views/Cart/Checkout.cshtml", Cart);
+            return View(nameof(Index));
         }
 
-        public IActionResult Success()
+        [HttpGet]
+        public async Task<IActionResult> MyOrders()
         {
-            return View("~/Views/Cart/Success.cshtml");
+            var userId = _accountService.GetCurrentUserId(User);
+            if (userId == null) return Unauthorized();
+
+            var orders = await _orderService.GetUserOrdersAsync(userId);
+
+            return View(orders);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> OrderDetail(int id)
+        {
+            var order = await _orderService.GetOrderByIdAsync(id);
+            if (order is null) return NotFound();
+
+            // Check Order - Current User
+            var userId = _accountService.GetCurrentUserId(User);
+            if (userId is null || userId != order.UserId) return Unauthorized();
+
+            return View("OrderDetail", order);
+        }
+
+        public IActionResult Success() => View();
     }
 }
 

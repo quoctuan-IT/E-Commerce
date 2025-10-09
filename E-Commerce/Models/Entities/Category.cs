@@ -1,4 +1,4 @@
-﻿namespace E_Commerce.Models;
+﻿namespace E_Commerce.Models.Entities;
 public partial class Category
 {
     public int CategoryId { get; set; }

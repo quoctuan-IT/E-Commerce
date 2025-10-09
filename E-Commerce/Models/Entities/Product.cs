@@ -1,4 +1,4 @@
-﻿namespace E_Commerce.Models;
+﻿namespace E_Commerce.Models.Entities;
 public partial class Product
 {
     public int ProductId { get; set; }
@@ -9,9 +9,15 @@ public partial class Product
 
     public double UnitPrice { get; set; }
 
-    public string? Image { get; set; }
+    public string Image { get; set; } = null!;
 
     public string? Description { get; set; }
+
+    public bool IsActive { get; set; } = true;
+
+    public DateTime? CreatedDate { get; set; }
+
+    public DateTime? UpdatedDate { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = [];
 

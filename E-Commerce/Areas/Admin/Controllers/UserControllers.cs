@@ -1,6 +1,5 @@
-using E_Commerce.Data;
-using E_Commerce.Helpers;
 using E_Commerce.Models;
+using E_Commerce.Models.Entities;
 using E_Commerce.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,9 +34,7 @@ namespace E_Commerce.Areas.Admin.Controllers
             {
                 var user = new AppUser
                 {
-                    FullName = vm.FullName,
-                    Phone = vm.Phone,
-                    Password = vm.Password,
+                    UserName = vm.UserName,
                     Address = vm.Address
                 };
 
@@ -70,9 +67,7 @@ namespace E_Commerce.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                account.FullName = vm.FullName;
-                account.Phone = vm.Phone;
-                account.Password = vm.Password;
+                account.UserName = vm.UserName;
                 account.Address = vm.Address;
 
                 _context.Update(account);

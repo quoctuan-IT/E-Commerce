@@ -1,8 +1,9 @@
-﻿using E_Commerce.Models;
+﻿using E_Commerce.Models.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace E_Commerce.Data;
-public partial class AppDbContext : DbContext
+namespace E_Commerce.Models;
+public partial class AppDbContext : IdentityDbContext<AppUser>
 {
     public AppDbContext()
     {
@@ -26,15 +27,14 @@ public partial class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         // AppUser
         modelBuilder.Entity<AppUser>(entity =>
         {
-            entity.HasKey(e => e.CustomerId).HasName("PK_Customers");
-
             entity.ToTable("AppUsers");
 
             entity.Property(e => e.IsActive).HasDefaultValue(true);
-            entity.Property(e => e.Role).HasDefaultValue(1);
         });
 
 
@@ -46,6 +46,9 @@ public partial class AppDbContext : DbContext
             entity.ToTable("Products");
 
             entity.Property(e => e.UnitPrice).HasDefaultValue(0.0);
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.UpdatedDate).IsRequired(false);
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)
@@ -73,12 +76,14 @@ public partial class AppDbContext : DbContext
                 .HasDefaultValue("Cash");
             entity.Property(e => e.ShippingMethod)
                 .HasDefaultValue("ShippingExpress");
+            entity.Property(e => e.OrderStatus)
+                .HasDefaultValue(0);
             entity.Property(e => e.OrderDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
 
             entity.HasOne(d => d.AppUser).WithMany(p => p.Orders)
-                .HasForeignKey(d => d.CustomerId)
+                .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_Orders_Customers");
 
             entity.HasOne(d => d.OrderStatus).WithMany(p => p.Orders)

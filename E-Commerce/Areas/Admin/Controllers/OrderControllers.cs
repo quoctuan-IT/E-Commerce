@@ -1,46 +1,40 @@
-using E_Commerce.Data;
-using E_Commerce.Helpers;
-using E_Commerce.Models;
+using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "1")]
-    public class OrderControllers(AppDbContext context) : Controller
+    public class OrderControllers(IOrderService orderService) : Controller
     {
-        private readonly AppDbContext _context = context;
+        private readonly IOrderService _categoryService = orderService;
 
         public async Task<IActionResult> Index()
         {
-            var orders = await _context.Orders.ToListAsync();
+            var orders = await _categoryService.GetAllAsync();
 
             return View(orders);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Update(int id)
+        public async Task<IActionResult> Update(int orderId)
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
-                return NotFound();
+            var order = await _categoryService.GetOrderByIdAsync(orderId);
+            if (order == null) return NotFound();
 
             return View(order);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int id, int orderStatusId)
+        public async Task<IActionResult> Update(int orderId, int orderStatusId)
         {
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
-                return NotFound();
+            var order = await _categoryService.GetOrderByIdAsync(orderId);
+            if (order == null) return NotFound();
 
             order.OrderStatusId = orderStatusId;
-            _context.Update(order);
-            await _context.SaveChangesAsync();
+            await _categoryService.UpdateAsync(order);
 
             return RedirectToAction(nameof(Index));
         }

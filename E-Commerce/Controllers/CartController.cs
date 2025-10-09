@@ -1,91 +1,60 @@
-﻿using E_Commerce.Data;
-using E_Commerce.Helpers;
-using E_Commerce.Models;
-using E_Commerce.Models.ViewModels;
+﻿using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
 {
     [Authorize]
-    public class CartController(AppDbContext context) : Controller
+    public class CartController(ICartService cartService) : Controller
     {
-        private readonly AppDbContext _context = context;
-
-        private const string CartKey = "CartSession";
-
-        public List<CartItem> Cart => HttpContext.Session.Get<List<CartItem>>(CartKey) ?? [];
-
-        public IActionResult Index()
-        {
-            return View(Cart);
-        }
-
-        public IActionResult AddToCart(int idProduct, int quantity = 1)
-        {
-            var gioHang = Cart;
-            // check item exist in CART
-            var item = gioHang.SingleOrDefault(p => p.MaHh == idProduct);
-
-            if (item == null)
-            {
-                var product = _context.Products.SingleOrDefault(p => p.ProductId == idProduct);
-
-                if (product == null)
-                {
-                    return NotFound();
-                }
-
-                item = new CartItem
-                {
-                    MaHh = product.ProductId,
-                    TenHh = product.ProductName,
-                    DonGia = product.UnitPrice ?? 0,
-                    Hinh = product.Image ?? "img.png",
-                    SoLuong = quantity
-                };
-
-                gioHang.Add(item);
-            }
-            else
-            {
-                item.SoLuong += quantity;
-            }
-
-            HttpContext.Session.Set(CartKey, gioHang);
-
-            return RedirectToAction("Index");
-        }
-
-        public IActionResult RemoveCart(int idProduct)
-        {
-            var gioHang = Cart;
-            var item = gioHang.SingleOrDefault(p => p.MaHh == idProduct);
-
-            if (item != null)
-            {
-                gioHang.Remove(item);
-                HttpContext.Session.Set(CartKey, gioHang);
-            }
-
-            return RedirectToAction("Index");
-        }
+        private readonly ICartService _cartService = cartService;
 
         [HttpGet]
-        public IActionResult Checkout()
+        public IActionResult Index()
         {
-            return RedirectToAction("Checkout", "Order");
+            var cartItems = _cartService.GetCartItems(HttpContext.Session);
+
+            return View(cartItems);
+        }
+
+        public IActionResult AddToCart(int productId, int quantity = 1)
+        {
+            _cartService.AddToCart(HttpContext.Session, productId, quantity);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult RemoveCart(int productId)
+        {
+            _cartService.RemoveFromCart(HttpContext.Session, productId);
+
+            return RedirectToAction(nameof(Index));
         }
 
         [HttpPost]
-        public IActionResult Checkout(Checkout model)
+        public IActionResult UpdateQuantity(int productId, int quantity)
         {
-            return RedirectToAction("Checkout", "Order", model);
+            _cartService.UpdateCartItemQuantity(HttpContext.Session, productId, quantity);
+
+            return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Success()
+        [HttpPost]
+        public IActionResult ClearCart()
         {
-            return RedirectToAction("Success", "Order");
+            _cartService.ClearCart(HttpContext.Session);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult GetCartSummary()
+        {
+            var cartItems = _cartService.GetCartItems(HttpContext.Session);
+            var total = _cartService.GetCartTotal(cartItems);
+            var count = _cartService.GetCartItemCount(cartItems);
+
+            return Json(new { total, count });
         }
     }
 }

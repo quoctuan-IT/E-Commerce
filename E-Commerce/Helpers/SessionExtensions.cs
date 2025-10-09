@@ -2,7 +2,7 @@
 
 namespace E_Commerce.Helpers
 {
-    public static class SessionExtension
+    public static class SessionExtensions
     {
         public static void Set<T>(this ISession session, string key, T value)
         {

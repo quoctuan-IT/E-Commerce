@@ -1,0 +1,19 @@
+﻿using E_Commerce.Models.DTOs;
+using E_Commerce.Models.Entities;
+using E_Commerce.Models.ViewModels;
+
+namespace E_Commerce.Services.Interfaces
+{
+    public interface IOrderService
+    {
+        Task<IEnumerable<Order>> GetAllAsync();
+        Task<List<Order>> GetUserOrdersAsync(string userId);
+        Task<Order?> GetOrderByIdAsync(int orderId);
+        Task<bool> CreateOrderAsync(string userId, CheckoutVM checkoutVM, List<CartItemVM> cartItems);
+        Task<bool> CreateOrderFromApiAsync(string userId, CreateOrderDto createOrderDto);
+        Task UpdateAsync(Order order);
+        Task<bool> UpdateOrderAsync(int orderId, UpdateOrderDto updateOrderDto);
+        Task<bool> DeleteOrderAsync(int orderId);
+        Task<IEnumerable<Order>> GetOrdersWithFilterAsync(OrderFilterDto filter);
+    }
+}

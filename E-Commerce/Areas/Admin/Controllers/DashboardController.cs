@@ -11,9 +11,6 @@ namespace E_Commerce.Areas.Admin.Controllers
         {
         }
 
-        public IActionResult Dashboard()
-        {
-            return View();
-        }
+        public IActionResult Dashboard() => View();
     }
 }

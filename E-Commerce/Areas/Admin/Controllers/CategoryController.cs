@@ -1,39 +1,33 @@
-using E_Commerce.Models;
 using E_Commerce.Models.Entities;
+using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "1")]
-    public class CategoryController(AppDbContext context) : Controller
+    public class CategoryController(ICategoryService categoryService) : Controller
     {
-        private readonly AppDbContext _context = context;
+        private readonly ICategoryService _categoryService = categoryService;
 
         public async Task<IActionResult> Index()
         {
-            var categories = await _context.Categories.ToListAsync();
+            var categories = await _categoryService.GetAllAsync();
 
             return View(categories);
         }
 
         [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CategoryName")] Category newCategory)
         {
-            if (!ModelState.IsValid)
-                return View(newCategory);
+            if (!ModelState.IsValid) return View(newCategory);
 
-            _context.Categories.Add(newCategory);
-            await _context.SaveChangesAsync();
+            await _categoryService.CreateAsync(newCategory);
 
             return RedirectToAction(nameof(Index));
         }
@@ -41,9 +35,8 @@ namespace E_Commerce.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-                return NotFound();
+            var category = await _categoryService.GetByIdAsync(id);
+            if (category == null) return NotFound();
 
             return View(category);
         }
@@ -52,18 +45,13 @@ namespace E_Commerce.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Update(int id, [Bind("CategoryName")] Category updatedCategory)
         {
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-                return NotFound();
+            var category = await _categoryService.GetByIdAsync(id);
+            if (category == null) return NotFound();
 
-            if (!ModelState.IsValid)
-            {
-                return View(updatedCategory);
-            }
+            if (!ModelState.IsValid) return View(updatedCategory);
 
             category.CategoryName = updatedCategory.CategoryName;
-            _context.Update(category);
-            await _context.SaveChangesAsync();
+            await _categoryService.UpdateAsync(category);
 
             return RedirectToAction(nameof(Index));
         }

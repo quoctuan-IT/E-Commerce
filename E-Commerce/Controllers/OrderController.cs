@@ -1,16 +1,15 @@
 using E_Commerce.Helpers;
-using E_Commerce.Models;
-using E_Commerce.Models.Entities;
 using E_Commerce.Models.ViewModels;
+using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
 {
     [Authorize]
-    public class OrderController(AppDbContext context) : Controller
+    public class OrderController(IOrderService orderService) : Controller
     {
-        private readonly AppDbContext _context = context;
+        private readonly IOrderService _orderService = orderService;
 
         private const string CartKey = "CartSession";
 
@@ -29,7 +28,7 @@ namespace E_Commerce.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Checkout(CheckoutVM vm)
+        public async Task<IActionResult> Checkout(CheckoutVM vm)
         {
             if (ModelState.IsValid)
             {
@@ -39,51 +38,12 @@ namespace E_Commerce.Controllers
 
                 var userId = int.Parse(claim.Value);
 
-                // Default address (optional)
-                var user = new AppUser();
-                if (vm.DefaultAddress)
-                    user = _context.AppUser.SingleOrDefault(u => u.UserId == userId)
-                           ?? throw new InvalidOperationException("User not found");
+                var success = await _orderService.CreateOrderAsync(userId, vm, Cart);
 
-                var order = new Order
+                if (success)
                 {
-                    UserId = userId,
-                    FullName = vm.FullName ?? user.FullName,
-                    Address = vm.Address ?? user.Address,
-                    Phone = vm.Phone ?? user.Phone,
-                    PaymentMethod = vm.PaymentMethod,
-                    ShippingMethod = vm.ShippingMethod
-                };
-
-                _context.Database.BeginTransaction();
-
-                try
-                {
-                    _context.Add(order);
-                    _context.SaveChanges();
-
-                    var orderDetails = new List<OrderDetail>();
-                    foreach (var item in Cart)
-                    {
-                        orderDetails.Add(new OrderDetail
-                        {
-                            OrderId = order.OrderId,
-                            Quantity = item.Quantity,
-                            UnitPrice = item.UnitPrice,
-                            ProductId = item.ProductId,
-                        });
-                    }
-                    _context.AddRange(orderDetails);
-                    _context.SaveChanges();
-                    _context.Database.CommitTransaction();
-
                     HttpContext.Session.Set<List<CartItemVM>>(CartKey, []);
-
                     return RedirectToAction(nameof(Success));
-                }
-                catch
-                {
-                    _context.Database.RollbackTransaction();
                 }
             }
 
@@ -93,6 +53,34 @@ namespace E_Commerce.Controllers
         public IActionResult Success()
         {
             return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MyOrders()
+        {
+            var claim = HttpContext.User.Claims.SingleOrDefault(u => u.Type == "ID");
+            if (claim == null)
+                return Unauthorized();
+
+            var userId = int.Parse(claim.Value);
+            var orders = await _orderService.GetUserOrdersAsync(userId);
+
+            return View(orders);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> OrderDetail(int id)
+        {
+            var order = await _orderService.GetOrderByIdAsync(id);
+            if (order is null)
+                return NotFound();
+
+            // Check if the order belongs to the current user
+            var claim = HttpContext.User.Claims.SingleOrDefault(u => u.Type == "ID");
+            if (claim is null || int.Parse(claim.Value) != order.UserId)
+                return Unauthorized();
+
+            return View("OrderDetail", order);
         }
     }
 }

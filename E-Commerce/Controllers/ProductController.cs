@@ -1,4 +1,4 @@
-﻿using E_Commerce.Service.Interfaces;
+﻿using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
@@ -11,7 +11,7 @@ namespace E_Commerce.Controllers
         public async Task<IActionResult> Index(int? categoryId, string? search, double? minPrice, double? maxPrice, string? sortPrice)
         {
             var products = await _service.FilterProductsAsync(categoryId, search, minPrice, maxPrice, sortPrice);
-            
+
             return View(products);
         }
 

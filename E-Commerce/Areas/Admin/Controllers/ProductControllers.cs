@@ -1,7 +1,7 @@
 ﻿using E_Commerce.Helpers;
 using E_Commerce.Models.Entities;
 using E_Commerce.Models.ViewModels;
-using E_Commerce.Service.Interfaces;
+using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +9,12 @@ namespace E_Commerce.Areas.Admin.Controllers
 {
     [Area("Admin")]
     [Authorize(Roles = "1")]
-    public class ProductControllers(IProductService productService) : Controller
+    public class ProductControllers(
+        IProductService productService,
+        ICategoryService categoryService) : Controller
     {
         private readonly IProductService _productService = productService;
+        private readonly IProductService _categoryService = (IProductService)categoryService;
 
         public async Task<IActionResult> Index()
         {
@@ -49,7 +52,7 @@ namespace E_Commerce.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Update(int id)
         {
-            //ViewData["categories"] = await _context.Categories.ToListAsync();
+            ViewData["categories"] = await _categoryService.GetAllAsync();
 
             var product = await _productService.GetByIdAsync(id);
             if (product == null) return NotFound();

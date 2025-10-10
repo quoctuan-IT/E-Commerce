@@ -1,69 +1,60 @@
-﻿using E_Commerce.Helpers;
-using E_Commerce.Models;
-using E_Commerce.Models.ViewModels;
+﻿using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
 {
     [Authorize]
-    public class CartController(AppDbContext context) : Controller
+    public class CartController(ICartService cartService) : Controller
     {
-        private readonly AppDbContext _context = context;
-
-        private const string CartKey = "CartSession";
-
-        public List<CartItemVM> Cart => HttpContext.Session.Get<List<CartItemVM>>(CartKey) ?? [];
+        private readonly ICartService _cartService = cartService;
 
         [HttpGet]
         public IActionResult Index()
         {
-            return View(Cart);
+            var cartItems = _cartService.GetCartItems(HttpContext.Session);
+
+            return View(cartItems);
         }
 
         public IActionResult AddToCart(int productId, int quantity = 1)
         {
-            var cart = Cart;
-            var item = cart.SingleOrDefault(c => c.ProductId == productId);
-
-            if (item == null)
-            {
-                var product = _context.Products.SingleOrDefault(p => p.ProductId == productId);
-
-                if (product != null)
-                {
-                    item = new CartItemVM
-                    {
-                        ProductId = product.ProductId,
-                        ProductName = product.ProductName,
-                        UnitPrice = product.UnitPrice,
-                        Image = product.Image,
-                        Quantity = quantity
-                    };
-
-                    cart.Add(item);
-                }
-            }
-            else
-                item.Quantity += quantity;
-
-            HttpContext.Session.Set(CartKey, cart);
+            _cartService.AddToCart(HttpContext.Session, productId, quantity);
 
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult RemoveCart(int productId)
         {
-            var cart = Cart;
-            var item = cart.SingleOrDefault(c => c.ProductId == productId);
-
-            if (item != null)
-            {
-                cart.Remove(item);
-                HttpContext.Session.Set(CartKey, cart);
-            }
+            _cartService.RemoveFromCart(HttpContext.Session, productId);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public IActionResult UpdateQuantity(int productId, int quantity)
+        {
+            _cartService.UpdateCartItemQuantity(HttpContext.Session, productId, quantity);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        public IActionResult ClearCart()
+        {
+            _cartService.ClearCart(HttpContext.Session);
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult GetCartSummary()
+        {
+            var cartItems = _cartService.GetCartItems(HttpContext.Session);
+            var total = _cartService.GetCartTotal(cartItems);
+            var count = _cartService.GetCartItemCount(cartItems);
+
+            return Json(new { total, count });
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace E_Commerce.Service.Interfaces
+﻿namespace E_Commerce.Services.Interfaces
 {
     public class IUserService
     {

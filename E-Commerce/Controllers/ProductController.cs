@@ -8,9 +8,10 @@ namespace E_Commerce.Controllers
         private readonly IProductService _service = service;
 
         [HttpGet]
-        public async Task<IActionResult> Index(int? categoryId, string? search, double? minPrice, double? maxPrice)
+        public async Task<IActionResult> Index(int? categoryId, string? search, double? minPrice, double? maxPrice, string? sortPrice)
         {
-            var products = await _service.FilterProductsAsync(categoryId, search, minPrice, maxPrice);
+            var products = await _service.FilterProductsAsync(categoryId, search, minPrice, maxPrice, sortPrice);
+            
             return View(products);
         }
 
@@ -22,14 +23,6 @@ namespace E_Commerce.Controllers
                 return NotFound();
 
             return View(product);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> FilterPrice(string? filterOption)
-        {
-            var products = await _service.SortProductsAsync(filterOption);
-            ViewData["FilterOption"] = filterOption;
-            return View("Index", products);
         }
     }
 }

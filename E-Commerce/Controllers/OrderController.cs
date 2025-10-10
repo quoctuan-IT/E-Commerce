@@ -39,7 +39,7 @@ namespace E_Commerce.Controllers
 
                 var userId = int.Parse(claim.Value);
 
-                // (Optional) - Default address
+                // Default address (optional)
                 var user = new AppUser();
                 if (vm.DefaultAddress)
                     user = _context.AppUser.SingleOrDefault(u => u.UserId == userId)

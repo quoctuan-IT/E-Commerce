@@ -9,9 +9,6 @@ namespace E_Commerce.Service.Implementations
     {
         private readonly AppDbContext _context = context;
 
-        // ========================
-        // CLIENT SECTION
-        // ========================
         public async Task<IEnumerable<Product>> GetAllAsync()
             => await _context.Products.Include(p => p.Category).ToListAsync();
 
@@ -19,7 +16,12 @@ namespace E_Commerce.Service.Implementations
             => await _context.Products.Include(p => p.Category)
                                       .FirstOrDefaultAsync(p => p.ProductId == id);
 
-        public async Task<IEnumerable<Product>> FilterProductsAsync(int? categoryId, string? search, double? minPrice, double? maxPrice)
+        public async Task<IEnumerable<Product>> FilterProductsAsync(
+            int? categoryId,
+            string? search,
+            double? minPrice,
+            double? maxPrice,
+            string? sortPrice)
         {
             var query = _context.Products.Include(p => p.Category).AsQueryable();
 
@@ -35,32 +37,17 @@ namespace E_Commerce.Service.Implementations
             if (maxPrice.HasValue)
                 query = query.Where(p => p.UnitPrice <= maxPrice.Value);
 
-            return await query.ToListAsync();
-        }
-
-        public async Task<IEnumerable<Product>> SortProductsAsync(string? filterOption)
-        {
-            var query = _context.Products.Include(p => p.Category).AsQueryable();
-
-            if (!string.IsNullOrEmpty(filterOption))
+            if (!string.IsNullOrWhiteSpace(sortPrice))
             {
-                switch (filterOption)
-                {
-                    case "minToMaxPrice":
-                        query = query.OrderBy(p => p.UnitPrice);
-                        break;
-                    case "maxToMinPrice":
-                        query = query.OrderByDescending(p => p.UnitPrice);
-                        break;
-                }
+                if (sortPrice == "sortMinToMaxPrice")
+                    query = query.OrderBy(p => p.UnitPrice);
+                else
+                    query = query.OrderByDescending(p => p.UnitPrice);
             }
 
             return await query.ToListAsync();
         }
 
-        // ========================
-        // ADMIN SECTION
-        // ========================
         public async Task CreateAsync(Product product)
         {
             _context.Products.Add(product);
@@ -83,5 +70,4 @@ namespace E_Commerce.Service.Implementations
             }
         }
     }
-
 }

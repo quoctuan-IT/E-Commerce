@@ -2,7 +2,7 @@
 @{
 	ViewData["Title"] = "Login";
 }
-@model Login
+@model LoginVM
 
 
 <!-- Single Page Header start -->
@@ -26,13 +26,13 @@
 				<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert" style="list-style: none;"></div>
 
 				<div class="row g-4">
-					<!-- Phone Field -->
+					<!-- Email Field -->
 					<div class="col-md-6">
 						<div class="form-item w-100">
-							<label asp-for="@Model.Phone" class="form-label fw-bold">Phone</label><sup>*</sup>
-							<input asp-for="@Model.Phone" class="form-control form-control-lg" placeholder="Phone"
-								type="number">
-							<span asp-validation-for="@Model.Phone" class="text-danger"></span>
+							<label asp-for="@Model.Email" class="form-label fw-bold">Email</label><sup>*</sup>
+							<input asp-for="@Model.Email" class="form-control form-control-lg" placeholder="Email"
+								type="email">
+							<span asp-validation-for="@Model.Email" class="text-danger"></span>
 						</div>
 					</div>
 
@@ -43,6 +43,18 @@
 							<input asp-for="@Model.Password" class="form-control form-control-lg" type="password"
 								placeholder="Password">
 							<span asp-validation-for="@Model.Password" class="text-danger"></span>
+						</div>
+					</div>
+				</div>
+
+				<!-- Remember Me -->
+				<div class="row g-4 mt-2">
+					<div class="col-md-6">
+						<div class="form-check">
+							<input asp-for="@Model.RememberMe" class="form-check-input" type="checkbox">
+							<label asp-for="@Model.RememberMe" class="form-check-label">
+								Remember me
+							</label>
 						</div>
 					</div>
 				</div>

@@ -1,15 +1,18 @@
 using E_Commerce.Helpers;
+using E_Commerce.Models.Entities;
 using E_Commerce.Models.ViewModels;
 using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
 {
     [Authorize]
-    public class OrderController(IOrderService orderService) : Controller
+    public class OrderController(IOrderService orderService, SignInManager<AppUser> signInManager) : Controller
     {
         private readonly IOrderService _orderService = orderService;
+        private readonly SignInManager<AppUser> _signInManager = signInManager;
 
         private const string CartKey = "CartSession";
 
@@ -32,11 +35,9 @@ namespace E_Commerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                var claim = HttpContext.User.Claims.SingleOrDefault(u => u.Type == "ID");
-                if (claim == null)
+                var userId = _signInManager.UserManager.GetUserId(User);
+                if (userId == null)
                     return Unauthorized();
-
-                var userId = int.Parse(claim.Value);
 
                 var success = await _orderService.CreateOrderAsync(userId, vm, Cart);
 
@@ -58,11 +59,10 @@ namespace E_Commerce.Controllers
         [HttpGet]
         public async Task<IActionResult> MyOrders()
         {
-            var claim = HttpContext.User.Claims.SingleOrDefault(u => u.Type == "ID");
-            if (claim == null)
+            var userId = _signInManager.UserManager.GetUserId(User);
+            if (userId == null)
                 return Unauthorized();
 
-            var userId = int.Parse(claim.Value);
             var orders = await _orderService.GetUserOrdersAsync(userId);
 
             return View(orders);
@@ -76,8 +76,8 @@ namespace E_Commerce.Controllers
                 return NotFound();
 
             // Check if the order belongs to the current user
-            var claim = HttpContext.User.Claims.SingleOrDefault(u => u.Type == "ID");
-            if (claim is null || int.Parse(claim.Value) != order.UserId)
+            var userId = _signInManager.UserManager.GetUserId(User);
+            if (userId is null || userId != order.UserId)
                 return Unauthorized();
 
             return View("OrderDetail", order);

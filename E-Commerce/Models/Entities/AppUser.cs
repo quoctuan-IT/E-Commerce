@@ -1,19 +1,11 @@
-﻿namespace E_Commerce.Models.Entities;
-public partial class AppUser
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace E_Commerce.Models.Entities;
+public partial class AppUser : IdentityUser
 {
-    public int UserId { get; set; }
-
-    public string FullName { get; set; } = null!;
-
-    public string Phone { get; set; } = null!;
-
-    public string Password { get; set; } = null!;
-
     public string Address { get; set; } = null!;
 
-    public int Role { get; set; }
-
-    public bool IsActive { get; set; }
+    public bool IsActive { get; set; } = true;
 
     public virtual ICollection<Order> Orders { get; set; } = [];
 }

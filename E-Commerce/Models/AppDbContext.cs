@@ -1,8 +1,9 @@
 ﻿using E_Commerce.Models.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace E_Commerce.Models;
-public partial class AppDbContext : DbContext
+public partial class AppDbContext : IdentityDbContext<AppUser>
 {
     public AppDbContext()
     {
@@ -26,15 +27,14 @@ public partial class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         // AppUser
         modelBuilder.Entity<AppUser>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK_Customers");
-
             entity.ToTable("AppUsers");
 
             entity.Property(e => e.IsActive).HasDefaultValue(true);
-            entity.Property(e => e.Role).HasDefaultValue(1);
         });
 
 

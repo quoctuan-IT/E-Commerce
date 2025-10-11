@@ -11,7 +11,7 @@ namespace E_Commerce.Services.Implementations
         public async Task<IEnumerable<Order>> GetAllAsync()
             => await context.Orders.ToListAsync();
 
-        public async Task<bool> CreateOrderAsync(int userId, CheckoutVM checkoutVM, List<CartItemVM> cartItems)
+        public async Task<bool> CreateOrderAsync(string userId, CheckoutVM checkoutVM, List<CartItemVM> cartItems)
         {
             try
             {
@@ -19,7 +19,7 @@ namespace E_Commerce.Services.Implementations
                 var user = new AppUser();
                 if (checkoutVM.DefaultAddress)
                 {
-                    user = await context.AppUser.SingleOrDefaultAsync(u => u.UserId == userId);
+                    user = await context.AppUser.SingleOrDefaultAsync(u => u.Id == userId);
                     if (user == null) throw new InvalidOperationException("User not found");
                 }
 
@@ -28,11 +28,10 @@ namespace E_Commerce.Services.Implementations
                     UserId = userId,
                     FullName = checkoutVM.FullName ?? user.FullName,
                     Address = checkoutVM.Address ?? user.Address,
-                    Phone = checkoutVM.Phone ?? user.Phone,
                     PaymentMethod = checkoutVM.PaymentMethod,
                     ShippingMethod = checkoutVM.ShippingMethod,
                     OrderDate = DateTime.Now,
-                    OrderStatusId = 1 // Assuming 1 is the default status (e.g., "Pending")
+                    OrderStatusId = 1
                 };
 
                 using var transaction = await context.Database.BeginTransactionAsync();
@@ -78,7 +77,7 @@ namespace E_Commerce.Services.Implementations
             await context.SaveChangesAsync();
         }
 
-        public async Task<List<Order>> GetUserOrdersAsync(int userId)
+        public async Task<List<Order>> GetUserOrdersAsync(string userId)
         {
             return await context.Orders
                 .Include(o => o.OrderDetails)

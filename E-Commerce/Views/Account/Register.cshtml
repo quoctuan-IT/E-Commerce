@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Register";
 }
-@model Register
+@model RegisterVM
 
 
 <!-- Single Page Header start -->
@@ -26,40 +26,59 @@
 				<div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert" style="list-style: none;"></div>
 
                 <div class="row g-4">
-                    <!-- Name Field -->
+                    <!-- Email Field -->
                     <div class="col-md-6">
                         <div class="form-item w-100">
-                            <label asp-for="@Model.HoTen" class="form-label fw-bold">Username</label><sup>*</sup>
-                            <input asp-for="@Model.HoTen" class="form-control form-control-lg" placeholder="Username">
-                            <span asp-validation-for="@Model.HoTen" class="text-danger"></span>
+                            <label asp-for="@Model.Email" class="form-label fw-bold">Email</label><sup>*</sup>
+                            <input asp-for="@Model.Email" class="form-control form-control-lg" placeholder="Email" type="email">
+                            <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Full Name Field -->
+                    <div class="col-md-6">
+                        <div class="form-item w-100">
+                            <label asp-for="@Model.FullName" class="form-label fw-bold">Full Name</label><sup>*</sup>
+                            <input asp-for="@Model.FullName" class="form-control form-control-lg" placeholder="Full Name">
+                            <span asp-validation-for="@Model.FullName" class="text-danger"></span>
                         </div>
                     </div>
 
                     <!-- Password Field -->
                     <div class="col-md-6">
                         <div class="form-item w-100">
-                            <label asp-for="@Model.MatKhau" class="form-label fw-bold">Password</label><sup>*</sup>
-                            <input asp-for="@Model.MatKhau" class="form-control form-control-lg" type="password"
-                                placeholder="Nhập mật khẩu">
-                            <span asp-validation-for="@Model.MatKhau" class="text-danger"></span>
+                            <label asp-for="@Model.Password" class="form-label fw-bold">Password</label><sup>*</sup>
+                            <input asp-for="@Model.Password" class="form-control form-control-lg" type="password"
+                                placeholder="Password">
+                            <span asp-validation-for="@Model.Password" class="text-danger"></span>
                         </div>
                     </div>
 
-                    <!-- Address Field -->
+                    <!-- Confirm Password Field -->
                     <div class="col-md-6">
                         <div class="form-item w-100">
-                            <label asp-for="@Model.DiaChi" class="form-label fw-bold">Address</label><sup>*</sup>
-                            <input asp-for="@Model.DiaChi" class="form-control form-control-lg" placeholder="Address">
-                            <span asp-validation-for="@Model.DiaChi" class="text-danger"></span>
+                            <label asp-for="@Model.ConfirmPassword" class="form-label fw-bold">Confirm Password</label><sup>*</sup>
+                            <input asp-for="@Model.ConfirmPassword" class="form-control form-control-lg" type="password"
+                                placeholder="Confirm Password">
+                            <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
                         </div>
                     </div>
 
                     <!-- Phone Field -->
                     <div class="col-md-6">
                         <div class="form-item w-100">
-                            <label asp-for="@Model.DienThoai" class="form-label fw-bold">Phone</label><sup>*</sup>
-                            <input asp-for="@Model.DienThoai" class="form-control form-control-lg" placeholder="Phone" type="number">
-                            <span asp-validation-for="@Model.DienThoai" class="text-danger"></span>
+                            <label asp-for="@Model.PhoneNumber" class="form-label fw-bold">Phone Number</label>
+                            <input asp-for="@Model.PhoneNumber" class="form-control form-control-lg" placeholder="Phone Number">
+                            <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Address Field -->
+                    <div class="col-md-6">
+                        <div class="form-item w-100">
+                            <label asp-for="@Model.Address" class="form-label fw-bold">Address</label>
+                            <input asp-for="@Model.Address" class="form-control form-control-lg" placeholder="Address">
+                            <span asp-validation-for="@Model.Address" class="text-danger"></span>
                         </div>
                     </div>
                 </div>

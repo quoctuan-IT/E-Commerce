@@ -33,9 +33,9 @@ namespace E_Commerce.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Update(int id)
+        public async Task<IActionResult> Update(int idCategory)
         {
-            var category = await _categoryService.GetByIdAsync(id);
+            var category = await _categoryService.GetByIdAsync(idCategory);
             if (category == null) return NotFound();
 
             return View(category);

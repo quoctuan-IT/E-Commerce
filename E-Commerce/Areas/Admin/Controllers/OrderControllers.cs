@@ -18,9 +18,9 @@ namespace E_Commerce.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Update(int id)
+        public async Task<IActionResult> Update(int orderId)
         {
-            var order = await _categoryService.GetOrderByIdAsync(id);
+            var order = await _categoryService.GetOrderByIdAsync(orderId);
             if (order == null) return NotFound();
 
             return View(order);
@@ -28,9 +28,9 @@ namespace E_Commerce.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int id, int orderStatusId)
+        public async Task<IActionResult> Update(int orderId, int orderStatusId)
         {
-            var order = await _categoryService.GetOrderByIdAsync(id);
+            var order = await _categoryService.GetOrderByIdAsync(orderId);
             if (order == null) return NotFound();
 
             order.OrderStatusId = orderStatusId;

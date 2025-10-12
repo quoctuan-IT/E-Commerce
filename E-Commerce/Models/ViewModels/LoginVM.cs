@@ -16,5 +16,8 @@ namespace E_Commerce.Models.ViewModels
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+
+        [Required(ErrorMessage = "Username is required")]
+        public string Username { get; set; } = null!;
     }
 }

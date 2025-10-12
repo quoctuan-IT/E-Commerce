@@ -19,8 +19,7 @@ namespace E_Commerce.Controllers
         public async Task<IActionResult> Detail(int id)
         {
             var product = await _service.GetByIdAsync(id);
-            if (product == null)
-                return NotFound();
+            if (product == null) return NotFound();
 
             return View(product);
         }

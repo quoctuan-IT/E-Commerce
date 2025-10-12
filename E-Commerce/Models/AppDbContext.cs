@@ -46,6 +46,9 @@ public partial class AppDbContext : IdentityDbContext<AppUser>
             entity.ToTable("Products");
 
             entity.Property(e => e.UnitPrice).HasDefaultValue(0.0);
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
+            entity.Property(e => e.CreatedDate).HasDefaultValueSql("(getdate())");
+            entity.Property(e => e.UpdatedDate).IsRequired(false);
 
             entity.HasOne(d => d.Category).WithMany(p => p.Products)
                 .HasForeignKey(d => d.CategoryId)

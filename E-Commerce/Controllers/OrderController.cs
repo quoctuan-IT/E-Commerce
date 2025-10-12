@@ -9,10 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace E_Commerce.Controllers
 {
     [Authorize]
-    public class OrderController(IOrderService orderService, SignInManager<AppUser> signInManager) : Controller
+    public class OrderController(
+        IOrderService orderService,
+        IAccountService accountService) : Controller
     {
         private readonly IOrderService _orderService = orderService;
-        private readonly SignInManager<AppUser> _signInManager = signInManager;
+
+        private readonly IAccountService _accountService = accountService;
 
         private const string CartKey = "CartSession";
 
@@ -21,10 +24,7 @@ namespace E_Commerce.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            if (Cart.Count == 0)
-            {
-                return RedirectToAction("Index", "Cart");
-            }
+            if (Cart.Count == 0) return RedirectToAction("Index", "Cart");
 
             return View(Cart);
         }
@@ -35,15 +35,16 @@ namespace E_Commerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userId = _signInManager.UserManager.GetUserId(User);
-                if (userId == null)
-                    return Unauthorized();
+                var userId = _accountService.GetCurrentUserId(User);
+
+                if (userId == null) return Unauthorized();
 
                 var success = await _orderService.CreateOrderAsync(userId, vm, Cart);
 
                 if (success)
                 {
                     HttpContext.Session.Set<List<CartItemVM>>(CartKey, []);
+                    
                     return RedirectToAction(nameof(Success));
                 }
             }
@@ -51,17 +52,11 @@ namespace E_Commerce.Controllers
             return View(nameof(Index));
         }
 
-        public IActionResult Success()
-        {
-            return View();
-        }
-
         [HttpGet]
         public async Task<IActionResult> MyOrders()
         {
-            var userId = _signInManager.UserManager.GetUserId(User);
-            if (userId == null)
-                return Unauthorized();
+            var userId = _accountService.GetCurrentUserId(User);
+            if (userId == null) return Unauthorized();
 
             var orders = await _orderService.GetUserOrdersAsync(userId);
 
@@ -72,16 +67,16 @@ namespace E_Commerce.Controllers
         public async Task<IActionResult> OrderDetail(int id)
         {
             var order = await _orderService.GetOrderByIdAsync(id);
-            if (order is null)
-                return NotFound();
+            if (order is null) return NotFound();
 
-            // Check if the order belongs to the current user
-            var userId = _signInManager.UserManager.GetUserId(User);
-            if (userId is null || userId != order.UserId)
-                return Unauthorized();
+            // Check Order - Current User
+            var userId = _accountService.GetCurrentUserId(User);
+            if (userId is null || userId != order.UserId) return Unauthorized();
 
             return View("OrderDetail", order);
         }
+
+        public IActionResult Success() => View();
     }
 }
 

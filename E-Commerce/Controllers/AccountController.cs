@@ -7,10 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
 {
-    public class AccountController(IAccountService accountService, SignInManager<AppUser> signInManager) : Controller
+    public class AccountController(IAccountService accountService) : Controller
     {
         private readonly IAccountService _accountService = accountService;
-        private readonly SignInManager<AppUser> _signInManager = signInManager;
 
         [Authorize]
         public IActionResult Index() => View();
@@ -26,21 +25,13 @@ namespace E_Commerce.Controllers
             {
                 var result = await _accountService.RegisterAsync(vm);
 
-                if (result.Succeeded)
-                {
-                    var user = await _accountService.GetUserByEmailAsync(vm.Email);
-                    if (user != null) await _signInManager.SignInAsync(user, isPersistent: false);
+                if (result.Succeeded) return RedirectToAction("Success");
 
-                    return RedirectToAction("Success");
-                }
-
-                foreach (var error in result.Errors) ModelState.AddModelError(string.Empty, error.Description);
+                ModelState.AddModelError(string.Empty, "Register failed.");
             }
 
             return View(vm);
         }
-
-        public IActionResult Success() => View();
 
         [HttpGet]
         public IActionResult Login() => View();
@@ -55,7 +46,7 @@ namespace E_Commerce.Controllers
 
                 if (result.Succeeded) return RedirectToAction("Index", "Home");
 
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                ModelState.AddModelError(string.Empty, "Login failed.");
             }
 
             return View(vm);
@@ -68,8 +59,6 @@ namespace E_Commerce.Controllers
 
             return RedirectToAction("Index", "Home");
         }
-
-        public IActionResult AccessDenied() => View();
 
         [Authorize]
         public async Task<IActionResult> Profile()
@@ -89,5 +78,10 @@ namespace E_Commerce.Controllers
 
             return View(user);
         }
+
+        public IActionResult Success() => View();
+
+        public IActionResult AccessDenied() => View();
+
     }
 }

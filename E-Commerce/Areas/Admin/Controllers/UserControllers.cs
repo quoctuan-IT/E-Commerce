@@ -34,7 +34,7 @@ namespace E_Commerce.Areas.Admin.Controllers
             {
                 var user = new AppUser
                 {
-                    FullName = vm.FullName,
+                    UserName = vm.UserName,
                     Address = vm.Address
                 };
 
@@ -67,7 +67,7 @@ namespace E_Commerce.Areas.Admin.Controllers
 
             if (ModelState.IsValid)
             {
-                account.FullName = vm.FullName;
+                account.UserName = vm.UserName;
                 account.Address = vm.Address;
 
                 _context.Update(account);

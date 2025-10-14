@@ -7,10 +7,8 @@ namespace E_Commerce.Areas.Admin.Controllers
     [Authorize(Roles = "1")]
     public class DashboardController : Controller
     {
-        public DashboardController()
-        {
-        }
+        public DashboardController() { }
 
-        public IActionResult Dashboard() => View();
+        public IActionResult Index() => View();
     }
 }

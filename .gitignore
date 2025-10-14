@@ -1,64 +1,16 @@
 ## Build results
 bin/
 obj/
-out/
-
-## User-specific files
-*.user
-*.suo
-*.userosscache
-*.sln.docstates
 
 ## Visual Studio
 .vs/
 
 ## ASP.NET Core secrets & configs
-secrets.json
-#**/appsettings.Development.json
+appsettings.Development.json
+/wwwroot/uploads/
 
-## IIS / local server settings
-*.vspscc
-*.vssscc
-*.dbmdl
-*.dbproj.schemaview
-
-## JetBrains Rider / VS Code
-.idea/
+## VS Code
 .vscode/
-*.code-workspace
-
-## Logs
-*.log
-
-## OS files
-.DS_Store
-Thumbs.db
-
-## Package management
-packages/
-*.nupkg
-project.lock.json
-project.fragment.lock.json
-
-## Publish output (keep publish configs)
-publish/
-*.zip
-!*.pubxml
-!*.Publish.xml
-!*.publishproj
-
-## Entity Framework Core
-# Migrations/
 
 ## Environment files
 .env
-.env.*
-
-/wwwroot/uploads/
-
-## Cursor (IDE plugin)
-.cursorignore
-.cursorindexingignore
-
-## Project specific
-NOTE.txt

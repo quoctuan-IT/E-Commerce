@@ -1,9 +1,7 @@
 using E_Commerce.Helpers;
-using E_Commerce.Models.Entities;
 using E_Commerce.Models.ViewModels;
 using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
@@ -36,15 +34,13 @@ namespace E_Commerce.Controllers
             if (ModelState.IsValid)
             {
                 var userId = _accountService.GetCurrentUserId(User);
-
                 if (userId == null) return Unauthorized();
 
                 var success = await _orderService.CreateOrderAsync(userId, vm, Cart);
-
                 if (success)
                 {
                     HttpContext.Session.Set<List<CartItemVM>>(CartKey, []);
-                    
+
                     return RedirectToAction(nameof(Success));
                 }
             }

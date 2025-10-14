@@ -63,6 +63,7 @@ namespace E_Commerce.Services.Implementations
         public async Task DeleteAsync(int id)
         {
             var product = await _context.Products.FindAsync(id);
+
             if (product != null)
             {
                 _context.Products.Remove(product);

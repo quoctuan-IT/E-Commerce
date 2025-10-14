@@ -2,7 +2,7 @@
     ViewData["Title"] = "Categories";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
-@model E_Commerce.Models.Loai
+@model E_Commerce.Models.Entities.Category
 
 
 <div class="container my-5">
@@ -12,7 +12,7 @@
         </div>
 
         <div class="card-body">
-            <form asp-action="CreateCategory" method="post">
+            @* <form asp-action="CreateCategory" method="post">
                 <div class="mb-4">
                     <label asp-for="TenLoai" class="form-label fw-bold">Category Name</label>
                     <input asp-for="TenLoai" class="form-control" placeholder="Enter category name" />
@@ -27,7 +27,7 @@
                         <i class="bi bi-x-circle"></i> Cancel
                     </a>
                 </div>
-            </form>
+            </form> *@
         </div>
     </div>
 </div>

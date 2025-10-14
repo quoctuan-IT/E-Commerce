@@ -206,9 +206,8 @@ namespace E_Commerce.ApiControllers
                 var summaries = orders.Select(o => new OrderSummaryDto
                 {
                     OrderId = o.OrderId,
-                    UserName = o.FullName,
                     OrderDate = o.OrderDate,
-                    OrderStatusName = o.OrderStatus?.OrderStatusName ?? "Unknown",
+                    OrderStatusName = o.OrderStatus.OrderStatusName,
                     TotalAmount = o.OrderDetails.Sum(od => od.UnitPrice * od.Quantity),
                     ItemCount = o.OrderDetails.Sum(od => od.Quantity)
                 });
@@ -278,18 +277,16 @@ namespace E_Commerce.ApiControllers
             {
                 OrderId = order.OrderId,
                 UserId = order.UserId,
-                UserName = order.FullName,
+                UserName = order.AppUser?.UserName ?? "",
                 UserEmail = order.AppUser?.Email ?? "",
                 OrderDate = order.OrderDate,
-                FullName = order.FullName,
                 Address = order.Address,
                 Phone = order.Phone,
                 PaymentMethod = order.PaymentMethod,
-                ShippingMethod = order.ShippingMethod,
                 OrderStatusId = order.OrderStatusId,
                 OrderStatusName = order.OrderStatus?.OrderStatusName,
                 TotalAmount = order.OrderDetails.Sum(od => od.UnitPrice * od.Quantity),
-                OrderDetails = order.OrderDetails.Select(od => new OrderDetailDto
+                OrderDetails = [.. order.OrderDetails.Select(od => new OrderDetailDto
                 {
                     OrderDetailId = od.OrderDetailId,
                     OrderId = od.OrderId,
@@ -299,7 +296,7 @@ namespace E_Commerce.ApiControllers
                     UnitPrice = od.UnitPrice,
                     Quantity = od.Quantity,
                     TotalPrice = od.UnitPrice * od.Quantity
-                }).ToList()
+                })]
             };
         }
     }

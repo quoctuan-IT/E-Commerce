@@ -35,10 +35,10 @@ namespace E_Commerce.Models.DTOs
         public string FullName { get; set; } = null!;
 
         [Phone(ErrorMessage = "Invalid phone number format")]
-        public string? PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; } = null!;
 
         [StringLength(200, ErrorMessage = "Address cannot exceed 200 characters")]
-        public string? Address { get; set; }
+        public string Address { get; set; } = null!;
     }
 
     public class TokenDto
@@ -60,9 +60,8 @@ namespace E_Commerce.Models.DTOs
         public string Id { get; set; } = null!;
         public string UserName { get; set; } = null!;
         public string Email { get; set; } = null!;
-        public string FullName { get; set; } = null!;
-        public string? PhoneNumber { get; set; }
-        public string? Address { get; set; }
+        public string PhoneNumber { get; set; } = null!;
+        public string Address { get; set; } = null!;
         public bool IsActive { get; set; }
         public DateTime? CreatedDate { get; set; }
         public DateTime? LastLoginDate { get; set; }

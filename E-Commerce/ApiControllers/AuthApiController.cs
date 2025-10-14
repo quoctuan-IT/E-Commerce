@@ -1,9 +1,7 @@
 ﻿using E_Commerce.Models.DTOs;
-using E_Commerce.Models.Entities;
 using E_Commerce.Models.ViewModels;
 using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.ApiControllers
@@ -23,8 +21,7 @@ namespace E_Commerce.ApiControllers
                     return BadRequest(ModelState);
 
                 var user = await _accountService.ValidateUserAsync(loginDto);
-                if (user == null)
-                    return Unauthorized(new { message = "Invalid email or password" });
+                if (user == null) return Unauthorized(new { message = "Invalid email or password" });
 
                 var token = await _accountService.GenerateJwtTokenAsync(user);
                 return Ok(token);
@@ -40,8 +37,7 @@ namespace E_Commerce.ApiControllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+                if (!ModelState.IsValid) return BadRequest(ModelState);
 
                 // Convert RegisterDto to RegisterVM
                 var registerVM = new RegisterVM
@@ -58,13 +54,13 @@ namespace E_Commerce.ApiControllers
                 if (!result.Succeeded)
                 {
                     var errors = result.Errors.Select(e => e.Description);
+
                     return BadRequest(new { message = "Registration failed", errors });
                 }
 
                 // Get the created user and generate token
                 var user = await _accountService.GetUserByEmailAsync(registerDto.Email);
-                if (user == null)
-                    return StatusCode(500, new { message = "User created but could not be retrieved" });
+                if (user == null) return StatusCode(500, new { message = "User created but could not be retrieved" });
 
                 var token = await _accountService.GenerateJwtTokenAsync(user);
                 return CreatedAtAction(nameof(GetProfile), new { }, token);
@@ -97,12 +93,10 @@ namespace E_Commerce.ApiControllers
             try
             {
                 var userId = _accountService.GetCurrentUserId(User);
-                if (userId == null)
-                    return Unauthorized(new { message = "User not found" });
+                if (userId == null) return Unauthorized(new { message = "User not found" });
 
                 var userProfile = await _accountService.GetUserProfileAsync(userId);
-                if (userProfile == null)
-                    return NotFound(new { message = "User profile not found" });
+                if (userProfile == null) return NotFound(new { message = "User profile not found" });
 
                 return Ok(userProfile);
             }
@@ -118,17 +112,16 @@ namespace E_Commerce.ApiControllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+                if (!ModelState.IsValid) return BadRequest(ModelState);
 
                 var userId = _accountService.GetCurrentUserId(User);
-                if (userId == null)
-                    return Unauthorized(new { message = "User not found" });
+                if (userId == null) return Unauthorized(new { message = "User not found" });
 
                 var result = await _accountService.UpdateUserProfileAsync(userId, userDto);
                 if (!result.Succeeded)
                 {
                     var errors = result.Errors.Select(e => e.Description);
+
                     return BadRequest(new { message = "Profile update failed", errors });
                 }
 
@@ -147,17 +140,16 @@ namespace E_Commerce.ApiControllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+                if (!ModelState.IsValid) return BadRequest(ModelState);
 
                 var userId = _accountService.GetCurrentUserId(User);
-                if (userId == null)
-                    return Unauthorized(new { message = "User not found" });
+                if (userId == null) return Unauthorized(new { message = "User not found" });
 
                 var result = await _accountService.ChangePasswordAsync(userId, changePasswordDto);
                 if (!result.Succeeded)
                 {
                     var errors = result.Errors.Select(e => e.Description);
+
                     return BadRequest(new { message = "Password change failed", errors });
                 }
 
@@ -174,18 +166,16 @@ namespace E_Commerce.ApiControllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+                if (!ModelState.IsValid) return BadRequest(ModelState);
 
                 var token = await _accountService.GeneratePasswordResetTokenAsync(forgotPasswordDto.Email);
                 if (string.IsNullOrEmpty(token))
                     return NotFound(new { message = "User not found" });
 
-                // In a real application, you would send this token via email
-                // For now, we'll return it in the response (for testing purposes)
-                return Ok(new { 
+                return Ok(new
+                {
                     message = "Password reset token generated successfully",
-                    token = token // Remove this in production
+                    token
                 });
             }
             catch (Exception ex)
@@ -199,13 +189,13 @@ namespace E_Commerce.ApiControllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                    return BadRequest(ModelState);
+                if (!ModelState.IsValid) return BadRequest(ModelState);
 
                 var result = await _accountService.ResetPasswordAsync(resetPasswordDto);
                 if (!result.Succeeded)
                 {
                     var errors = result.Errors.Select(e => e.Description);
+
                     return BadRequest(new { message = "Password reset failed", errors });
                 }
 
@@ -224,8 +214,7 @@ namespace E_Commerce.ApiControllers
             try
             {
                 var userId = _accountService.GetCurrentUserId(User);
-                if (userId == null)
-                    return Unauthorized(new { message = "Invalid token" });
+                if (userId == null) return Unauthorized(new { message = "Invalid token" });
 
                 return Ok(new { message = "Token is valid", userId });
             }
@@ -242,16 +231,14 @@ namespace E_Commerce.ApiControllers
             try
             {
                 var user = await _accountService.GetCurrentUserAsync(User);
-                if (user == null)
-                    return Unauthorized(new { message = "User not found" });
+                if (user == null) return Unauthorized(new { message = "User not found" });
 
                 var userDto = new UserDto
                 {
                     Id = user.Id,
                     UserName = user.UserName!,
                     Email = user.Email!,
-                    FullName = user.UserName!,
-                    PhoneNumber = user.PhoneNumber,
+                    PhoneNumber = user.PhoneNumber!,
                     Address = user.Address,
                     IsActive = user.IsActive,
                     CreatedDate = user.LockoutEnd?.DateTime

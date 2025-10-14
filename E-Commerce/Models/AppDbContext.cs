@@ -5,13 +5,9 @@ using Microsoft.EntityFrameworkCore;
 namespace E_Commerce.Models;
 public partial class AppDbContext : IdentityDbContext<AppUser>
 {
-    public AppDbContext()
-    {
-    }
+    public AppDbContext() { }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-    }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
 
@@ -72,11 +68,7 @@ public partial class AppDbContext : IdentityDbContext<AppUser>
 
             entity.ToTable("Orders");
 
-            entity.Property(e => e.PaymentMethod)
-                .HasDefaultValue("Cash");
-            entity.Property(e => e.ShippingMethod)
-                .HasDefaultValue("ShippingExpress");
-            entity.Property(e => e.OrderStatus)
+            entity.Property(e => e.OrderStatusId)
                 .HasDefaultValue(0);
             entity.Property(e => e.OrderDate)
                 .HasDefaultValueSql("(getdate())")
@@ -85,7 +77,6 @@ public partial class AppDbContext : IdentityDbContext<AppUser>
             entity.HasOne(d => d.AppUser).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.UserId)
                 .HasConstraintName("FK_Orders_Customers");
-
             entity.HasOne(d => d.OrderStatus).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.OrderStatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -105,7 +96,6 @@ public partial class AppDbContext : IdentityDbContext<AppUser>
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
                 .HasConstraintName("FK_OrderDetails_Orders");
-
             entity.HasOne(d => d.Product).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)

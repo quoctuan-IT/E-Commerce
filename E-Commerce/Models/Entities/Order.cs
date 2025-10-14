@@ -7,17 +7,13 @@ public partial class Order
 
     public DateTime OrderDate { get; set; }
 
-    public string FullName { get; set; } = null!;
-
     public string Address { get; set; } = null!;
 
     public string PaymentMethod { get; set; } = null!;
 
-    public string ShippingMethod { get; set; } = null!;
-
     public string Phone { get; set; } = null!;
 
-    public int OrderStatusId { get; set; }
+    public int OrderStatusId { get; set; } = 0;
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = [];
 

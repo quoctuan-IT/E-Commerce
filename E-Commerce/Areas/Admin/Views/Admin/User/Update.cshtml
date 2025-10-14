@@ -2,7 +2,7 @@
     ViewData["Title"] = "Edit Account";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
-@model E_Commerce.Models.KhachHang
+@model E_Commerce.Models.Entities.AppUser
 
 
 <div class="container my-5">
@@ -12,7 +12,7 @@
         </div>
 
         <div class="card-body">
-            <form asp-action="EditAccount" method="post">
+            @* <form asp-action="EditAccount" method="post">
                 <input type="hidden" asp-for="MaKh" />
 
                 <div class="row g-3 mb-3">
@@ -47,7 +47,7 @@
                         <i class="bi bi-arrow-left"></i> Cancel
                     </a>
                 </div>
-            </form>
+            </form> *@
         </div>
     </div>
 </div>

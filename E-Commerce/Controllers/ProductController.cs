@@ -16,9 +16,9 @@ namespace E_Commerce.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Detail(int id)
+        public async Task<IActionResult> Detail(int productId)
         {
-            var product = await _service.GetByIdAsync(id);
+            var product = await _service.GetByIdAsync(productId);
             if (product == null) return NotFound();
 
             return View(product);

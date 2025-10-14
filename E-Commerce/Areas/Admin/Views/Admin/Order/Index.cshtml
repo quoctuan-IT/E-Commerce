@@ -2,7 +2,7 @@
     ViewData["Title"] = "Orders";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
-@model IEnumerable<E_Commerce.Models.HoaDon>
+@model IEnumerable<E_Commerce.Models.Entities.Order>
 
 
 <div class="container my-4">
@@ -28,16 +28,18 @@
             @foreach (var hd in Model)
             {
                 <tr>
-                    <td>@hd.MaHd</td>
-                    <td>@hd.MaKh</td>
-                    <td>@hd.HoTen</td>
-                    <td>@hd.NgayDat</td>
-                    <td>@hd.DiaChi</td>
-                    <td>@hd.DienThoai</td>
-                    <td>@hd.CachThanhToan</td>
-                    <td>@hd.CachVanChuyen</td>
+                    <td>@hd.OrderId</td>
+                    <td>@hd.UserId</td>
+                    <td>@hd.UserId</td>
+                    <td>@hd.UserId</td>
+                    <td>@hd.UserId</td>
+                    <td>@hd.UserId</td>
+                    <td>@hd.UserId</td>
+                    <td>@hd.UserId</td>
+                    <td>@hd.UserId</td>
+                    <td>@hd.UserId</td>
                     <td>
-                        @switch (hd.MaTrangThai)
+                        @switch (hd.OrderStatusId)
                         {
                             case 0:
                                 <span class="badge bg-warning text-dark">Chờ xử lý</span>
@@ -58,7 +60,7 @@
                         }
                     </td>
                     <td>
-                        <a asp-action="EditOrderStatus" asp-route-id="@hd.MaHd" class="btn btn-sm btn-primary">
+                        <a asp-action="EditOrderStatus" asp-route-id="@hd.OrderId" class="btn btn-sm btn-primary">
                             <i class="bi bi-pencil-square"></i> Edit
                         </a>
                     </td>

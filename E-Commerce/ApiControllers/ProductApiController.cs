@@ -18,10 +18,10 @@ namespace E_Commerce.ApiControllers
             try
             {
                 var products = await _productService.FilterProductsAsync(
-                    filter.CategoryId, 
-                    filter.Search, 
-                    filter.MinPrice, 
-                    filter.MaxPrice, 
+                    filter.CategoryId,
+                    filter.Search,
+                    filter.MinPrice,
+                    filter.MaxPrice,
                     filter.SortPrice);
 
                 var totalCount = products.Count();
@@ -150,7 +150,7 @@ namespace E_Commerce.ApiControllers
             {
                 var products = await _productService.FilterProductsAsync(categoryId, null, null, null, null);
                 var productDtos = products.Select(MapToDto);
-                
+
                 return Ok(productDtos);
             }
             catch (Exception ex)

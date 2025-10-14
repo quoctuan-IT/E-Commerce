@@ -2,7 +2,7 @@
     ViewData["Title"] = "Edit Product";
     Layout = "~/Views/Shared/_Layout_Admin.cshtml";
 }
-@model E_Commerce.Models.HangHoa
+@model E_Commerce.Models.Entities.Product
 
 
 <div class="container my-5">
@@ -12,7 +12,7 @@
         </div>
 
         <div class="card-body">
-            <form asp-action="EditProduct" method="post" enctype="multipart/form-data">
+            @* <form asp-action="EditProduct" method="post" enctype="multipart/form-data">
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label asp-for="MaHh" class="form-label fw-bold">Product ID</label>
@@ -25,7 +25,7 @@
                     </div>
                 </div>
 
-                @if (ViewData["Loais"] is List < E_Commerce.Models.Loai > loais)
+                @if (ViewData["Loais"] is List<E_Commerce.Models.Entities.Category> loais)
                 {
                     <div class="mb-3">
                         <label asp-for="MaLoai" class="form-label fw-bold">Category</label>
@@ -33,7 +33,7 @@
                             <option value="">-- Select Category --</option>
                             @foreach (var item in loais)
                             {
-                                <option value="@item.MaLoai">@item.TenLoai</option>
+                                <option value="@item.CategoryId">@item.CategoryName</option>
                             }
                         </select>
                     </div>
@@ -55,10 +55,10 @@
                 <div class="mb-3">
                     <label asp-for="Hinh" class="form-label fw-bold">Image</label>
                     <div class="d-flex align-items-center">
-                        <img src="~/hinh/HangHoa/@Model.Hinh" alt="@Model.TenHh" class="img-thumbnail me-3"
+                        <img src="~/hinh/HangHoa/@Model.Image" alt="@Model.ProductName" class="img-thumbnail me-3"
                             style="width: 100px; height: 100px;">
                         <input asp-for="Hinh" class="form-control" type="text" placeholder="Enter image path"
-                            value="@Model.Hinh" />
+                            value="@Model.Image" />
                     </div>
                 </div>
 
@@ -70,7 +70,7 @@
                         <i class="bi bi-arrow-left"></i> Cancel
                     </a>
                 </div>
-            </form>
+            </form> *@
         </div>
     </div>
 </div>

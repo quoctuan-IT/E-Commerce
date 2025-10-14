@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Checkout";
 }
-@model IEnumerable<CartItem>
+@model IEnumerable<CartItemVM>
 
 
 <!-- Single Page Header start -->
@@ -75,14 +75,14 @@
                                     <tr>
                                         <th scope="row">
                                             <div class="d-flex align-items-center mt-2">
-                                                <img src="~/hinh/HangHoa/@item.Hinh" class="img-fluid rounded-circle"
+                                                <img src="~/hinh/HangHoa/@item.Image" class="img-fluid rounded-circle"
                                                     style="width: 90px; height: 90px;" alt="">
                                             </div>
                                         </th>
-                                        <td class="py-5">@item.TenHh</td>
-                                        <td class="py-5">@item.DonGia</td>
-                                        <td class="py-5">@item.SoLuong</td>
-                                        <td class="py-5">@item.ThanhTien</td>
+                                        <td class="py-5">@item.ProductName</td>
+                                        <td class="py-5">@item.UnitPrice</td>
+                                        <td class="py-5">@item.Quantity</td>
+                                        <td class="py-5">@item.Total</td>
                                     </tr>
                                 }
 
@@ -121,7 +121,7 @@
                                     <td class="py-5"></td>
                                     <td class="py-5">
                                         <div class="py-3 border-bottom border-top">
-                                            <p class="mb-0 text-dark">@Model.Sum(p => p.ThanhTien)</p>
+                                            <p class="mb-0 text-dark">@Model.Sum(p => p.Total)</p>
                                         </div>
                                     </td>
                                 </tr>

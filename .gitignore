@@ -59,6 +59,3 @@ publish/
 ## Cursor (IDE plugin)
 .cursorignore
 .cursorindexingignore
-
-## Project specific
-NOTE.txt

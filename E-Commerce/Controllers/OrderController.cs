@@ -1,9 +1,7 @@
 using E_Commerce.Helpers;
-using E_Commerce.Models.Entities;
 using E_Commerce.Models.ViewModels;
 using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Controllers
@@ -44,7 +42,7 @@ namespace E_Commerce.Controllers
                 if (success)
                 {
                     HttpContext.Session.Set<List<CartItemVM>>(CartKey, []);
-                    
+
                     return RedirectToAction(nameof(Success));
                 }
             }

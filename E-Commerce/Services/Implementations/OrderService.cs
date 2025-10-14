@@ -26,11 +26,9 @@ namespace E_Commerce.Services.Implementations
                 var order = new Order
                 {
                     UserId = userId,
-                    FullName = checkoutVM.FullName,
                     Address = checkoutVM.Address,
                     Phone = checkoutVM.Phone,
                     PaymentMethod = checkoutVM.PaymentMethod,
-                    ShippingMethod = checkoutVM.ShippingMethod,
                     OrderDate = DateTime.Now,
                     OrderStatusId = 1
                 };
@@ -88,11 +86,9 @@ namespace E_Commerce.Services.Implementations
                 var order = new Order
                 {
                     UserId = userId,
-                    FullName = createOrderDto.FullName,
                     Address = createOrderDto.Address,
                     Phone = createOrderDto.Phone,
                     PaymentMethod = createOrderDto.PaymentMethod,
-                    ShippingMethod = createOrderDto.ShippingMethod,
                     OrderDate = DateTime.Now,
                     OrderStatusId = 1
                 };
@@ -147,9 +143,6 @@ namespace E_Commerce.Services.Implementations
                 var order = await context.Orders.FindAsync(orderId);
                 if (order == null) return false;
 
-                if (!string.IsNullOrEmpty(updateOrderDto.FullName))
-                    order.FullName = updateOrderDto.FullName;
-
                 if (!string.IsNullOrEmpty(updateOrderDto.Address))
                     order.Address = updateOrderDto.Address;
 
@@ -158,9 +151,6 @@ namespace E_Commerce.Services.Implementations
 
                 if (!string.IsNullOrEmpty(updateOrderDto.PaymentMethod))
                     order.PaymentMethod = updateOrderDto.PaymentMethod;
-
-                if (!string.IsNullOrEmpty(updateOrderDto.ShippingMethod))
-                    order.ShippingMethod = updateOrderDto.ShippingMethod;
 
                 if (updateOrderDto.OrderStatusId.HasValue)
                     order.OrderStatusId = updateOrderDto.OrderStatusId.Value;
@@ -212,10 +202,6 @@ namespace E_Commerce.Services.Implementations
 
             if (filter.EndDate.HasValue)
                 query = query.Where(o => o.OrderDate <= filter.EndDate.Value);
-
-            if (!string.IsNullOrEmpty(filter.Search))
-                query = query.Where(o => o.FullName.Contains(filter.Search) || 
-                                       o.Address.Contains(filter.Search));
 
             return await query
                 .OrderByDescending(o => o.OrderDate)

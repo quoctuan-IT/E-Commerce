@@ -5,13 +5,9 @@ using Microsoft.EntityFrameworkCore;
 namespace E_Commerce.Models;
 public partial class AppDbContext : IdentityDbContext<AppUser>
 {
-    public AppDbContext()
-    {
-    }
+    public AppDbContext() { }
 
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-    }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
     public virtual DbSet<OrderDetail> OrderDetails { get; set; }
 
@@ -72,10 +68,6 @@ public partial class AppDbContext : IdentityDbContext<AppUser>
 
             entity.ToTable("Orders");
 
-            entity.Property(e => e.PaymentMethod)
-                .HasDefaultValue("Cash");
-            entity.Property(e => e.ShippingMethod)
-                .HasDefaultValue("ShippingExpress");
             entity.Property(e => e.OrderStatus)
                 .HasDefaultValue(0);
             entity.Property(e => e.OrderDate)

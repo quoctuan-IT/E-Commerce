@@ -8,7 +8,7 @@
                 return null;
 
             // Folder
-            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/products");
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/uploads/products");
             if (!Directory.Exists(uploadPath))
                 Directory.CreateDirectory(uploadPath);
 
@@ -20,7 +20,7 @@
                 await file.CopyToAsync(stream);
             }
 
-            return $"/images/products/{fileName}";
+            return $"/uploads/products/{fileName}";
         }
     }
 }

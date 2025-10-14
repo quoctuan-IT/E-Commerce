@@ -14,7 +14,7 @@ namespace E_Commerce.Services.Interfaces
         Task<AppUser?> GetCurrentUserAsync(System.Security.Claims.ClaimsPrincipal user);
         string? GetCurrentUserId(System.Security.Claims.ClaimsPrincipal user);
         Task<IdentityResult> RegisterAsync(RegisterVM vm);
-        
+
         // JWT Token methods
         Task<TokenDto> GenerateJwtTokenAsync(AppUser user);
         Task<AppUser?> ValidateUserAsync(LoginDto loginDto);

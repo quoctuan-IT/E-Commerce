@@ -3,7 +3,6 @@ using E_Commerce.Models.Entities;
 using E_Commerce.Models.ViewModels;
 using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -69,11 +68,9 @@ namespace E_Commerce.Services.Implementations
                 new(JwtRegisteredClaimNames.Sub, user.Id),
                 new(JwtRegisteredClaimNames.UniqueName, user.UserName!),
                 new(JwtRegisteredClaimNames.Email, user.Email!),
-                new(ClaimTypes.Name, user.FullName),
                 new(ClaimTypes.NameIdentifier, user.Id)
             };
 
-            // Add roles if any
             var roles = await _userManager.GetRolesAsync(user);
             foreach (var role in roles)
             {
@@ -103,11 +100,8 @@ namespace E_Commerce.Services.Implementations
         public async Task<AppUser?> ValidateUserAsync(LoginDto loginDto)
         {
             var user = await _userManager.FindByEmailAsync(loginDto.Email);
-            
-            if (user != null && user.IsActive && await _userManager.CheckPasswordAsync(user, loginDto.Password))
-            {
-                return user;
-            }
+
+            if (user != null && user.IsActive && await _userManager.CheckPasswordAsync(user, loginDto.Password)) return user;
 
             return null;
         }
@@ -146,8 +140,7 @@ namespace E_Commerce.Services.Implementations
                 Id = user.Id,
                 UserName = user.UserName!,
                 Email = user.Email!,
-                FullName = user.FullName,
-                PhoneNumber = user.PhoneNumber,
+                PhoneNumber = user.PhoneNumber!,
                 Address = user.Address,
                 IsActive = user.IsActive,
                 CreatedDate = user.LockoutEnd?.DateTime
@@ -159,7 +152,6 @@ namespace E_Commerce.Services.Implementations
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return IdentityResult.Failed(new IdentityError { Description = "User not found" });
 
-            user.FullName = userDto.FullName;
             user.PhoneNumber = userDto.PhoneNumber;
             user.Address = userDto.Address;
 

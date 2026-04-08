@@ -9,6 +9,7 @@ namespace E_Commerce.Controllers
     {
         private readonly ICartService _cartService = cartService;
 
+
         [HttpGet]
         public IActionResult Index()
         {
@@ -17,13 +18,23 @@ namespace E_Commerce.Controllers
             return View(cartItems);
         }
 
+        [HttpPost]
         public IActionResult AddToCart(int productId, int quantity = 1)
         {
             _cartService.AddToCart(HttpContext.Session, productId, quantity);
 
-            return RedirectToAction(nameof(Index));
+            return Json(new { success = true });
         }
 
+        [HttpGet]
+        public IActionResult GetCartPartial()
+        {
+            var cartItems = _cartService.GetCartItems(HttpContext.Session);
+
+            return PartialView("~/Views/Shared/Components/Cart/Default.cshtml", cartItems);
+        }
+
+        [HttpGet]
         public IActionResult RemoveCart(int productId)
         {
             _cartService.RemoveFromCart(HttpContext.Session, productId);
@@ -31,7 +42,7 @@ namespace E_Commerce.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult UpdateQuantity(int productId, int quantity)
         {
             _cartService.UpdateCartItemQuantity(HttpContext.Session, productId, quantity);
@@ -39,7 +50,7 @@ namespace E_Commerce.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpGet]
         public IActionResult ClearCart()
         {
             _cartService.ClearCart(HttpContext.Session);

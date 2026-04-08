@@ -1,0 +1,223 @@
+﻿@using E_Commerce.Areas.Admin.ViewModels.OrderVM
+@model OrderDetailVM
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Dashboard"
+                           asp-action="Index">Admin</a>
+                    </li>
+                    <li class="breadcrumb-item">
+                        <a asp-action="Index">Orders</a>
+                    </li>
+                    <li class="breadcrumb-item active">Details</li>
+                </ol>
+            </nav>
+        </div>
+
+        <div class="d-flex gap-2">
+            <a asp-action="Index"
+               class="btn btn-outline-secondary shadow-sm">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="card admin-card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h6 class="text-primary fw-bold text-uppercase mb-3 small">General Information</h6>
+
+                    <div class="mb-3 d-flex justify-content-between border-bottom pb-2">
+                        <span class="text-muted small">Order ID:</span>
+                        <span class="fw-bold text-dark">@Model.OrderId</span>
+                    </div>
+
+                    <div class="mb-3 d-flex justify-content-between border-bottom pb-2">
+                        <span class="text-muted small">Placed Date:</span>
+                        <span class="fw-bold text-dark">@Model.OrderDate.ToString("MMM dd, yyyy HH:mm")</span>
+                    </div>
+
+                    <div class="mb-3 d-flex justify-content-between border-bottom pb-2 align-items-center">
+                        <span class="text-muted small">Status:</span>
+                        <div class="d-flex align-items-center gap-2">
+                            @switch (Model.OrderStatusName?.ToString())
+                            {
+                                case "Processing":
+                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-1">
+                                        <i class="bi bi-clock-history me-1"></i> Processing
+                                    </span>
+                                    break;
+                                case "Shipped":
+                                    <span class="badge bg-info-subtle text-info border border-info-subtle px-3 py-1">
+                                        <i class="bi bi-truck me-1"></i> Shipped
+                                    </span>
+                                    break;
+                                case "Delivered":
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1">
+                                        <i class="bi bi-check2-circle me-1"></i> Delivered
+                                    </span>
+                                    break;
+                                case "Cancelled":
+                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-1">
+                                        <i class="bi bi-x-circle me-1"></i> Cancelled
+                                    </span>
+                                    break;
+                                default:
+                                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-1">
+                                        Unknown
+                                    </span>
+                                    break;
+                            }
+
+                            <a asp-action="Update" asp-route-orderId="@Model.OrderId"
+                               class="btn btn-sm btn-outline-primary rounded-circle d-flex align-items-center justify-content-center"
+                               style="width: 28px; height: 28px; padding: 0;"
+                               title="Update Status">
+                                <i class="bi bi-pencil-fill" style="font-size: 0.75rem;"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted small">Payment:</span>
+                        <span class="fw-bold text-primary small"><i class="bi bi-wallet2 me-1"></i> @Model.PaymentMethodName</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card admin-card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h6 class="text-primary fw-bold text-uppercase mb-4 small">Shipping Details</h6>
+
+                    <div class="d-flex mb-3">
+                        <div class="bg-light rounded-circle p-2 text-primary me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="bi bi-person"></i>
+                        </div>
+
+                        <div>
+                            <p class="small text-muted mb-0 fw-bold">RECIPIENT</p>
+                            <p class="mb-0 fw-semibold text-dark">@Model.UserName</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex mb-3">
+                        <div class="bg-light rounded-circle p-2 text-primary me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="bi bi-telephone"></i>
+                        </div>
+
+                        <div>
+                            <p class="small text-muted mb-0 fw-bold">PHONE NUMBER</p>
+                            <p class="mb-0 fw-semibold text-dark">@Model.PhoneNumber</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex">
+                        <div class="bg-light rounded-circle p-2 text-primary me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+
+                        <div>
+                            <p class="small text-muted mb-0 fw-bold">DELIVERY ADDRESS</p>
+                            <p class="mb-0 fw-semibold text-dark small">@Model.Address</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card admin-card border-0 shadow-sm overflow-hidden">
+                <div class="card-header bg-white py-3 border-bottom-0">
+                    <h6 class="mb-0 fw-bold"><i class="bi bi-cart3 me-2 text-primary"></i>Items Summary</h6>
+                </div>
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="px-4 py-3 text-secondary small fw-bold text-uppercase border-0">Product</th>
+                                <th class="py-3 text-secondary small fw-bold text-uppercase border-0 text-center">Price</th>
+                                <th class="py-3 text-secondary small fw-bold text-uppercase border-0 text-center">Qty</th>
+                                <th class="py-3 text-secondary small fw-bold text-uppercase border-0 text-end px-4">Subtotal</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var item in Model.OrderDetailItems)
+                            {
+                                <tr>
+                                    <td class="px-4">
+                                        <div class="d-flex align-items-center">
+                                            <img src="~/uploads/products/@item.Image"
+                                                 class="rounded-3 border me-3"
+                                                 style="width: 50px; height: 50px; object-fit: cover;" />
+                                            <div>
+                                                <span class="fw-bold text-dark d-block">@item.ProductName</span>
+                                                <small class="text-muted">ID: #@item.ProductId</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center fw-semibold">$@item.UnitPrice.ToString("N2")</td>
+                                    <td class="text-center">
+                                        <span class="badge bg-light text-dark border fw-normal px-2">x @item.Quantity</span>
+                                    </td>
+                                    <td class="text-end px-4 fw-bold text-dark">$@item.SubTotal.ToString("N2")</td>
+                                </tr>
+                            }
+                        </tbody>
+
+                        <tfoot class="border-top">
+                            <tr>
+                                <td colspan="3" class="text-end py-3 text-secondary fw-bold">Total Amount:</td>
+                                <td class="text-end px-4 py-3 text-primary h4 mb-0 fw-bold">$@Model.TotalAmount.ToString("N2")</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+
+            <div class="mt-4 p-4 rounded-4 bg-primary-subtle border border-primary-subtle">
+                <div class="d-flex">
+                    <i class="bi bi-info-circle-fill text-primary me-3 fs-4"></i>
+                    <div>
+                        <h6 class="fw-bold text-primary mb-1">System Tip:</h6>
+                        <p class="mb-0 small text-primary opacity-75">As an administrator, you can manage Products, Categories and handle User orders from the sidebar menu.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .admin-card {
+        border-radius: 12px;
+    }
+
+    .breadcrumb-item + .breadcrumb-item::before {
+        content: "\F285";
+        font-family: "bootstrap-icons";
+        font-size: 0.7rem;
+    }
+
+    @@media print {
+        .btn, nav, .breadcrumb {
+            display: none !important;
+        }
+
+        .card {
+            box-shadow: none !important;
+            border: 1px solid #ddd !important;
+        }
+    }
+</style>

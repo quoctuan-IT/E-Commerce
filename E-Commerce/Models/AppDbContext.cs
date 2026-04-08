@@ -21,6 +21,8 @@ public partial class AppDbContext : IdentityDbContext<AppUser>
 
     public virtual DbSet<OrderStatus> OrderStatuses { get; set; }
 
+    public virtual DbSet<PaymentMethod> PaymentMethod { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -29,8 +31,6 @@ public partial class AppDbContext : IdentityDbContext<AppUser>
         modelBuilder.Entity<AppUser>(entity =>
         {
             entity.ToTable("AppUsers");
-
-            entity.Property(e => e.IsActive).HasDefaultValue(true);
         });
 
 
@@ -69,7 +69,7 @@ public partial class AppDbContext : IdentityDbContext<AppUser>
             entity.ToTable("Orders");
 
             entity.Property(e => e.OrderStatusId)
-                .HasDefaultValue(0);
+                .HasDefaultValue(1);
             entity.Property(e => e.OrderDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
@@ -81,6 +81,10 @@ public partial class AppDbContext : IdentityDbContext<AppUser>
                 .HasForeignKey(d => d.OrderStatusId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Orders_OrderStatus");
+            entity.HasOne(d => d.PaymentMethod).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.PaymentMethodId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Orders_PaymentMethod");
         });
 
 
@@ -111,6 +115,16 @@ public partial class AppDbContext : IdentityDbContext<AppUser>
             entity.ToTable("OrderStatuses");
 
             entity.Property(e => e.OrderStatusId).ValueGeneratedNever();
+        });
+
+        // PaymentMethod
+        modelBuilder.Entity<PaymentMethod>(entity =>
+        {
+            entity.HasKey(e => e.PaymentMethodId);
+
+            entity.ToTable("PaymentMethods");
+
+            entity.Property(e => e.PaymentMethodId).ValueGeneratedNever();
         });
 
         OnModelCreatingPartial(modelBuilder);

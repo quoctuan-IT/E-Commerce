@@ -1,0 +1,144 @@
+﻿@using E_Commerce.Models.ViewModels.OrderVM
+@model OrderVM
+
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+
+<!-- Breadcrumb -->
+<div class="container">
+    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+        <a asp-controller="Account" asp-action="Profile" class="stext-109 cl8 hov-cl1 trans-04">
+            Account &nbsp;<i class="fa fa-home" aria-hidden="true"></i>
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+
+        <span class="stext-109 cl4">
+            My Orders &nbsp;<i class="fa fa-list" aria-hidden="true"></i>
+        </span>
+    </div>
+</div>
+
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+            <h2 class="font-weight-bold mb-1">My Orders</h2>
+            <p class="text-muted">
+                You have a total of
+                <span class="badge badge-primary px-2">@Model.TotalOrders</span> orders
+            </p>
+
+        </div>
+        <a asp-controller="Account"
+        asp-action="Profile"
+        class="btn btn-sm btn-outline-secondary mb-2">
+            <i class="fa fa-arrow-left mr-1"></i> Back to Profile
+        </a>
+    </div>
+
+    @if (Model.Orders != null && Model.Orders.Any())
+    {
+        <div class="card border-0 shadow-sm rounded">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="border-top-0 px-4">Order ID</th>
+                            <th class="border-top-0">Date</th>
+                            <th class="border-top-0">Status</th>
+                            <th class="border-top-0 text-center">Items</th>
+                            <th class="border-top-0 text-center">Amount</th>
+                            <th class="border-top-0 text-right px-4">Details</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model.Orders)
+                        {
+                            <tr>
+                                <td class="px-4 font-weight-bold text-dark">#@item.OrderId</td>
+                                <td class="text-muted small">@item.OrderDate.ToString("MMM dd, yyyy")</td>
+                                <td>
+                                    @switch (item.OrderStatusName?.ToString())
+                                    {
+                                        case "Processing":
+                                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2">
+                                                <i class="bi bi-clock-history me-1"></i> Processing
+                                            </span>
+                                            break;
+                                        case "Shipped":
+                                            <span class="badge bg-info-subtle text-info border border-info-subtle px-3 py-2">
+                                                <i class="bi bi-truck me-1"></i> Shipped
+                                            </span>
+                                            break;
+                                        case "Delivered":
+                                            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2">
+                                                <i class="bi bi-check2-circle me-1"></i> Delivered
+                                            </span>
+                                            break;
+                                        case "Cancelled":
+                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2">
+                                                <i class="bi bi-x-circle me-1"></i> Cancelled
+                                            </span>
+                                            break;
+
+                                        default:
+                                            <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-2">
+                                                Unknown
+                                            </span>
+                                            break;
+                                    }
+                                </td>
+                                <td class="text-center font-weight-bold">@item.TotalItems</td>
+                                <td class="text-center text-primary font-weight-bold">$@item.TotalAmount</td>
+                                <td class="text-right px-4">
+                                    <a asp-controller="Order"
+                                    asp-action="OrderDetail"
+                                    asp-route-orderId="@item.OrderId"
+                                       class="btn btn-sm btn-light border font-weight-bold px-3">
+                                        View <i class="fa fa-chevron-right ml-1 small"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="text-center py-5 bg-white border rounded shadow-sm">
+            <i class="fa fa-file-text-o fa-4x text-light mb-3"></i>
+            <h4 class="font-weight-bold">No orders found</h4>
+            <p class="text-muted">It looks like you haven't placed any orders yet.</p>
+            <a asp-controller="Product"
+               asp-action="Index"
+               class="btn btn-primary mt-2">Shopping</a>
+        </div>
+    }
+</div>
+
+
+<style>
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    .table label {
+        display: inline-block !important;
+        margin-bottom: 0;
+    }
+
+    .table-hover tbody tr:hover {
+        background-color: rgba(0,123,255,0.03);
+        cursor: pointer;
+    }
+
+    .badge-pill {
+        font-weight: 600;
+        letter-spacing: 0.3px;
+    }
+</style>

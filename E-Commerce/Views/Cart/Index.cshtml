@@ -1,133 +1,204 @@
-﻿@using E_Commerce.Models.ViewModels
-@{
-    ViewData["Title"] = "Index";
-}
+﻿@using E_Commerce.Models.ViewModels.CartVM
 @model IEnumerable<CartItemVM>
 
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
 
-<!-- Single Page Header start -->
-<div class="container-fluid page-header py-5">
-    <h1 class="text-center text-white display-6">Shop</h1>
-    <ol class="breadcrumb justify-content-center mb-0">
-        <li class="breadcrumb-item"><a href="#">Home</a></li>
-        <li class="breadcrumb-item active text-white">Cart</li>
-    </ol>
+
+<!-- Breadcrumb -->
+<div class="container">
+    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+        <a asp-controller="Product"
+           asp-action="Index"
+           class="stext-109 cl8 hov-cl1 trans-04">
+            Shop &nbsp;<i class="fa fa-shopping-bag" aria-hidden="true"></i>
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+
+        <span class="stext-109 cl4">
+            Shopping Cart &nbsp;<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+        </span>
+    </div>
 </div>
-<!-- Single Page Header End -->
 
-@if (Model != null && Model.Any())
-{
-    <!-- Cart Page Start -->
-    <div class="container-fluid py-5">
-        <div class="container py-5">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Products</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Handle</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <th scope="row">
-                                    <div class="d-flex align-items-center">
-                                        <img src="~/hinh/HangHoa/@item.Image" class="img-fluid me-5 rounded-circle"
-                                            style="width: 80px; height: 80px;" alt="">
-                                    </div>
-                                </th>
-                                <td>
-                                    <p class="mb-0 mt-4">
-                                        <a asp-controller="Product" asp-action="Details"
-                                            asp-route-idProduct="@item.ProductId">@item.ProductName</a>
-                                    </p>
-                                </td>
-                                <td>
-                                    <p class="mb-0 mt-4">@item.UnitPrice</p>
-                                </td>
-                                <td>
-                                    <div class="input-group quantity mt-4" style="width: 100px;">
-                                        <div class="input-group-btn">
-                                            <form asp-action="AddToCart" asp-controller="Cart" asp-route-idProduct="@item.ProductId"
-                                                asp-route-quantity=-1>
-                                                <button type="submit"
-                                                    class="btn btn-sm btn-minus rounded-circle bg-light border">
-                                                    <i class="fa fa-minus"></i>
-                                                </button>
-                                            </form>
-                                        </div>
 
-                                        <input type="text" class="form-control form-control-sm text-center border-0"
-                                            value="@item.Quantity">
+<!-- Shopping Cart -->
+<div class="container py-5">
 
-                                        <div class="input-group-btn">
-                                            <form asp-action="AddToCart" asp-controller="Cart" asp-route-idProduct="@item.ProductId">
-                                                <button type="submit"
-                                                    class="btn btn-sm btn-plus rounded-circle bg-light border">
-                                                    <i class="fa fa-plus"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p class="mb-0 mt-4">@item.Total</p>
-                                </td>
-                                <td>
-                                    <a asp-action="RemoveCart" asp-controller="Cart" asp-route-idProduct="@item.ProductId"
-                                        class="btn btn-md rounded-circle bg-light border mt-4">
-                                        <i class="fa fa-times text-danger"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+    @if (Model != null && Model.Any())
+    {
+        <div class="row">
+            <div class="col-12 mb-4">
+                <div class="card shadow-sm border-0">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="thead-light">
+                                <tr>
+                                    <th class="border-top-0 px-4">Product</th>
+                                    <th class="border-top-0">Name</th>
+                                    <th class="border-top-0 text-center">Price</th>
+                                    <th class="border-top-0 text-center" style="width: 160px;">Quantity</th>
+                                    <th class="border-top-0 text-center">Total</th>
+                                    <th class="border-top-0 text-right px-4">Action</th>
+                                </tr>
+                            </thead>
 
-            <div class="row g-4">
-                <div class="col-8"></div>
-                <div class="col-sm-8 col-md-7 col-lg-6 col-xl-4">
-                    <div class="bg-light rounded">
-                        <div class="p-4">
-                            <h1 class="display-6 mb-4">Cart <span class="fw-normal">Total</span></h1>
-                            <div class="d-flex justify-content-between mb-4">
-                                <h5 class="mb-0 me-4">Subtotal:</h5>
-                                <p class="mb-0">@Model.Sum(p => p.Total)</p>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <h5 class="mb-0 me-4">Shipping</h5>
-                                <div class="">
-                                    <p class="mb-0">Free</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="py-4 mb-4 border-top border-bottom d-flex justify-content-between">
-                            <h5 class="mb-0 ps-4 me-4">Total</h5>
-                            <p class="mb-0 pe-4">@Model.Sum(p => p.Total)</p>
-                        </div>
-                        <a asp-action="Checkout"
-                            class="btn border-secondary rounded-pill px-4 py-3 text-primary text-uppercase mb-4 ms-4">Proceed
-                            Checkout</a>
+                            <tbody>
+
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td class="px-4">
+                                            <a asp-controller="Product"
+                                               asp-action="Detail"
+                                               asp-route-productId="@item.ProductId">
+                                                <img src="@item.Image"
+                                                     class="img-fluid rounded border"
+                                                     style="width: 70px; height: 70px; object-fit: cover;"
+                                                     alt="@item.ProductName">
+                                            </a>
+                                        </td>
+
+                                        <td class="font-weight-bold">
+                                            <a asp-controller="Product"
+                                               asp-action="Detail"
+                                               asp-route-productId="@item.ProductId"
+                                               class="text-dark text-decoration-none">
+                                                @item.ProductName
+                                            </a>
+                                        </td>
+
+                                        <td class="text-center">$ @item.UnitPrice</td>
+
+                                        <td class="text-center">
+                                            <div class="input-group input-group-sm mx-auto" style="width: 120px;">
+                                                <div class="input-group-prepend">
+                                                    <a asp-action="UpdateQuantity"
+                                                       asp-route-productId="@item.ProductId" 
+                                                       asp-route-quantity="-1"
+                                                       class="btn btn-outline-danger">
+                                                        <i class="fa fa-minus"></i>
+                                                    </a>
+                                                </div>
+
+                                                <input type="text" class="form-control text-center bg-white" value="@item.Quantity" readonly>
+
+                                                <div class="input-group-append">
+                                                    <a asp-action="UpdateQuantity"
+                                                       asp-route-productId="@item.ProductId" 
+                                                       asp-route-quantity="1"
+                                                       class="btn btn-outline-success">
+                                                        <i class="fa fa-plus"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td class="text-center font-weight-bold text-primary">$ @item.Total</td>
+
+                                        <td class="text-right px-4">
+                                            <a asp-action="RemoveCart"
+                                               asp-route-productId="@item.ProductId"
+                                               class="btn btn-sm btn-outline-danger border-0 rounded-circle">
+                                                <i class="fa fa-trash-o fa-lg"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+
+                            </tbody>
+                        </table>
                     </div>
                 </div>
+
+                <div class="mt-4">
+                    <a asp-action="ClearCart"
+                       class="btn btn-sm btn-danger border-0">
+                        Delete Card &nbsp;<i class="fa fa-trash-o" aria-hidden="true"></i>
+                    </a>
+                </div>
             </div>
+
+            <!-- Subtotal -->
+            <div class="col-md-6 col-lg-4 ml-auto">
+                <div class="card border-0 bg-light shadow-sm">
+                    <div class="card-body p-4">
+                        <h4 class="mtext-109 cl2 p-b-30">
+                            Cart Subtotal
+                        </h4>
+
+                        <div class="flex-w flex-t p-t-27 p-b-33">
+                            <div class="size-208">
+                                <span class="mtext-101 cl2">
+                                    Total:
+                                </span>
+                            </div>
+
+                            <div class="size-209 p-t-1">
+                                <span class="mtext-110 cl2">
+                                    $ @Model.Sum(p => p.Total)
+                                </span>
+                            </div>
+                        </div>
+
+                        <a asp-controller="Order"
+                           asp-action="Checkout"
+                           class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 pointer">
+                            Checkout &nbsp;<i class="fa fa-credit-card" aria-hidden="true"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a asp-controller="Product"
+                       asp-action="Index"
+                       class="text-muted">
+                        <i class="fa fa-chevron-left mr-2"></i>Back to Shop
+                    </a>
+                </div>
+            </div>
+
+
         </div>
-    </div>
-    <!-- Cart Page End -->
-}
-else
-{
-    <div class="container my-5">
-        <div class="alert alert-warning text-center p-4" role="alert">
-            <h3 class="fw-bold">🛒 CART EMPTY!</h3>
-            <a asp-controller="Product" asp-action="Index" class="btn btn-primary mt-3">Continue Shopping</a>
+    }
+    else
+    {
+        <partial name="_Notification" />
+
+        <div class="text-center py-5 bg-white border rounded">
+            <div class="mb-4">
+                <i class="fa fa-shopping-basket text-dark" style="font-size: 4rem;"></i>
+            </div>
+
+            <h3 class="font-weight-bold">Your cart is empty!</h3>
+            <p class="text-muted">Add some items to your cart to start shopping.</p>
+
+            <a asp-controller="Product"
+               asp-action="Index"
+               class="btn btn-primary btn-lg mt-3 px-5">Shop Now</a>
         </div>
-    </div>
-}
+    }
+</div>
+
+
+<style>
+    .table td, .table th {
+        vertical-align: middle;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .card {
+        border-radius: 0.5rem;
+    }
+
+    .input-group .form-control:focus {
+        z-index: 0;
+        box-shadow: none;
+        border-color: #ced4da;
+    }
+</style>

@@ -1,21 +1,29 @@
-using E_Commerce.Models.Entities;
+using E_Commerce.Areas.Admin.ViewModels.CategoryVM;
+using E_Commerce.Helpers;
 using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.Areas.Admin.Controllers
 {
-    [Area("Admin")]
-    [Authorize(Roles = "1")]
+    [Area(Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public class CategoryController(ICategoryService categoryService) : Controller
     {
         private readonly ICategoryService _categoryService = categoryService;
+
 
         public async Task<IActionResult> Index()
         {
             var categories = await _categoryService.GetAllAsync();
 
-            return View(categories);
+            List<CategoryItemVM> vm = [.. categories.Select(c => new CategoryItemVM
+            {
+                CategoryId = c.CategoryId,
+                CategoryName = c.CategoryName
+            })];
+
+            return View(vm);
         }
 
         [HttpGet]
@@ -23,35 +31,39 @@ namespace E_Commerce.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("CategoryName")] Category newCategory)
+        public async Task<IActionResult> Create(CategoryCreateUpdateVM vm)
         {
-            if (!ModelState.IsValid) return View(newCategory);
+            if (!ModelState.IsValid) return View(vm);
 
-            await _categoryService.CreateAsync(newCategory);
+            await _categoryService.CreateAsync(vm);
+            TempData["Success"] = "Create Category successful!";
 
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
-        public async Task<IActionResult> Update(int idCategory)
+        public async Task<IActionResult> Update(int categoryId)
         {
-            var category = await _categoryService.GetByIdAsync(idCategory);
+            var category = await _categoryService.GetByIdAsync(categoryId);
             if (category == null) return NotFound();
 
-            return View(category);
+            CategoryCreateUpdateVM vm = new()
+            {
+                CategoryId = category.CategoryId,
+                CategoryName = category.CategoryName,
+            };
+
+            return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Update(int id, [Bind("CategoryName")] Category updatedCategory)
+        public async Task<IActionResult> Update(CategoryCreateUpdateVM vm)
         {
-            var category = await _categoryService.GetByIdAsync(id);
-            if (category == null) return NotFound();
+            if (!ModelState.IsValid) return View(vm);
 
-            if (!ModelState.IsValid) return View(updatedCategory);
-
-            category.CategoryName = updatedCategory.CategoryName;
-            await _categoryService.UpdateAsync(category);
+            await _categoryService.UpdateAsync(vm);
+            TempData["Success"] = "Update Category successful!";
 
             return RedirectToAction(nameof(Index));
         }

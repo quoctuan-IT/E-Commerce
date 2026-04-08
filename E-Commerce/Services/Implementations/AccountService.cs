@@ -1,8 +1,10 @@
-﻿using E_Commerce.Models.DTOs;
+﻿using E_Commerce.Areas.Admin.ViewModels.UserVM;
+using E_Commerce.Models.DTOs;
 using E_Commerce.Models.Entities;
-using E_Commerce.Models.ViewModels;
+using E_Commerce.Models.ViewModels.AccountVM;
 using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -10,18 +12,23 @@ using System.Text;
 
 namespace E_Commerce.Services.Implementations
 {
-    public class AccountService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IConfiguration configuration) : IAccountService
+    public class AccountService(
+        UserManager<AppUser> userManager,
+        SignInManager<AppUser> signInManager,
+        IConfiguration configuration
+    ) : IAccountService
     {
         private readonly UserManager<AppUser> _userManager = userManager;
         private readonly SignInManager<AppUser> _signInManager = signInManager;
         private readonly IConfiguration _configuration = configuration;
 
+
+        // Account
         public async Task<IdentityResult> RegisterAsync(RegisterVM vm)
         {
             var user = new AppUser
             {
-                UserName = vm.Email,
-                Email = vm.Email,
+                UserName = vm.UserName,
                 PhoneNumber = vm.PhoneNumber,
                 Address = vm.Address,
             };
@@ -31,9 +38,14 @@ namespace E_Commerce.Services.Implementations
 
         public async Task<SignInResult> LoginAsync(LoginVM vm)
         {
-            var user = await _userManager.FindByEmailAsync(vm.Email);
+            var user = await _userManager.FindByNameAsync(vm.UserName);
 
-            if (user != null && user.IsActive) return await _signInManager.PasswordSignInAsync(user, vm.Password, vm.RememberMe, lockoutOnFailure: false);
+            if (user != null)
+                return await _signInManager.PasswordSignInAsync(
+                    user,
+                    vm.Password,
+                    isPersistent: true,
+                    lockoutOnFailure: false);
 
             return SignInResult.Failed;
         }
@@ -41,23 +53,67 @@ namespace E_Commerce.Services.Implementations
         public async Task LogoutAsync()
             => await _signInManager.SignOutAsync();
 
-        public async Task<AppUser?> GetUserByEmailAsync(string email)
-            => await _userManager.FindByEmailAsync(email);
+        public async Task<IdentityResult> UpdateUserProfileAsync(string userId, UpdateProfileVM vm)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return IdentityResult.Failed(new IdentityError { Description = "User not found" });
+
+            user.PhoneNumber = vm.PhoneNumber;
+            user.Address = vm.Address;
+
+            return await _userManager.UpdateAsync(user);
+        }
+
+        public async Task<IdentityResult> ChangePasswordAsync(string userId, ChangePasswordVM vm)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return IdentityResult.Failed(new IdentityError { Description = "User not found" });
+
+            return await _userManager.ChangePasswordAsync(user, vm.CurrentPassword, vm.NewPassword);
+        }
+
+
+        // Admin
+        public async Task<IdentityResult> CreateUserAsync(UserCreateVM vm)
+        {
+            var user = new AppUser
+            {
+                UserName = vm.UserName,
+                PhoneNumber = vm.PhoneNumber,
+                Address = vm.Address,
+            };
+
+            return await _userManager.CreateAsync(user, vm.Password);
+        }
+
+        public async Task<IdentityResult> UpdateUserPasswordAsync(string userId, UserPasswordUpdateVM vm)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return IdentityResult.Failed(new IdentityError { Description = "User not found" });
+
+            return await _userManager.ChangePasswordAsync(user, vm.CurrentPassword, vm.NewPassword);
+        }
+
+
+        // GET
+        public async Task<IEnumerable<AppUser>> GetAllAsync()
+            => await _userManager.Users.ToListAsync();
+
+        public async Task<AppUser?> GetUserByIdAsync(string userId)
+            => await _userManager.FindByIdAsync(userId);
+
+        public async Task<AppUser?> GetUserByNameAsync(string userName)
+            => await _userManager.FindByNameAsync(userName);
 
         public async Task<AppUser?> GetCurrentUserAsync(System.Security.Claims.ClaimsPrincipal user)
             => await _userManager.GetUserAsync(user);
 
-        public async Task<bool> IsUserActiveAsync(string email)
-        {
-            var user = await _userManager.FindByEmailAsync(email);
-
-            return user?.IsActive ?? false;
-        }
-
         public string? GetCurrentUserId(System.Security.Claims.ClaimsPrincipal user)
             => _userManager.GetUserId(user);
 
-        public async Task<TokenDto> GenerateJwtTokenAsync(AppUser user)
+
+        // JWT
+        public async Task<TokenDTO> GenerateJwtTokenAsync(AppUser user)
         {
             var jwtSettings = _configuration.GetSection("Jwt");
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["Key"]!));
@@ -67,7 +123,6 @@ namespace E_Commerce.Services.Implementations
             {
                 new(JwtRegisteredClaimNames.Sub, user.Id),
                 new(JwtRegisteredClaimNames.UniqueName, user.UserName!),
-                new(JwtRegisteredClaimNames.Email, user.Email!),
                 new(ClaimTypes.NameIdentifier, user.Id)
             };
 
@@ -89,7 +144,7 @@ namespace E_Commerce.Services.Implementations
 
             var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
 
-            return new TokenDto
+            return new TokenDTO
             {
                 AccessToken = tokenString,
                 TokenType = "Bearer",
@@ -97,21 +152,21 @@ namespace E_Commerce.Services.Implementations
             };
         }
 
-        public async Task<AppUser?> ValidateUserAsync(LoginDto loginDto)
+        public async Task<AppUser?> ValidateUserAsync(LoginDTO loginDTO)
         {
-            var user = await _userManager.FindByEmailAsync(loginDto.Email);
+            var user = await _userManager.FindByEmailAsync(loginDTO.Email);
 
-            if (user != null && user.IsActive && await _userManager.CheckPasswordAsync(user, loginDto.Password)) return user;
+            if (user != null && await _userManager.CheckPasswordAsync(user, loginDTO.Password)) return user;
 
             return null;
         }
 
-        public async Task<IdentityResult> ChangePasswordAsync(string userId, ChangePasswordDto changePasswordDto)
+        public async Task<IdentityResult> ChangePasswordAsync(string userId, ChangePasswordDTO changePasswordDTO)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return IdentityResult.Failed(new IdentityError { Description = "User not found" });
 
-            return await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+            return await _userManager.ChangePasswordAsync(user, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword);
         }
 
         public async Task<string> GeneratePasswordResetTokenAsync(string email)
@@ -122,38 +177,29 @@ namespace E_Commerce.Services.Implementations
             return await _userManager.GeneratePasswordResetTokenAsync(user);
         }
 
-        public async Task<IdentityResult> ResetPasswordAsync(ResetPasswordDto resetPasswordDto)
-        {
-            var user = await _userManager.FindByEmailAsync(resetPasswordDto.Email);
-            if (user == null) return IdentityResult.Failed(new IdentityError { Description = "User not found" });
-
-            return await _userManager.ResetPasswordAsync(user, resetPasswordDto.Token, resetPasswordDto.NewPassword);
-        }
-
-        public async Task<UserDto> GetUserProfileAsync(string userId)
+        public async Task<UserDTO> GetUserProfileAsync(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return null!;
 
-            return new UserDto
+            return new UserDTO
             {
                 Id = user.Id,
                 UserName = user.UserName!,
                 Email = user.Email!,
                 PhoneNumber = user.PhoneNumber!,
                 Address = user.Address,
-                IsActive = user.IsActive,
                 CreatedDate = user.LockoutEnd?.DateTime
             };
         }
 
-        public async Task<IdentityResult> UpdateUserProfileAsync(string userId, UserDto userDto)
+        public async Task<IdentityResult> UpdateUserProfileAsync(string userId, UserDTO userDTO)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null) return IdentityResult.Failed(new IdentityError { Description = "User not found" });
 
-            user.PhoneNumber = userDto.PhoneNumber;
-            user.Address = userDto.Address;
+            user.PhoneNumber = userDTO.PhoneNumber;
+            user.Address = userDTO.Address;
 
             return await _userManager.UpdateAsync(user);
         }

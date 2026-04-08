@@ -1,0 +1,115 @@
+﻿@using E_Commerce.Areas.Admin.ViewModels.OrderVM
+@model OrderUpdateVM
+
+@{
+    ViewData["Title"] = "Update Order Status";
+}
+
+
+<div class="container-fluid">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Dashboard"
+                   asp-action="Index">Admin</a>
+            </li>
+
+            <li class="breadcrumb-item">
+                <a asp-action="Index">Orders</a>
+            </li>
+
+            <li class="breadcrumb-item active">Update Status</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-5">
+            <div class="card admin-card border-0 shadow-sm">
+
+                <div class="card-header bg-white py-3 border-bottom">
+                    <div class="d-flex align-items-center">
+                        <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
+                             style="width: 45px; height: 45px;">
+                            <i class="bi bi-pencil-square fs-4"></i>
+                        </div>
+
+                        <div>
+                            <h5 class="mb-0 fw-bold text-dark">Update Order</h5>
+                            <small class="text-muted fw-bold text-uppercase">Order ID: #@Model.OrderId</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-light p-3 mx-4 mt-4 rounded-3 border">
+                    <div class="row text-center">
+                        <div class="col-12">
+                            <small class="text-muted d-block small fw-bold">ORDER DATE</small>
+                            <span class="small fw-semibold text-dark">@Model.OrderDate.ToString("dd/MM/yyyy")</span>
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-action="Update" method="post">
+                    <input type="hidden" asp-for="@Model.OrderId" />
+
+                    <div class="card-body p-4">
+                        <div class="mb-3">
+                            <label asp-for="@Model.OrderStatusId" class="form-label text-secondary small fw-bold text-uppercase">
+                                Transition Status to:
+                            </label>
+
+                            <div class="input-group">
+                                <span class="input-group-text bg-white"><i class="bi bi-arrow-repeat text-primary"></i></span>
+                                <select asp-for="@Model.OrderStatusId" class="form-select form-select-lg fs-6 shadow-none">
+                                    @foreach (var status in Model.OrderStatuses)
+                                    {
+                                        <option value="@status.OrderStatusId">@status.OrderStatusName</option>
+                                    }
+                                </select>
+                            </div>
+
+                            <div class="form-text text-muted small mt-2">
+                                <i class="bi bi-info-circle-fill me-1 text-info"></i>
+                                Changing status will notify the customer via email.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-footer bg-white p-4 border-top-0 d-grid gap-2">
+                        <button type="submit" class="btn btn-primary py-2 fw-bold shadow-sm">
+                            CONFIRM <i class="bi bi-check-lg ms-1"></i>
+                        </button>
+
+                        <a asp-controller="Order"
+                           asp-action="Detail"
+                           asp-route-orderId="@Model.OrderId"
+                           class="btn btn-link text-decoration-none text-muted small border-dark">
+                            Cancel
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .admin-card {
+        border-radius: 15px;
+    }
+
+    .form-select {
+        border-left: none;
+    }
+
+    .input-group-text {
+        border-right: none;
+        border-radius: 8px 0 0 8px;
+    }
+
+    .form-select:focus {
+        border-color: #dee2e6;
+    }
+</style>

@@ -1,25 +1,21 @@
 ﻿@{
-    ViewData["Title"] = "AccessDenied";
+    ViewData["Title"] = "Access Denied";
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
 }
 
 
-<!-- Single Page Header start -->
-<div class="container-fluid page-header py-5">
-    <h1 class="text-center text-white display-6">Shop</h1>
-    <ol class="breadcrumb justify-content-center mb-0">
-        <li class="breadcrumb-item active text-white">Admin</li>
-    </ol>
-</div>
-<!-- Single Page Header End -->
+<img class="mt-4 mb-4" src="~/images/icons/icon-IT.png" alt="" width="200" height="200">
 
 <div class="container my-5">
     <div class="alert alert-danger text-center p-5 rounded shadow">
         <h2 class="fw-bold mb-4">
             <i class="bi bi-x-circle-fill me-2"></i>Access Denied
         </h2>
-        <p class="fs-5 mb-4">Bạn không có quyền truy cập vào trang này.</p>
+
+        <p class="fs-5 mb-4">You do not have Permission to Access this Page.</p>
+
         <a asp-action="Index" class="btn btn-primary">
-            <i class="bi bi-house-door me-2"></i>Quay về trang chủ
+            <i class="bi bi-house-door me-2"></i>Back Home
         </a>
     </div>
 </div>

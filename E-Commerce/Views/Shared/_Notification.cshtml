@@ -1,0 +1,44 @@
+﻿@if (TempData["RegisterSuccess"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["RegisterSuccess"]
+    </div>
+}
+
+@if (TempData["UpdateProfileSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show small shadow-sm py-2" role="alert">
+        <i class="fa fa-check-circle mr-1"></i>
+
+        @TempData["UpdateProfileSuccess"]
+
+        <button type="button" class="close py-2" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+}
+
+@if (TempData["ChangePasswordSuccess"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show small shadow-sm py-2" role="alert">
+        <i class="fa fa-check-circle mr-1"></i>
+
+        @TempData["ChangePasswordSuccess"]
+
+        <button type="button" class="close py-2" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+}
+
+@if (TempData["CheckoutSuccess"] != null)
+{
+    <div class="text-center py-2 bg-light border border-success rounded">
+        <div class="mb-2">
+            <i class="fa fa-check text-success" style="font-size: 2rem;"></i>
+        </div>
+        <h3 class="font-weight-bold text-success">@TempData["CheckoutSuccess"]</h3>
+        <p class="text-success">Thanks you so much!</p>
+    </div>
+}

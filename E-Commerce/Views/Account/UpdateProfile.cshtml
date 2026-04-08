@@ -1,0 +1,134 @@
+﻿@using E_Commerce.Models.ViewModels.AccountVM
+@model UpdateProfileVM
+
+@{
+    ViewData["Title"] = "Update Profile";
+}
+
+
+<!-- Breadcrumb -->
+<div class="container">
+    <div class="bread-crumb flex-w p-l-25 p-r-15 p-t-30 p-lr-0-lg">
+        <a asp-controller="Account" asp-action="Profile" class="stext-109 cl8 hov-cl1 trans-04">
+            Account &nbsp;<i class="fa fa-cog" aria-hidden="true"></i>
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+
+        <a asp-controller="Account" asp-action="Profile" class="stext-109 cl8 hov-cl1 trans-04">
+            Profile &nbsp;<i class="fa fa-user-circle-o" aria-hidden="true"></i>
+            <i class="fa fa-angle-right m-l-9 m-r-10" aria-hidden="true"></i>
+        </a>
+
+        <span class="stext-109 cl4">
+            Update &nbsp;<i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+        </span>
+    </div>
+</div>
+
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-sm">
+
+                <div class="card-header bg-white border-bottom py-4">
+                    <div class="d-flex align-items-center">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated && !string.IsNullOrEmpty(@User.Identity.Name))
+                        {
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                                 style="width: 50px; height: 50px;">
+                                @User.Identity.Name.Substring(0, 1).ToUpper()
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center mr-3"
+                                 style="width: 50px; height: 50px;">
+                                User
+                            </div>
+                        }
+                        <h4 class="mb-0 font-weight-bold text-dark">Update Profile</h4>
+                    </div>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <form asp-action="UpdateProfile" method="post">
+                        <div class="form-group mb-4">
+                            <label class="text-muted small font-weight-bold text-uppercase mb-2" style="display: block;">
+                                Phone Number <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white border-right-0"><i class="fa fa-phone text-muted"></i></span>
+                                </div>
+
+                                <input asp-for="@Model.PhoneNumber"
+                                       class="form-control border-left-0 font-weight-bold py-4"
+                                       type="tel" placeholder="Enter your phone number" required autofocus>
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label class="text-muted small font-weight-bold text-uppercase mb-2" style="display: block;">
+                                Shipping Address <span class="text-danger">*</span>
+                            </label>
+
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text bg-white border-right-0"><i class="fa fa-map-marker text-muted"></i></span>
+                                </div>
+
+                                <input asp-for="@Model.Address"
+                                       class="form-control border-left-0 font-weight-bold py-4"
+                                       type="text" placeholder="Enter your address" required>
+                            </div>
+                            <span asp-validation-for="Address" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mt-5">
+                            <button type="submit" class="btn btn-primary btn-block py-3 font-weight-bold shadow-sm">
+                                SAVE CHANGES &nbsp;<i class="fa fa-save ml-1"></i>
+                            </button>
+
+                            <a asp-controller="Account"
+                               asp-action="Profile"
+                               class="btn btn-link btn-block text-muted small mt-2">
+                                <i class="fa fa-arrow-left mr-1"></i> Back to Profile
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .card {
+        border-radius: 15px;
+    }
+
+    .form-control {
+        border-radius: 8px;
+        font-size: 0.95rem;
+    }
+
+    .input-group-text {
+        border-radius: 8px 0 0 8px;
+    }
+
+    .form-control:focus {
+        box-shadow: none;
+        border-color: #007bff;
+    }
+
+    label {
+        display: block !important;
+        margin-bottom: 0.5rem;
+    }
+</style>

@@ -1,21 +1,18 @@
 using E_Commerce.Helpers;
 using E_Commerce.Models;
-using E_Commerce.Models.ViewModels;
+using E_Commerce.Models.ViewModels.CartVM;
 using E_Commerce.Services.Interfaces;
 
 namespace E_Commerce.Services.Implementations
 {
     public class CartService(AppDbContext context) : ICartService
     {
-        private const string CartKey = "CartSession";
-
         private readonly AppDbContext _context = context;
 
-        public List<CartItemVM> GetCartItems(ISession session)
-        {
-            return session.Get<List<CartItemVM>>(CartKey) ?? [];
-        }
+        private const string CartKey = "CartSession";
 
+
+        // Cart
         public void SaveCartItems(ISession session, List<CartItemVM> cartItems)
         {
             session.Set(CartKey, cartItems);
@@ -37,7 +34,7 @@ namespace E_Commerce.Services.Implementations
                         ProductId = product.ProductId,
                         ProductName = product.ProductName,
                         UnitPrice = product.UnitPrice,
-                        Image = product.Image ?? "default.jpg",
+                        Image = product.Image,
                         Quantity = quantity
                     };
                     cartItems.Add(newItem);
@@ -66,9 +63,7 @@ namespace E_Commerce.Services.Implementations
 
             if (item != null)
             {
-                if (quantity <= 0) cartItems.Remove(item);
-                else item.Quantity = quantity;
-
+                item.Quantity += quantity;
                 SaveCartItems(session, cartItems);
             }
         }
@@ -76,6 +71,13 @@ namespace E_Commerce.Services.Implementations
         public void ClearCart(ISession session)
         {
             SaveCartItems(session, []);
+        }
+
+
+        // GET
+        public List<CartItemVM> GetCartItems(ISession session)
+        {
+            return session.Get<List<CartItemVM>>(CartKey) ?? [];
         }
 
         public decimal GetCartTotal(List<CartItemVM> cartItems)

@@ -1,0 +1,72 @@
+﻿@using E_Commerce.Models.ViewModels.CartVM
+@model List<CartItemVM>
+
+
+@if (Model != null && Model.Any())
+{
+    <div class="header-cart-content flex-w js-pscroll">
+        <ul class="header-cart-wrapitem w-full">
+            @foreach (var item in Model)
+            {
+                <li class="header-cart-item flex-w flex-t m-b-12">
+                    <a asp-controller="Cart"
+                       asp-action="RemoveCart"
+                       asp-route-productId="@item.ProductId"
+                       class="header-cart-item-img">
+                        <img src="@item.Image" alt="IMG">
+                    </a>
+
+                    <div class="header-cart-item-txt p-t-8">
+                        <span class="header-cart-item-name m-b-18">
+                            @item.ProductName
+                        </span>
+
+                        <span class="header-cart-item-info">
+                            @item.Quantity x $@item.UnitPrice
+                        </span>
+                    </div>
+                </li>
+            }
+        </ul>
+
+        <div class="w-full">
+            <div class="header-cart-total w-full p-tb-40">
+                Total: $ @Model.Sum(p => p.Total)
+            </div>
+
+            <div class="header-cart-buttons flex-w w-full">
+                <a asp-controller="Cart"
+                   asp-action="Index"
+                   class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-r-8 m-b-10">
+                    View Cart &nbsp;<i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                </a>
+
+                <a asp-controller="Order"
+                   asp-action="Checkout"
+                   class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
+                    Check Out &nbsp;<i class="fa fa-credit-card" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="header-cart-content flex-w flex-c-m w-full p-t-100">
+        <div class="text-center w-full">
+            <div class="mb-4">
+                <i class="fa fa-shopping-bag text-muted" style="font-size: 5rem; opacity: 0.2;"></i>
+            </div>
+            <h5 class="stext-101 cl2 font-weight-bold mb-2">Your cart is empty</h5>
+            <p class="stext-111 cl6 px-4 mb-5">
+                Looks like you hasn't added anything to your cart yet.
+            </p>
+            <div class="header-cart-buttons flex-w w-full px-4">
+                <a asp-controller="Product" asp-action="Index"
+                   class="flex-c-m stext-101 cl0 size-116 bg3 bor14 hov-btn3 p-lr-15 trans-04 text-decoration-none shadow-sm">
+                    Go To Shop
+                </a>
+            </div>
+        </div>
+    </div>
+}

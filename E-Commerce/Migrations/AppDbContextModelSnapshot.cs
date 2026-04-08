@@ -45,11 +45,6 @@ namespace E_Commerce.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsActive")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(true);
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -134,15 +129,17 @@ namespace E_Commerce.Migrations
                     b.Property<int>("OrderStatusId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasDefaultValue(1);
 
-                    b.Property<string>("PaymentMethod")
+                    b.Property<int>("PaymentMethodId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PhoneNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("TotalAmount")
+                        .HasColumnType("float");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -152,6 +149,8 @@ namespace E_Commerce.Migrations
                         .HasName("PK_Orders");
 
                     b.HasIndex("OrderStatusId");
+
+                    b.HasIndex("PaymentMethodId");
 
                     b.HasIndex("UserId");
 
@@ -202,6 +201,20 @@ namespace E_Commerce.Migrations
                     b.HasKey("OrderStatusId");
 
                     b.ToTable("OrderStatuses", (string)null);
+                });
+
+            modelBuilder.Entity("E_Commerce.Models.Entities.PaymentMethod", b =>
+                {
+                    b.Property<int>("PaymentMethodId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PaymentMethodName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("PaymentMethodId");
+
+                    b.ToTable("PaymentMethods", (string)null);
                 });
 
             modelBuilder.Entity("E_Commerce.Models.Entities.Product", b =>
@@ -393,6 +406,12 @@ namespace E_Commerce.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_Orders_OrderStatus");
 
+                    b.HasOne("E_Commerce.Models.Entities.PaymentMethod", "PaymentMethod")
+                        .WithMany("Orders")
+                        .HasForeignKey("PaymentMethodId")
+                        .IsRequired()
+                        .HasConstraintName("FK_Orders_PaymentMethod");
+
                     b.HasOne("E_Commerce.Models.Entities.AppUser", "AppUser")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
@@ -403,6 +422,8 @@ namespace E_Commerce.Migrations
                     b.Navigation("AppUser");
 
                     b.Navigation("OrderStatus");
+
+                    b.Navigation("PaymentMethod");
                 });
 
             modelBuilder.Entity("E_Commerce.Models.Entities.OrderDetail", b =>
@@ -504,6 +525,11 @@ namespace E_Commerce.Migrations
                 });
 
             modelBuilder.Entity("E_Commerce.Models.Entities.OrderStatus", b =>
+                {
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("E_Commerce.Models.Entities.PaymentMethod", b =>
                 {
                     b.Navigation("Orders");
                 });

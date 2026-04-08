@@ -1,0 +1,17 @@
+﻿@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success border-0 rounded-0 m-0 d-flex align-items-center shadow-sm animate__animated animate__fadeInDown" role="alert">
+        <i class="bi bi-check-circle-fill me-3 fs-5"></i>
+        <div class="fw-bold">@TempData["Success"]</div>
+        <button type="button" class="btn-close ms-auto shadow-none" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger border-0 rounded-0 m-0 d-flex align-items-center shadow-sm animate__animated animate__fadeInDown" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-3 fs-5"></i>
+        <div class="fw-bold">@TempData["Error"]</div>
+        <button type="button" class="btn-close ms-auto shadow-none" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}

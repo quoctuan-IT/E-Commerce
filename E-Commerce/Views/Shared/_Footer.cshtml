@@ -1,5 +1,4 @@
-﻿
-<!-- Footer -->
+﻿<!-- Footer -->
 
 <footer class="bg3 p-t-75 p-b-32">
     <div class="container">
@@ -11,25 +10,33 @@
 
                 <ul>
                     <li class="p-b-10">
-                        <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                        <a asp-controller="Home"
+                           asp-action="Index"
+                           class="stext-107 cl7 hov-cl1 trans-04">
                             Track Order
                         </a>
                     </li>
 
                     <li class="p-b-10">
-                        <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                        <a asp-controller="Home"
+                           asp-action="Index"
+                           class="stext-107 cl7 hov-cl1 trans-04">
                             Returns
                         </a>
                     </li>
 
                     <li class="p-b-10">
-                        <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                        <a asp-controller="Home"
+                           asp-action="Index"
+                           class="stext-107 cl7 hov-cl1 trans-04">
                             Shipping
                         </a>
                     </li>
 
                     <li class="p-b-10">
-                        <a href="#" class="stext-107 cl7 hov-cl1 trans-04">
+                        <a asp-controller="Home"
+                           asp-action="Index"
+                           class="stext-107 cl7 hov-cl1 trans-04">
                             FAQs
                         </a>
                     </li>
@@ -46,15 +53,21 @@
                 </p>
 
                 <div class="p-t-27">
-                    <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+                    <a asp-controller="Home"
+                       asp-action="Index"
+                       class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
                         <i class="fa fa-facebook"></i>
                     </a>
 
-                    <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+                    <a asp-controller="Home"
+                       asp-action="Index"
+                       class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
                         <i class="fa fa-instagram"></i>
                     </a>
 
-                    <a href="#" class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
+                    <a asp-controller="Home"
+                       asp-action="Index"
+                       class="fs-18 cl7 hov-cl1 trans-04 m-r-16">
                         <i class="fa fa-pinterest-p"></i>
                     </a>
                 </div>
@@ -65,9 +78,10 @@
                     Email
                 </h4>
 
-                <form>
+                <form asp-controller="Home"
+                      asp-action="Index">
                     <div class="wrap-input1 w-full p-b-4">
-                        <input class="input1 bg-none plh1 stext-107 cl7" type="text" name="email" placeholder="email@example.com">
+                        <input class="input1 bg-none plh1 stext-107 cl7" type="text" placeholder="email@example.com">
                         <div class="focus-input1 trans-04"></div>
                     </div>
 
@@ -83,23 +97,33 @@
         <!-- Payment Icon & Coppyright -->
         <div class="p-t-40">
             <div class="flex-c-m flex-w p-b-18">
-                <a href="#" class="m-all-1">
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="m-all-1">
                     <img src="~/images/icons/icon-pay-01.png" alt="ICON-PAY">
                 </a>
 
-                <a href="#" class="m-all-1">
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="m-all-1">
                     <img src="~/images/icons/icon-pay-02.png" alt="ICON-PAY">
                 </a>
 
-                <a href="#" class="m-all-1">
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="m-all-1">
                     <img src="~/images/icons/icon-pay-03.png" alt="ICON-PAY">
                 </a>
 
-                <a href="#" class="m-all-1">
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="m-all-1">
                     <img src="~/images/icons/icon-pay-04.png" alt="ICON-PAY">
                 </a>
 
-                <a href="#" class="m-all-1">
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="m-all-1">
                     <img src="~/images/icons/icon-pay-05.png" alt="ICON-PAY">
                 </a>
             </div>
@@ -225,14 +249,3 @@
 </script>
 <!--===============================================================================================-->
 <script src="~/js/main.js"></script>
-<!--===============================================================================================-->
-<!-- Modal Search -->
-<script>
-    $(document).ready(function () {
-        $("#searchButton").click(function () {
-            let url = `/Product/Search?searchKeyword=` + $("#searchText").val();
-            window.location.href = url;
-        });
-    });
-</script>
-<!--===============================================================================================-->

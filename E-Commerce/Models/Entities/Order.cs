@@ -9,15 +9,19 @@ public partial class Order
 
     public string Address { get; set; } = null!;
 
-    public string PaymentMethod { get; set; } = null!;
+    public string PhoneNumber { get; set; } = null!;
 
-    public string Phone { get; set; } = null!;
+    public int OrderStatusId { get; set; }
 
-    public int OrderStatusId { get; set; } = 0;
+    public int PaymentMethodId { get; set; }
+
+    public double TotalAmount { get; set; }
 
     public virtual ICollection<OrderDetail> OrderDetails { get; set; } = [];
 
     public virtual AppUser AppUser { get; set; } = null!;
 
     public virtual OrderStatus OrderStatus { get; set; } = null!;
+
+    public virtual PaymentMethod PaymentMethod { get; set; } = null!;
 }

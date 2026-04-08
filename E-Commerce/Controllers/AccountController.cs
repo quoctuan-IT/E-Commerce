@@ -1,4 +1,4 @@
-﻿using E_Commerce.Models.ViewModels;
+﻿using E_Commerce.Models.ViewModels.AccountVM;
 using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,8 +9,24 @@ namespace E_Commerce.Controllers
     {
         private readonly IAccountService _accountService = accountService;
 
+
+        [HttpGet]
         [Authorize]
-        public IActionResult Index() => View();
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _accountService.GetCurrentUserAsync(User);
+            if (user == null) return NotFound();
+
+            // Profile
+            ProfileVM vm = new()
+            {
+                UserName = user.UserName,
+                Address = user.Address,
+                PhoneNumber = user.PhoneNumber
+            };
+
+            return View(vm);
+        }
 
         [HttpGet]
         public IActionResult Register() => View();
@@ -19,13 +35,14 @@ namespace E_Commerce.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterVM vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(vm);
+
+            // Register
+            if ((await _accountService.RegisterAsync(vm)).Succeeded)
             {
-                var result = await _accountService.RegisterAsync(vm);
+                TempData["RegisterSuccess"] = "Registration successful!";
 
-                if (result.Succeeded) return RedirectToAction("Success");
-
-                ModelState.AddModelError(string.Empty, "Register failed.");
+                return RedirectToAction(nameof(Register));
             }
 
             return View(vm);
@@ -38,15 +55,15 @@ namespace E_Commerce.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginVM vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(vm);
+
+            // Login
+            if ((await _accountService.LoginAsync(vm)).Succeeded)
             {
-                var result = await _accountService.LoginAsync(vm);
-
-                if (result.Succeeded) return RedirectToAction("Index", "Home");
-
-                ModelState.AddModelError(string.Empty, "Login failed.");
+                return RedirectToAction("Index", "Home");
             }
 
+            ModelState.AddModelError(string.Empty, "The UserName or Password is incorrect.");
             return View(vm);
         }
 
@@ -58,28 +75,67 @@ namespace E_Commerce.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        [Authorize]
-        public async Task<IActionResult> Profile()
+        [HttpGet]
+        public async Task<IActionResult> UpdateProfileAsync()
         {
             var user = await _accountService.GetCurrentUserAsync(User);
             if (user == null) return NotFound();
 
-            return View(user);
+            UpdateProfileVM vm = new()
+            {
+                Address = user.Address,
+                PhoneNumber = user.PhoneNumber ?? string.Empty,
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProfile(UpdateProfileVM vm)
+        {
+            if (!ModelState.IsValid) return View(vm);
+
+            var user = await _accountService.GetCurrentUserAsync(User);
+            if (user == null) return NotFound();
+
+            // UpdateProfile
+            if ((await _accountService.UpdateUserProfileAsync(user.Id, vm)).Succeeded)
+            {
+                TempData["UpdateProfileSuccess"] = "Update Profile successful!";
+
+                return RedirectToAction(nameof(Profile));
+            }
+
+            return View(vm);
+        }
+
+        [HttpGet]
+        public IActionResult ChangePassword() => View();
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordVM vm)
+        {
+            if (!ModelState.IsValid) return View(vm);
+
+            var user = await _accountService.GetCurrentUserAsync(User);
+            if (user == null) return NotFound();
+
+            // ChangePassword
+            if ((await _accountService.ChangePasswordAsync(user.Id, vm)).Succeeded)
+            {
+                TempData["ChangePasswordSuccess"] = "Change Password successful!";
+
+                return RedirectToAction(nameof(Profile));
+            }
+
+            ModelState.AddModelError(string.Empty, "The current Password is incorrect.");
+            return View(vm);
         }
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> EditProfile()
-        {
-            var user = await _accountService.GetCurrentUserAsync(User);
-            if (user == null) return NotFound();
-
-            return View(user);
-        }
-
-        public IActionResult Success() => View();
-
         public IActionResult AccessDenied() => View();
-
     }
 }

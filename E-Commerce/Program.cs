@@ -1,45 +1,53 @@
-using E_Commerce.Models;
+﻿using E_Commerce.Models;
 using E_Commerce.Models.Entities;
 using E_Commerce.Services.Implementations;
 using E_Commerce.Services.Interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.Text;
+
+
+// Services
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Configure DbContext
+
+// DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
+
+
+// Cache + Session
 builder.Services.AddDistributedMemoryCache();
-// Configure Session
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(60);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
-// Configure Identity Authentication
+
+
+// Cookie (Identity) - MVC
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
-    // UserName settings
-    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     // Password settings
     options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
     options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = true;
     options.Password.RequiredLength = 6;
-    options.Password.RequiredUniqueChars = 1;
+
     // Lockout settings
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(60);
     options.Lockout.AllowedForNewUsers = true;
 })
 .AddEntityFrameworkStores<AppDbContext>()
 .AddDefaultTokenProviders();
-// Configure Cookie
+
+
+// Cookie
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
@@ -54,12 +62,19 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
     options.SlidingExpiration = true;
 });
-// Configure JWT Authentication
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
 
-builder.Services.AddAuthentication().AddJwtBearer(options =>
+
+builder.Services.AddAuthentication(options =>
 {
+    options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+    options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+})
+// JWT (Bearer) - API
+.AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+{
+    var jwtSettings = builder.Configuration.GetSection("Jwt");
+    var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -68,34 +83,36 @@ builder.Services.AddAuthentication().AddJwtBearer(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = jwtSettings["Issuer"],
         ValidAudience = jwtSettings["Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(key)
+        IssuerSigningKey = new SymmetricSecurityKey(key),
+        ClockSkew = TimeSpan.Zero
     };
 });
-// Configure Swagger API
+
+
+// Swagger API
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new() { Title = "E-Commerce API", Version = "v1" });
 
-    options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Name = "Authorization",
-        Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
-        Scheme = "Bearer",
+        Type = SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
         BearerFormat = "JWT",
-        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
-        Description = "Input token."
+        In = ParameterLocation.Header,
+        Description = "Enter JWT token in format: Bearer {your_token}"
     });
 
-    options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
-            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            new OpenApiSecurityScheme
             {
-                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                Reference = new OpenApiReference
                 {
-                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Type = ReferenceType.SecurityScheme,
                     Id = "Bearer"
                 }
             },
@@ -103,17 +120,24 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-// Configure Service
+
+
+// MVC
+builder.Services.AddControllersWithViews();
+
+
+// DI
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
-// Configure Controllers
-builder.Services.AddControllers();
-builder.Services.AddControllersWithViews();
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Middleware
 
 var app = builder.Build();
 
@@ -123,17 +147,25 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
+// Swagger
+app.UseSwagger();
+app.UseSwaggerUI();
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
+
 app.UseSession();
-// Middleware
+
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.Use(async (context, next) =>
 {
-    if (context.User.Identity?.IsAuthenticated == true && context.Request.Path.StartsWithSegments("/Account/Login"))
+    if (context.User.Identity?.IsAuthenticated == true &&
+        context.Request.Path.StartsWithSegments("/Account/Login"))
     {
         context.Response.Redirect("/Home");
         return;
@@ -141,6 +173,8 @@ app.Use(async (context, next) =>
 
     await next();
 });
+
+
 // Routing
 app.MapControllers();
 app.MapControllerRoute(
@@ -151,4 +185,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}"
 );
+
+
 app.Run();

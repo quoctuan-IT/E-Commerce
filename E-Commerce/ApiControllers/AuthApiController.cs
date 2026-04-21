@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.ApiControllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class AuthApiController(IAccountService accountService) : ControllerBase
     {
         private readonly IAccountService _accountService = accountService;
@@ -27,11 +27,12 @@ namespace E_Commerce.ApiControllers
                     return Unauthorized(new { message = "Invalid email or password" });
 
                 var token = await _accountService.GenerateJwtTokenAsync(user);
+
                 return Ok(token);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
 
@@ -43,13 +44,17 @@ namespace E_Commerce.ApiControllers
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
 
-                // Convert RegisterDTO to RegisterVM
+                var normalizedEmail = registerDTO.Email.Trim().ToLowerInvariant();
+                var existingUser = await _accountService.GetUserByNameAsync(normalizedEmail);
+                if (existingUser != null)
+                    return Conflict(new { message = "Email is already registered" });
+
                 var registerVM = new RegisterVM
                 {
                     Password = registerDTO.Password,
-                    UserName = registerDTO.FullName,
-                    PhoneNumber = registerDTO.PhoneNumber ?? "",
-                    Address = registerDTO.Address ?? ""
+                    UserName = normalizedEmail,
+                    PhoneNumber = registerDTO.PhoneNumber,
+                    Address = registerDTO.Address
                 };
 
                 var result = await _accountService.RegisterAsync(registerVM);
@@ -60,16 +65,24 @@ namespace E_Commerce.ApiControllers
                     return BadRequest(new { message = "Registration failed", errors });
                 }
 
-                // Get the created user and generate token
-                var user = await _accountService.GetUserByNameAsync(registerDTO.FullName);
+                var user = await _accountService.GetUserByNameAsync(normalizedEmail);
                 if (user == null) return StatusCode(500, new { message = "User created but could not be retrieved" });
 
                 var token = await _accountService.GenerateJwtTokenAsync(user);
-                return CreatedAtAction(nameof(GetProfile), new { }, token);
+
+                return Ok(token);
             }
+            //catch (Exception)
+            //{
+            //    return StatusCode(500, new { message = "Internal server error" });
+            //}
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = ex.Message,
+                    detail = ex.InnerException?.Message
+                });
             }
         }
 
@@ -82,9 +95,9 @@ namespace E_Commerce.ApiControllers
                 await _accountService.LogoutAsync();
                 return Ok(new { message = "Logged out successfully" });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
 
@@ -102,14 +115,14 @@ namespace E_Commerce.ApiControllers
 
                 return Ok(userProfile);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
 
         [HttpPut("profile")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<UserDTO>> UpdateProfile([FromBody] UserDTO userDTO)
         {
             try
@@ -128,16 +141,17 @@ namespace E_Commerce.ApiControllers
                 }
 
                 var updatedProfile = await _accountService.GetUserProfileAsync(userId);
+
                 return Ok(updatedProfile);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
 
         [HttpPost("change-password")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDTO)
         {
             try
@@ -157,15 +171,15 @@ namespace E_Commerce.ApiControllers
 
                 return Ok(new { message = "Password changed successfully" });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
 
 
         [HttpGet("verify-token")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public ActionResult VerifyToken()
         {
             try
@@ -175,15 +189,15 @@ namespace E_Commerce.ApiControllers
 
                 return Ok(new { message = "Token is valid", userId });
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
 
 
         [HttpGet("user-info")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<UserDTO>> GetUserInfo()
         {
             try
@@ -203,9 +217,9 @@ namespace E_Commerce.ApiControllers
 
                 return Ok(userDTO);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, new { message = "Internal server error", error = ex.Message });
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
     }

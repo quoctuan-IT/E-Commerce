@@ -26,9 +26,11 @@ namespace E_Commerce.Services.Implementations
         // Account
         public async Task<IdentityResult> RegisterAsync(RegisterVM vm)
         {
+            var normalizedUserName = vm.UserName.Trim().ToLowerInvariant();
             var user = new AppUser
             {
-                UserName = vm.UserName,
+                UserName = normalizedUserName,
+                Email = normalizedUserName,
                 PhoneNumber = vm.PhoneNumber,
                 Address = vm.Address,
             };

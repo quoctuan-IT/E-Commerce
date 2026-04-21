@@ -116,8 +116,6 @@ namespace E_Commerce.Controllers
 
             return View(vm);
         }
-
-        public IActionResult Success() => View();
     }
 }
 

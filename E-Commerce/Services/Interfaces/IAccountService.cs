@@ -27,6 +27,7 @@ namespace E_Commerce.Services.Interfaces
         string? GetCurrentUserId(System.Security.Claims.ClaimsPrincipal user);
         Task<AppUser?> GetUserByIdAsync(string userId);
         Task<AppUser?> GetUserByNameAsync(string userName);
+        Task<AppUser?> GetUserByEmailAsync(string userEmail);
 
 
         // JWT

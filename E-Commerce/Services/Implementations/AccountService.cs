@@ -26,11 +26,10 @@ namespace E_Commerce.Services.Implementations
         // Account
         public async Task<IdentityResult> RegisterAsync(RegisterVM vm)
         {
-            var normalizedUserName = vm.UserName.Trim().ToLowerInvariant();
             var user = new AppUser
             {
-                UserName = normalizedUserName,
-                Email = normalizedUserName,
+                UserName = vm.UserName.Trim(),
+                Email = vm.UserName.Trim(),
                 PhoneNumber = vm.PhoneNumber,
                 Address = vm.Address,
             };
@@ -103,6 +102,9 @@ namespace E_Commerce.Services.Implementations
 
         public async Task<AppUser?> GetUserByIdAsync(string userId)
             => await _userManager.FindByIdAsync(userId);
+
+        public async Task<AppUser?> GetUserByEmailAsync(string userEmail)
+            => await _userManager.FindByEmailAsync(userEmail);
 
         public async Task<AppUser?> GetUserByNameAsync(string userName)
             => await _userManager.FindByNameAsync(userName);

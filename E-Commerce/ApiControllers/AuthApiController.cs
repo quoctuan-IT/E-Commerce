@@ -44,15 +44,14 @@ namespace E_Commerce.ApiControllers
             {
                 if (!ModelState.IsValid) return BadRequest(ModelState);
 
-                var normalizedEmail = registerDTO.Email.Trim().ToLowerInvariant();
-                var existingUser = await _accountService.GetUserByNameAsync(normalizedEmail);
+                var existingUser = await _accountService.GetUserByEmailAsync(registerDTO.Email.Trim());
                 if (existingUser != null)
                     return Conflict(new { message = "Email is already registered" });
 
                 var registerVM = new RegisterVM
                 {
+                    UserName = registerDTO.Email.Trim(),
                     Password = registerDTO.Password,
-                    UserName = normalizedEmail,
                     PhoneNumber = registerDTO.PhoneNumber,
                     Address = registerDTO.Address
                 };
@@ -65,7 +64,7 @@ namespace E_Commerce.ApiControllers
                     return BadRequest(new { message = "Registration failed", errors });
                 }
 
-                var user = await _accountService.GetUserByNameAsync(normalizedEmail);
+                var user = await _accountService.GetUserByEmailAsync(registerDTO.Email.Trim());
                 if (user == null) return StatusCode(500, new { message = "User created but could not be retrieved" });
 
                 var token = await _accountService.GenerateJwtTokenAsync(user);
@@ -204,7 +203,7 @@ namespace E_Commerce.ApiControllers
                     Email = user.Email!,
                     PhoneNumber = user.PhoneNumber!,
                     Address = user.Address,
-                    CreatedDate = user.LockoutEnd?.DateTime
+                    LastLoginDate = user.LockoutEnd?.DateTime
                 };
 
                 return Ok(userDTO);

@@ -91,6 +91,16 @@
                 </div>
 
                 <div class="card-footer bg-white border-top py-3 text-right">
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a asp-area="Admin"
+                           asp-controller="Dashboard"
+                           asp-action="Index"
+                           class="btn btn-success border px-4 font-weight-bold mr-2">
+                            Admin &nbsp;<i class="fa fa-lock" aria-hidden="true"></i>
+                        </a>
+                    }
+
                     <a asp-controller="Order"
                        asp-action="MyOrders"
                        class="btn btn-secondary border px-4 font-weight-bold mr-2">
@@ -106,7 +116,7 @@
                     <a asp-controller="Account"
                        asp-action="ChangePassword"
                        class="btn btn-warning px-4 font-weight-bold">
-                        Change Password &nbsp;<i class="fa fa-lock" aria-hidden="true"></i>
+                        Change Password &nbsp;<i class="fa fa-cog" aria-hidden="true"></i>
                     </a>
                 </div>
             </div>

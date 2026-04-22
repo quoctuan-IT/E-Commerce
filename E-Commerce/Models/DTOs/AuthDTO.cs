@@ -30,9 +30,6 @@ namespace E_Commerce.Models.DTOs
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = null!;
 
-        [StringLength(100, ErrorMessage = "Full name cannot exceed 100 characters")]
-        public string? FullName { get; set; }
-
         [Required(ErrorMessage = "Phone number is required")]
         [Phone(ErrorMessage = "Invalid phone number format")]
         public string PhoneNumber { get; set; } = null!;
@@ -63,8 +60,6 @@ namespace E_Commerce.Models.DTOs
         public string Email { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
         public string Address { get; set; } = null!;
-        public bool IsActive { get; set; } = true;
-        public DateTime? CreatedDate { get; set; }
         public DateTime? LastLoginDate { get; set; }
     }
 

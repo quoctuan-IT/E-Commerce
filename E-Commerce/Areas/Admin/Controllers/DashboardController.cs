@@ -13,7 +13,7 @@ namespace E_Commerce.Areas.Admin.Controllers
         private readonly IAccountService _accountService = accountService;
 
 
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> Index()
         {
             var user = await _accountService.GetCurrentUserAsync(User);
             if (user == null) return NotFound();

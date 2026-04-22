@@ -83,11 +83,20 @@
                                 }
                             </td>
                             <td class="text-end px-4">
-                                <a asp-action="Detail"
-                                   asp-route-orderId="@item.OrderId"
-                                   class="btn btn-sm btn-light border shadow-sm px-3 fw-bold">
-                                    <i class="bi bi-eye me-1"></i> Detail
-                                </a>
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a asp-action="Detail"
+                                       asp-route-orderId="@item.OrderId"
+                                       class="btn btn-sm btn-light border shadow-sm px-3 fw-bold text-primary">
+                                        <i class="bi bi-eye me-1"></i> View
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-orderId="@item.OrderId"
+                                       class="btn btn-sm btn-outline-danger shadow-sm px-3 fw-bold"
+                                       onclick="return confirm('Are you sure to delete this Order?');">
+                                        <i class="bi bi-trash me-1"></i> Delete
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     }

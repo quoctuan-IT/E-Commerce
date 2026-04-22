@@ -191,7 +191,6 @@ namespace E_Commerce.Services.Implementations
                 Email = user.Email!,
                 PhoneNumber = user.PhoneNumber!,
                 Address = user.Address,
-                CreatedDate = user.LockoutEnd?.DateTime
             };
         }
 

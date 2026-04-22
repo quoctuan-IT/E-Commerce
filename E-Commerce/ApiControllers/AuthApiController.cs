@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace E_Commerce.ApiControllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]
     public class AuthApiController(IAccountService accountService) : ControllerBase
     {
         private readonly IAccountService _accountService = accountService;
@@ -72,17 +72,9 @@ namespace E_Commerce.ApiControllers
 
                 return Ok(token);
             }
-            //catch (Exception)
-            //{
-            //    return StatusCode(500, new { message = "Internal server error" });
-            //}
-            catch (Exception ex)
+            catch (Exception)
             {
-                return StatusCode(500, new
-                {
-                    message = ex.Message,
-                    detail = ex.InnerException?.Message
-                });
+                return StatusCode(500, new { message = "Internal server error" });
             }
         }
 

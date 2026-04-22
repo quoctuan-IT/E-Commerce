@@ -63,7 +63,7 @@ namespace E_Commerce.Models.DTOs
         public string Email { get; set; } = null!;
         public string PhoneNumber { get; set; } = null!;
         public string Address { get; set; } = null!;
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public DateTime? CreatedDate { get; set; }
         public DateTime? LastLoginDate { get; set; }
     }

@@ -2,21 +2,21 @@
 bin/
 obj/
 E-Commerce/.config
+E-Commerce/Properties/PublishProfiles/*
 
 ## Visual Studio
 .vs/
 *.user
 
-## ASP.NET Core
+## App Settings
 appsettings.Development.json
 appsettings.json
-E-Commerce/Properties/PublishProfiles/*
 
 ## VS Code
 .vscode/
 
-## Environment files
-.env
-
 ## Uploaded product images (Utils.SaveImageAsync -> wwwroot/uploads/products)
 E-Commerce/wwwroot/uploads/products/
+
+## Environment files
+.env

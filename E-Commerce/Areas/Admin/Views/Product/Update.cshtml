@@ -5,20 +5,12 @@
     ViewData["Title"] = "Update Product";
 }
 
-
 <div class="container-fluid">
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a asp-controller="Dashboard"
-                   asp-action="Index">Admin</a>
-            </li>
-
-            <li class="breadcrumb-item">
-                <a asp-action="Index">Products</a>
-            </li>
-
-            <li class="breadcrumb-item active">Update</li>
+            <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Products</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Update</li>
         </ol>
     </nav>
 
@@ -27,11 +19,9 @@
             <div class="card admin-card border-0 shadow-sm">
                 <div class="card-header bg-white py-3 border-bottom">
                     <div class="d-flex align-items-center">
-                        <div class="bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center me-3"
-                             style="width: 45px; height: 45px;">
+                        <div class="bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 45px; height: 45px;">
                             <i class="bi bi-box-seam fs-4"></i>
                         </div>
-
                         <h5 class="mb-0 fw-bold text-dark">Update Product</h5>
                     </div>
                 </div>
@@ -43,49 +33,29 @@
                                 <h6 class="text-primary fw-bold mb-4">Basic Information</h6>
 
                                 <div class="mb-3">
-                                    <label asp-for="ProductId"
-                                           class="form-label text-secondary small fw-bold text-uppercase">
-                                        Product ID
-                                    </label>
-                                    <input asp-for="ProductId"
-                                           class="form-control form-control-lg fs-6" placeholder="Enter product name..." required readonly />
-                                    <span asp-validation-for="ProductId"
-                                          class="text-danger small"></span>
+                                    <label asp-for="ProductId" class="form-label text-secondary small fw-bold text-uppercase">Product ID</label>
+                                    <input asp-for="ProductId" class="form-control form-control-lg fs-6" readonly />
                                 </div>
 
                                 <div class="mb-3">
-                                    <label asp-for="ProductName"
-                                           class="form-label text-secondary small fw-bold text-uppercase">
-                                        Product Name
-                                    </label>
-                                    <input asp-for="ProductName"
-                                           class="form-control form-control-lg fs-6" placeholder="Enter product name..." required />
-                                    <span asp-validation-for="ProductName"
-                                          class="text-danger small"></span>
+                                    <label asp-for="ProductName" class="form-label text-secondary small fw-bold text-uppercase">Product Name</label>
+                                    <input asp-for="ProductName" class="form-control form-control-lg fs-6" placeholder="Enter product name..." required />
+                                    <span asp-validation-for="ProductName" class="text-danger small"></span>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label asp-for="UnitPrice"
-                                           class="form-label text-secondary small fw-bold text-uppercase">
-                                        Price ($)
-                                    </label>
+                                    <label asp-for="UnitPrice" class="form-label text-secondary small fw-bold text-uppercase">Price ($)</label>
                                     <div class="input-group">
                                         <span class="input-group-text">$</span>
-                                        <input asp-for="UnitPrice"
-                                               type="number" step="0.01" class="form-control" placeholder="0.00" required />
+                                        <input asp-for="UnitPrice" type="number" step="0.01" class="form-control" placeholder="0.00" required />
                                     </div>
                                     <span asp-validation-for="UnitPrice" class="text-danger small"></span>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label asp-for="Description"
-                                           class="form-label text-secondary small fw-bold text-uppercase">
-                                        Description
-                                    </label>
-                                    <textarea asp-for="Description"
-                                              class="form-control" rows="6" placeholder="Describe the product features..."></textarea>
-                                    <span asp-validation-for="Description"
-                                          class="text-danger small"></span>
+                                    <label asp-for="Description" class="form-label text-secondary small fw-bold text-uppercase">Description</label>
+                                    <textarea asp-for="Description" class="form-control" rows="6" placeholder="Describe the product features..."></textarea>
+                                    <span asp-validation-for="Description" class="text-danger small"></span>
                                 </div>
                             </div>
 
@@ -95,61 +65,49 @@
                                 <div class="mb-4 text-center">
                                     <label class="form-label text-secondary small fw-bold text-uppercase d-block text-start">Product Image</label>
                                     <div class="image-preview-wrapper mb-3">
-                                        <img id="preview" src="@Model.Image" class="img-fluid rounded-3 border shadow-sm" style="max-height: 200px; width: 100%; object-fit: cover;">
+                                        <img id="preview" src="@Model.Image" class="img-fluid rounded-3 border shadow-sm" style="max-height: 300px; width: 100%; object-fit: cover;">
                                     </div>
                                     <input asp-for="UploadedImage" class="form-control form-control-sm" type="file" id="imageInput" accept="image/*" />
                                     <small class="text-muted d-block mt-2">Recommended size: 1200x1486px (JPG, PNG)</small>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label asp-for="CategoryId"
-                                           class="form-label text-secondary small fw-bold text-uppercase">
-                                        Category
-                                    </label>
-
-                                    <select asp-for="CategoryId"
-                                            class="form-select" required>
+                                    <label asp-for="CategoryId" class="form-label text-secondary small fw-bold text-uppercase">Category</label>
+                                    <select asp-for="CategoryId" class="form-select" required>
                                         <option value="">-- Choose Category --</option>
                                         @foreach (var item in Model.Categories)
                                         {
                                             <option value="@item.CategoryId">@item.CategoryName</option>
                                         }
                                     </select>
-                                    <span asp-validation-for="CategoryId"
-                                          class="text-danger small"></span>
+                                    <span asp-validation-for="CategoryId" class="text-danger small"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="card-footer bg-light p-4 border-0 text-end">
-                        <a asp-action="Index"
-                           class="btn btn-link text-decoration-none text-muted me-3 fw-bold border-dark">Cancel</a>
-
-                        <button type="submit" class="btn btn-success px-3 py-2 shadow-sm fw-bold">
+                        <a asp-action="Index" class="btn btn-link text-decoration-none text-muted me-3 fw-bold border-dark">Cancel</a>
+                        <button type="submit" class="btn btn-success px-4 py-2 shadow-sm fw-bold">
                             <i class="bi bi-save me-2"></i>UPDATE
                         </button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
 </div>
 
-
 @section Scripts {
     <script>
-        // Preview IMG
         document.getElementById('imageInput').onchange = evt => {
-            const [file] = document.getElementById('imageInput').files
+            const [file] = evt.target.files;
             if (file) {
-                document.getElementById('preview').src = URL.createObjectURL(file)
+                document.getElementById('preview').src = URL.createObjectURL(file);
             }
         }
     </script>
 }
-
 
 <style>
     .admin-card {

@@ -3,32 +3,28 @@
 
 @{
     ViewData["Title"] = "User Management";
-}
 
+    string[] avatarColors = { "bg-primary-subtle text-primary", "bg-success-subtle text-success", "bg-danger-subtle text-danger", "bg-warning-subtle text-warning", "bg-info-subtle text-info" };
+    int colorCount = avatarColors.Length;
+}
 
 <div class="container-fluid p-0">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item">
-                        <a asp-controller="Dashboard" 
-                        asp-action="Index">Admin</a>
-                        </li>
-
-                    <li class="breadcrumb-item active">Users</li>
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Users</li>
                 </ol>
             </nav>
         </div>
 
-        <a asp-action="Create" 
-        class="btn btn-primary d-flex align-items-center shadow-sm px-3 py-2">
-            <i class="bi bi-person-plus-fill me-2"></i> <span>Create User</span>
+        <a asp-action="Create" class="btn btn-primary d-flex align-items-center shadow-sm px-3 py-2 fw-bold">
+            <i class="bi bi-person-plus-fill me-2"></i>Create User
         </a>
     </div>
 
     <div class="card admin-card border-0 shadow-sm overflow-hidden">
-
         <partial name="_Notification" />
 
         <div class="card-header bg-white py-3 border-bottom-0">
@@ -41,7 +37,7 @@
 
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light">
+                <thead class="table-light border-bottom">
                     <tr>
                         <th class="px-4 py-3 text-secondary small fw-bold text-uppercase" style="width: 30%">User</th>
                         <th class="py-3 text-secondary small fw-bold text-uppercase" style="width: 20%">Contact</th>
@@ -51,35 +47,52 @@
                 </thead>
 
                 <tbody>
-                    @foreach (var item in Model)
+                    @if (Model != null && Model.Any())
+                    {
+                        int index = 0;
+                        foreach (var item in Model)
+                        {
+                            string colorClass = avatarColors[index % colorCount];
+                            index++;
+                            string firstLetter = !string.IsNullOrEmpty(item.UserName) ? item.UserName.Substring(0, 1).ToUpper() : "U";
+
+                            <tr>
+                                <td class="px-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar-circle me-3 fw-bold d-flex align-items-center justify-content-center rounded-circle @colorClass"
+                                             style="width: 40px; height: 40px; min-width: 40px;">
+                                            @firstLetter
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark">@(item.UserName ?? "Unknown User")</div>
+                                            <small class="text-muted">User ID: #@item.UserId</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="small fw-semibold text-dark">
+                                        <i class="bi bi-telephone text-secondary me-1"></i> @(item.PhoneNumber ?? "N/A")
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="text-muted small text-truncate" style="max-width: 250px;" title="@item.Address">
+                                        <i class="bi bi-geo-alt text-secondary me-1"></i> @(item.Address ?? "No address provided")
+                                    </div>
+                                </td>
+                                <td class="text-end px-4">
+                                    <a asp-action="ChangePassword" asp-route-userId="@item.UserId"
+                                       class="btn btn-sm btn-outline-action px-3 d-inline-flex align-items-center transition-all">
+                                        <i class="bi bi-key-fill me-1"></i> <span class="small fw-bold">Reset Password</span>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-                            <td class="px-4">
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar-circle me-3 bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center rounded-circle"
-                                         style="width: 40px; height: 40px; min-width: 40px;">
-                                        @item.UserName?.Substring(0, 1).ToUpper()
-                                    </div>
-                                    <div>
-                                        <div class="fw-bold text-dark">@item.UserName</div>
-                                        <small class="text-muted">User ID: #@item.UserId</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <div class="small fw-semibold text-dark"><i class="bi bi-telephone-outbound me-1 small"></i> @item.PhoneNumber</div>
-                            </td>
-                            <td>
-                                <div class="text-muted small text-truncate" style="max-width: 250px;" title="@item.Address">
-                                    <i class="bi bi-geo-alt me-1"></i> @item.Address
-                                </div>
-                            </td>
-                            <td class="text-end px-4">
-                                <a asp-action="ChangePassword"
-                                   asp-route-userId="@item.UserId"
-                                   class="btn btn-sm btn-outline-secondary px-3 d-inline-flex align-items-center">
-                                    <i class="bi bi-key-fill me-1"></i> <span class="small fw-bold">Reset Password</span>
-                                </a>
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                <i class="bi bi-people fs-1 d-block mb-2"></i> No users found.
                             </td>
                         </tr>
                     }
@@ -87,14 +100,13 @@
             </table>
         </div>
 
-        <div class="card-footer bg-white py-3">
-            <div class="text-muted small">
-                Showing @Model.Count() registered users
+        <div class="card-footer bg-white py-3 border-top">
+            <div class="text-muted small fw-medium">
+                Showing @(Model?.Count() ?? 0) registered users
             </div>
         </div>
     </div>
 </div>
-
 
 <style>
     .admin-card {
@@ -102,17 +114,28 @@
     }
 
     .table-hover tbody tr:hover {
-        background-color: rgba(13, 110, 253, 0.01);
+        background-color: rgba(13, 110, 253, 0.02);
     }
 
     .avatar-circle {
-        border: 1px solid rgba(13, 110, 253, 0.1);
-        font-size: 0.9rem;
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
     }
 
-    .btn-outline-secondary:hover {
-        background-color: #f8f9fa;
-        color: #0d6efd;
-        border-color: #0d6efd;
+    .btn-outline-action {
+        color: #6c757d;
+        border-color: #dee2e6;
+        background-color: transparent;
+        border-radius: 6px;
+    }
+
+        .btn-outline-action:hover {
+            color: #0d6efd;
+            background-color: #f0f5ff;
+            border-color: #80b3ff;
+        }
+
+    .transition-all {
+        transition: all 0.2s ease-in-out;
     }
 </style>

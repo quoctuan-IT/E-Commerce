@@ -49,12 +49,13 @@
                             }
 
                             <div>
-                                <h4 class="mb-0 font-weight-bold text-dark">Welcome, @Model.UserName.</h4>
+                                <h5 class="mb-0 font-weight-bold text-dark">Welcome, <strong>@Model.UserName</strong></h5>
                                 <p class="text-muted mb-0 small text-uppercase font-weight-bold">Personal Account</p>
                             </div>
                         </div>
 
-                        <a asp-action="Logout" class="btn btn-danger btn-sm font-weight-bold px-3 py-2">
+                        <a asp-action="Logout"
+                           class="btn btn-danger btn-sm font-weight-bold px-3 py-2 ml-1">
                             Sign out &nbsp;<i class="fa fa-sign-out" aria-hidden="true"></i>
                         </a>
                     </div>
@@ -90,34 +91,42 @@
                     </div>
                 </div>
 
-                <div class="card-footer bg-white border-top py-3 text-right">
-                    @if (User.IsInRole("Admin"))
-                    {
-                        <a asp-area="Admin"
-                           asp-controller="Dashboard"
-                           asp-action="Index"
-                           class="btn btn-success border px-4 font-weight-bold mr-2">
-                            Admin &nbsp;<i class="fa fa-lock" aria-hidden="true"></i>
-                        </a>
-                    }
+                <div class="card-footer bg-white border-top py-3">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center">
+                        <!-- Góc bên trái: Nút Admin -->
+                        <div class="mb-2 mb-sm-0 w-100-mobile">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-area="Admin"
+                                   asp-controller="Dashboard"
+                                   asp-action="Index"
+                                   class="btn btn-success border font-weight-bold btn-custom-size">
+                                    Admin &nbsp;<i class="fa fa-lock" aria-hidden="true"></i>
+                                </a>
+                            }
+                        </div>
 
-                    <a asp-controller="Order"
-                       asp-action="MyOrders"
-                       class="btn btn-secondary border px-4 font-weight-bold mr-2">
-                        Order History &nbsp;<i class="fa fa-history" aria-hidden="true"></i>
-                    </a>
+                        <!-- Góc bên phải: Các nút chức năng cá nhân -->
+                        <div class="d-flex flex-column flex-sm-row style-gap w-100-mobile">
+                            <a asp-controller="Order"
+                               asp-action="MyOrders"
+                               class="btn btn-secondary border font-weight-bold btn-custom-size">
+                                Order History &nbsp;<i class="fa fa-history" aria-hidden="true"></i>
+                            </a>
 
-                    <a asp-controller="Account"
-                       asp-action="UpdateProfile"
-                       class="btn btn-info px-4 font-weight-bold">
-                        Update Profile &nbsp;<i class="fa fa-cog" aria-hidden="true"></i>
-                    </a>
+                            <a asp-controller="Account"
+                               asp-action="UpdateProfile"
+                               class="btn btn-info font-weight-bold btn-custom-size">
+                                Update Profile &nbsp;<i class="fa fa-user" aria-hidden="true"></i>
+                            </a>
 
-                    <a asp-controller="Account"
-                       asp-action="ChangePassword"
-                       class="btn btn-warning px-4 font-weight-bold">
-                        Change Password &nbsp;<i class="fa fa-cog" aria-hidden="true"></i>
-                    </a>
+                            <a asp-controller="Account"
+                               asp-action="ChangePassword"
+                               class="btn btn-warning font-weight-bold btn-custom-size">
+                                Password &nbsp;<i class="fa fa-key" aria-hidden="true"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -138,5 +147,26 @@
     .btn-outline-danger:hover {
         background-color: #dc3545;
         color: #fff;
+    }
+
+    .style-gap {
+        gap: 10px;
+    }
+
+    .style-gap {
+        gap: 10px;
+    }
+
+    @@media (min-width: 576px) {
+        .btn-custom-size {
+            min-width: 170px;
+            text-align: center;
+        }
+    }
+
+    @@media (max-width: 575.98px) {
+        .w-100-mobile, .btn-custom-size {
+            width: 100%;
+        }
     }
 </style>

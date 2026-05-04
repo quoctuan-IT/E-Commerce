@@ -5,17 +5,16 @@
     ViewData["Title"] = "Dashboard";
 }
 
-
-<div class="container-fluid">
+<div class="container-fluid px-0">
+    <!-- Welcome Header Card -->
     <div class="row mb-4">
         <div class="col-12">
             <div class="p-4 bg-white shadow-sm rounded-4 d-flex align-items-center justify-content-between">
                 <div>
                     <h3 class="fw-bold mb-1">Hello, @Model.UserName!</h3>
-                    <p class="text-muted mb-0">Welcome back to your administration panel.</p>
+                    <p class="text-muted mb-0 small">Welcome back to your administration panel.</p>
                 </div>
-
-                <div class="d-none d-md-block">
+                <div>
                     <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill">
                         <i class="bi bi-calendar3 me-2"></i> @DateTime.Now.ToString("dd MMM, yyyy")
                     </span>
@@ -24,123 +23,92 @@
         </div>
     </div>
 
+    <!-- Info Stats Cards -->
     <div class="row g-4 mb-4">
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card admin-card p-3 border-0 shadow-sm">
+        <div class="col-12 col-sm-6">
+            <div class="card admin-card p-3 bg-white">
                 <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-primary text-white rounded-3 p-3">
-                        <i class="bi bi-person-badge fs-3"></i>
+                    <div class="flex-shrink-0 bg-primary-subtle text-primary rounded-3 p-3">
+                        <i class="bi bi-person-badge fs-3 lh-1"></i>
                     </div>
-
                     <div class="flex-grow-1 ms-3">
-                        <p class="text-muted mb-0 small fw-bold text-uppercase">Admin Name</p>
-                        <h5 class="mb-0 fw-bold">@Model.UserName</h5>
+                        <p class="text-muted mb-0 small fw-bold text-uppercase">Name</p>
+                        <h5 class="mb-0 fw-bold text-dark">@Model.UserName</h5>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card admin-card p-3 border-0 shadow-sm">
+        <div class="col-12 col-sm-6">
+            <div class="card admin-card p-3 bg-dark text-white h-100">
                 <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-success text-white rounded-3 p-3">
-                        <i class="bi bi-telephone fs-3"></i>
+                    <div class="flex-shrink-0 bg-secondary rounded-3 p-3 text-primary">
+                        <i class="bi bi-patch-check-fill fs-3 lh-1"></i>
                     </div>
-
                     <div class="flex-grow-1 ms-3">
-                        <p class="text-muted mb-0 small fw-bold text-uppercase">Contact</p>
-                        <h5 class="mb-0 fw-bold">@Model.PhoneNumber</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card admin-card p-3 border-0 shadow-sm">
-                <div class="d-flex align-items-center">
-                    <div class="flex-shrink-0 bg-info text-white rounded-3 p-3">
-                        <i class="bi bi-geo-alt fs-3"></i>
-                    </div>
-
-                    <div class="flex-grow-1 ms-3">
-                        <p class="text-muted mb-0 small fw-bold text-uppercase">Location</p>
-                        <h5 class="mb-0 fw-bold text-truncate" style="max-width: 150px;">@Model.Address</h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card admin-card p-3 border-0 shadow-sm h-100 bg-dark text-white">
-                <div class="d-flex align-items-center justify-content-center h-100">
-                    <div class="text-center">
-                        <p class="small mb-1 opacity-75">Account Status</p>
-                        <div class="fw-bold"><i class="bi bi-patch-check-fill text-primary"></i> Verified Admin</div>
+                        <p class="text-white-50 mb-0 small fw-bold text-uppercase">Account Status</p>
+                        <h5 class="mb-0 fw-bold">Verified Admin</h5>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Main Content Grid -->
     <div class="row g-4">
-        <div class="col-lg-8">
-            <div class="card admin-card h-100 p-4 border-0 shadow-sm bg-white">
+        <!-- Left: Quick Actions -->
+        <div class="col-12 col-lg-8">
+            <div class="card admin-card p-4 bg-white h-100">
                 <h5 class="fw-bold mb-4"><i class="bi bi-lightning-charge me-2 text-warning"></i>Quick Actions</h5>
 
                 <div class="row g-3">
-                    <div class="col-md-6">
-                        <a asp-area=""
-                           asp-controller="Account"
-                           asp-action="ChangePassword"
-                           class="btn btn-light border w-100 py-3 text-start d-flex align-items-center justify-content-between hover-shadow">
+                    <div class="col-12 col-sm-6">
+                        <a asp-area="" asp-controller="Account" asp-action="ChangePassword"
+                           class="btn btn-light border w-100 py-3 text-start d-flex align-items-center justify-content-between action-link">
                             <span><i class="bi bi-shield-lock me-2 text-primary"></i> Change Password</span>
                             <i class="bi bi-chevron-right small opacity-50"></i>
                         </a>
                     </div>
 
-                    <div class="col-md-6">
-                        <a asp-area=""
-                           asp-controller="Account"
-                           asp-action="Logout"
-                           class="btn btn-light border w-100 py-3 text-start d-flex align-items-center justify-content-between text-danger hover-shadow">
+                    <div class="col-12 col-sm-6">
+                        <a asp-area="" asp-controller="Account" asp-action="Logout"
+                           class="btn btn-light border w-100 py-3 text-start d-flex align-items-center justify-content-between text-danger action-link">
                             <span><i class="bi bi-box-arrow-right me-2"></i> Sign Out System</span>
                             <i class="bi bi-chevron-right small opacity-50"></i>
                         </a>
                     </div>
                 </div>
 
-                <div class="mt-4 p-4 rounded-4 bg-light">
-                    <p class="small text-muted mb-2"><i class="bi bi-info-circle me-1"></i> System Tip:</p>
-                    <p class="mb-0 small">As an administrator, you can manage Products, Categories and handle User orders from the sidebar menu.</p>
+                <div class="mt-4 p-3 rounded-3 bg-light border-start border-primary border-3">
+                    <p class="small text-muted mb-1 fw-bold"><i class="bi bi-info-circle me-1 text-primary"></i> System Tip:</p>
+                    <p class="mb-0 small text-secondary">As an administrator, you can manage Products, Categories and handle Users, Orders from the sidebar menu.</p>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4">
-            <div class="card admin-card h-100 border-0 shadow-sm overflow-hidden bg-white">
+        <!-- Right: Profile Info -->
+        <div class="col-12 col-lg-4">
+            <div class="card admin-card overflow-hidden bg-white h-100">
                 <div class="bg-primary p-4 text-center">
-                    <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm mb-3" style="width: 80px; height: 80px;">
-
-                        @if (!string.IsNullOrEmpty(@Model.UserName))
+                    <div class="bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-sm mb-3" style="width: 70px; height: 70px;">
+                        @if (!string.IsNullOrEmpty(Model.UserName))
                         {
-                            <span class="fs-2 fw-bold text-primary">@Model.UserName.Substring(0, 1).ToUpper()</span>
+                            <span class="fs-3 fw-bold text-primary">@Model.UserName.Substring(0, 1).ToUpper()</span>
                         }
-
                     </div>
-
                     <h5 class="text-white fw-bold mb-0">@Model.UserName</h5>
                     <p class="text-white-50 small mb-0">System Administrator</p>
                 </div>
 
                 <div class="p-4">
                     <div class="mb-3 border-bottom pb-2">
-                        <label class="text-muted small fw-bold">REGISTERED PHONE</label>
-                        <p class="mb-0 fw-semibold">@Model.PhoneNumber</p>
+                        <label class="text-muted small fw-bold d-block mb-1">REGISTERED PHONE</label>
+                        <p class="mb-0 fw-semibold text-dark small"><i class="bi bi-telephone me-2 text-muted"></i>@Model.PhoneNumber</p>
                     </div>
 
                     <div class="mb-0">
-                        <label class="text-muted small fw-bold">REGISTERED ADDRESS</label>
-                        <p class="mb-0 fw-semibold">@Model.Address</p>
+                        <label class="text-muted small fw-bold d-block mb-1">REGISTERED ADDRESS</label>
+                        <p class="mb-0 fw-semibold text-dark small"><i class="bi bi-geo-alt me-2 text-muted"></i>@Model.Address</p>
                     </div>
                 </div>
             </div>
@@ -148,21 +116,15 @@
     </div>
 </div>
 
-
 <style>
-    .hover-shadow:hover {
-        background-color: #fff !important;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        border-color: #0d6efd !important;
-        transform: translateY(-2px);
-        transition: all 0.2s;
+    .action-link {
+        transition: all 0.2s ease-in-out;
     }
 
-    .rounded-4 {
-        border-radius: 1rem !important;
-    }
-
-    .ls-1 {
-        letter-spacing: 1px;
-    }
+        .action-link:hover {
+            background-color: #fff !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-color: #0d6efd !important;
+            transform: translateY(-1px);
+        }
 </style>

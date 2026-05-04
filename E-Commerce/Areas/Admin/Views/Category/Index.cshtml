@@ -5,58 +5,73 @@
     ViewData["Title"] = "Categories Management";
 }
 
-
-<div class="container-fluid p-0">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container-fluid px-0">
+    <!-- Breadcrumb & Header Action -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
                     <li class="breadcrumb-item">
-                        <a asp-controller="Dashboard" asp-action="Index">Admin</a>
+                        <a asp-controller="Dashboard" asp-action="Index" class="text-decoration-none">Admin</a>
                     </li>
-
-                    <li class="breadcrumb-item active">Categories</li>
+                    <li class="breadcrumb-item active" aria-current="page">Categories</li>
                 </ol>
             </nav>
         </div>
 
-        <a asp-action="Create" class="btn btn-primary d-flex align-items-center shadow-sm px-3 py-2">
+        <a asp-action="Create" class="btn btn-primary d-flex align-items-center shadow-sm px-3 py-2 btn-responsive">
             <i class="bi bi-plus-lg me-2"></i> <span>New Category</span>
         </a>
     </div>
 
-    <div class="card admin-card border-0 shadow-sm overflow-hidden">
-
+    <!-- Main Table Card -->
+    <div class="card admin-card border-0 shadow-sm overflow-hidden bg-white">
         <partial name="_Notification" />
 
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light">
+            <table class="table table-hover align-middle mb-0 text-nowrap">
+                <thead class="table-light border-bottom">
                     <tr>
                         <th class="px-4 py-3 text-secondary small fw-bold text-uppercase" style="width: 15%">ID</th>
-                        <th class="py-3 text-secondary small fw-bold text-uppercase" style="width: 55%">Category Name</th>
-                        <th class="py-3 text-secondary small fw-bold text-uppercase text-end px-4" style="width: 30%">Actions</th>
+                        <th class="py-3 text-secondary small fw-bold text-uppercase">Category Name</th>
+                        <th class="py-3 text-secondary small fw-bold text-uppercase text-end px-4" style="width: 20%">Actions</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach (var item in Model)
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="px-4">
+                                    <span class="badge bg-light text-secondary border fw-medium px-2 py-1 rounded-2">
+                                        #@item.CategoryId
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="fw-bold text-dark text-truncate" style="max-width: 350px;" title="@item.CategoryName">
+                                        @item.CategoryName
+                                    </div>
+                                </td>
+                                <td class="text-end px-4">
+                                    <div class="btn-group shadow-sm rounded-2 overflow-hidden">
+                                        <a asp-action="Update"
+                                           asp-route-categoryId="@item.CategoryId"
+                                           class="btn btn-sm btn-outline-primary px-3 d-inline-flex align-items-center py-2">
+                                            <i class="bi bi-pencil-square me-1"></i> Edit
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-                            <td class="px-4">
-                                <span class="badge bg-light text-dark border fw-medium px-3 py-2">#@item.CategoryId</span>
-                            </td>
-                            <td>
-                                <div class="fw-bold text-dark">@item.CategoryName</div>
-                            </td>
-                            <td class="text-end px-4">
-                                <div class="btn-group shadow-sm">
-                                    <a asp-action="Update"
-                                       asp-route-categoryId="@item.CategoryId"
-                                       class="btn btn-sm btn-outline-primary px-3">
-                                        <i class="bi bi-pencil-square me-1"></i> Edit
-                                    </a>
-                                </div>
+                            <td colspan="3" class="text-center py-5 text-muted">
+                                <i class="bi bi-folder-x fs-1 d-block mb-2 text-opacity-25"></i>
+                                No categories found.
                             </td>
                         </tr>
                     }
@@ -64,26 +79,36 @@
             </table>
         </div>
 
-        <div class="card-footer bg-white py-3">
+        <div class="card-footer bg-white py-3 border-top">
             <div class="d-flex justify-content-between align-items-center">
-                <span class="text-muted small">Showing @Model.Count() categories</span>
+                <span class="text-muted small fw-medium">
+                    Total: <span class="text-dark fw-bold">@(Model?.Count() ?? 0)</span> categories
+                </span>
             </div>
         </div>
     </div>
 </div>
 
-
 <style>
-    .table > :not(caption) > * > * {
-        padding: 1rem 0.5rem;
+    .table td {
+        padding-top: 0.85rem;
+        padding-bottom: 0.85rem;
     }
 
-    .table-hover tbody tr:hover {
+    .table tbody tr:hover {
         background-color: rgba(13, 110, 253, 0.02);
     }
 
-    .btn-group .btn {
-        border-radius: 6px !important;
-        margin: 0 2px;
+    @@media (max-width: 575.98px) {
+        .btn-responsive span
+
+    {
+        display: none;
+    }
+
+    .btn-responsive i {
+        margin-right: 0 !important;
+    }
+
     }
 </style>

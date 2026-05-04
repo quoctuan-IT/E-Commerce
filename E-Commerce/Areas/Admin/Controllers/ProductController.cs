@@ -1,7 +1,6 @@
-﻿using E_Commerce.Areas.Admin.ViewModels.ProductVM;
-using E_Commerce.Areas.Admin.ViewModels.CategoryVM;
+﻿using E_Commerce.Areas.Admin.ViewModels.CategoryVM;
+using E_Commerce.Areas.Admin.ViewModels.ProductVM;
 using E_Commerce.Helpers;
-using E_Commerce.Models.Entities;
 using E_Commerce.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

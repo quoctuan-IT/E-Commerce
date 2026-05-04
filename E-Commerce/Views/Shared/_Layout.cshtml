@@ -44,7 +44,7 @@
                     else
                     {
                         <div class="mtext-110 left-top-bar">
-                            Register to Order now!
+                            Sign in to Order now!
                         </div>
 
                         <div class="right-top-bar flex-w h-full">
@@ -52,12 +52,6 @@
                                asp-action="Login"
                                class="flex-c-m trans-04 p-lr-25">
                                 Sign in &nbsp;<i class="fa fa-sign-in" aria-hidden="true"></i>
-                            </a>
-
-                            <a asp-controller="Account"
-                               asp-action="Register"
-                               class="flex-c-m trans-04 p-lr-25">
-                                Register &nbsp;<i class="fa fa-user-circle-o" aria-hidden="true"></i>
                             </a>
                         </div>
                     }
@@ -88,7 +82,7 @@
                             <li class="active-menu label1" data-label1="sale">
                                 <a asp-controller="Product"
                                    asp-action="Index">
-                                    Shop &nbsp;<i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                                    Shop
                                 </a>
                             </li>
                         </ul>
@@ -152,14 +146,14 @@
                 {
                     <li>
                         <div class="mtext-110 left-top-bar">
-                            Hi! <strong style="color: pink;">Phạm Quốc Tuấn ❤️</strong>.
+                            Hi, <strong style="color: pink;">@User.Identity.Name ❤️</strong>.
                         </div>
                     </li>
 
                     <li>
                         <div class="right-top-bar flex-w h-full">
                             <a asp-controller="Account"
-                               asp-action="Index"
+                               asp-action="Profile"
                                class="flex-c-m p-lr-10 trans-04">
                                 Profile &nbsp;<i class="fa fa-user-circle-o" aria-hidden="true"></i>
                             </a>
@@ -176,7 +170,7 @@
                 {
                     <li>
                         <div class="mtext-110 left-top-bar">
-                            Register to Order now!
+                            Sign in to Order now!
                         </div>
                     </li>
 
@@ -186,12 +180,6 @@
                                asp-action="Login"
                                class="flex-c-m p-lr-10 trans-04">
                                 Sign in &nbsp;<i class="fa fa-sign-in" aria-hidden="true"></i>
-                            </a>
-
-                            <a asp-controller="Account"
-                               asp-action="Register"
-                               class="flex-c-m p-lr-10 trans-04">
-                                Register &nbsp;<i class="fa fa-user-circle-o" aria-hidden="true"></i>
                             </a>
                         </div>
                     </li>
@@ -211,7 +199,7 @@
                     <a asp-controller="Product"
                        asp-action="Index"
                        class="label1 rs1" data-label1="sale">
-                        Shop &nbsp;<i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                        Shop
                     </a>
                 </li>
             </ul>

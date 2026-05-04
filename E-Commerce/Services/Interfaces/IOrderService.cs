@@ -1,7 +1,7 @@
-﻿using E_Commerce.Models.Entities;
+﻿using E_Commerce.Areas.Admin.ViewModels.OrderVM;
+using E_Commerce.Models.Entities;
 using E_Commerce.Models.ViewModels.CartVM;
 using E_Commerce.Models.ViewModels.OrderVM;
-using E_Commerce.Areas.Admin.ViewModels.OrderVM;
 
 namespace E_Commerce.Services.Interfaces
 {

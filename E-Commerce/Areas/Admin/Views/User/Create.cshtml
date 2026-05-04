@@ -5,33 +5,24 @@
     ViewData["Title"] = "Create User";
 }
 
-
-<div class="container-fluid">
+<div class="container-fluid p-0">
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a asp-controller="Dashboard" 
-                asp-action="Index">Admin</a>
-            </li>
-
-            <li class="breadcrumb-item">
-                <a asp-action="Index">Users</a>
-                </li>
-
-            <li class="breadcrumb-item active">Create User</li>
+            <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index">Users</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Create User</li>
         </ol>
     </nav>
 
     <div class="row justify-content-center">
-        <div class="col-xl-8 col-lg-10">
-            <div class="card admin-card border-0 shadow-sm">
-                <div class="card-header bg-white py-4 border-bottom">
+        <div class="col-xl-9 col-lg-11">
+            <div class="card admin-card border-0 shadow-sm overflow-hidden">
+                <div class="card-header bg-white py-4 border-bottom-0">
                     <div class="d-flex align-items-center">
                         <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
-                             style="width: 50px; height: 50px;">
-                            <i class="bi bi-person-plus fs-3"></i>
+                             style="width: 48px; height: 48px; min-width: 48px;">
+                            <i class="bi bi-person-plus-fill fs-4"></i>
                         </div>
-
                         <div>
                             <h5 class="mb-0 fw-bold text-dark">User Registration</h5>
                             <p class="text-muted small mb-0">Create a new account for your customer or staff.</p>
@@ -40,85 +31,98 @@
                 </div>
 
                 <form asp-action="Create" method="post">
-                    <div class="card-body p-4 p-md-5">
+                    <div class="card-body p-4 p-md-5 pt-2">
                         <div class="row g-4">
-                            <div class="col-md-6">
-                                <h6 class="text-primary fw-bold mb-4 small text-uppercase"><i class="bi bi-info-circle me-2"></i>Account Details</h6>
+                            <div class="col-md-6 pe-md-4">
+                                <h6 class="text-primary fw-bold mb-4 small text-uppercase tracking-wider">
+                                    <i class="bi bi-info-circle me-2"></i>Account Details
+                                </h6>
 
                                 <div class="mb-3">
-                                    <label asp-for="UserName" class="form-label text-secondary small fw-bold">USERNAME</label>
+                                    <label asp-for="UserName" class="form-label text-secondary small fw-bold">USERNAME <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-person text-muted"></i></span>
-                                        <input asp-for="UserName" class="form-control border-start-0" placeholder="e.g. johndoe" required />
+                                        <span class="input-group-text bg-white text-muted"><i class="bi bi-person"></i></span>
+                                        <input asp-for="UserName" class="form-control" placeholder="e.g. johndoe" required />
                                     </div>
-                                    <span asp-validation-for="UserName" class="text-danger small"></span>
+                                    <span asp-validation-for="UserName" class="text-danger small mt-1 d-block"></span>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label asp-for="PhoneNumber" class="form-label text-secondary small fw-bold">PHONE NUMBER</label>
+                                    <label asp-for="PhoneNumber" class="form-label text-secondary small fw-bold">PHONE NUMBER <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-telephone text-muted"></i></span>
-                                        <input asp-for="PhoneNumber" class="form-control border-start-0" placeholder="0123 456 789" required />
+                                        <span class="input-group-text bg-white text-muted"><i class="bi bi-telephone"></i></span>
+                                        <input asp-for="PhoneNumber" class="form-control" placeholder="0123 456 789" required />
                                     </div>
-                                    <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                                    <span asp-validation-for="PhoneNumber" class="text-danger small mt-1 d-block"></span>
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label text-secondary small fw-bold">INITIAL PASSWORD</label>
+                                    <label class="form-label text-secondary small fw-bold">INITIAL PASSWORD <span class="text-danger">*</span></label>
                                     <div class="input-group">
-                                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-shield-lock text-muted"></i></span>
-                                        <input name="Password" type="password" class="form-control border-start-0" placeholder="Minimum 6 characters" required />
+                                        <span class="input-group-text bg-white text-muted"><i class="bi bi-shield-lock"></i></span>
+                                        <input name="Password" type="password" id="passwordInput" class="form-control border-end-0" placeholder="Minimum 6 characters" required />
+                                        <button class="btn btn-outline-secondary border-start-0 bg-white text-muted" type="button" onclick="togglePasswordVisibility('passwordInput', 'toggleIcon')">
+                                            <i class="bi bi-eye" id="toggleIcon"></i>
+                                        </button>
                                     </div>
                                     <small class="text-muted mt-2 d-block small">Users can change this password later.</small>
                                 </div>
                             </div>
 
                             <div class="col-md-6 border-start-md ps-md-4">
-                                <h6 class="text-primary fw-bold mb-4 small text-uppercase"><i class="bi bi-geo-alt me-2"></i>Contact Information</h6>
+                                <h6 class="text-primary fw-bold mb-4 small text-uppercase tracking-wider">
+                                    <i class="bi bi-geo-alt me-2"></i>Contact Information
+                                </h6>
 
                                 <div class="mb-3">
                                     <label asp-for="Address" class="form-label text-secondary small fw-bold">DELIVERY ADDRESS</label>
-                                    <textarea asp-for="Address" class="form-control" rows="8" placeholder="Enter full address details..."></textarea>
-                                    <span asp-validation-for="Address" class="text-danger small"></span>
+                                    <textarea asp-for="Address" class="form-control" rows="7" placeholder="Enter full address details..."></textarea>
+                                    <span asp-validation-for="Address" class="text-danger small mt-1 d-block"></span>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-footer bg-light p-4 border-0 text-end">
-                        <a asp-action="Index"
-                           class="btn btn-link text-decoration-none text-muted me-3 border-dark">Discard</a>
-
-                        <button type="submit" class="btn btn-primary px-3 py-2 shadow-sm fw-bold">
+                    <div class="card-footer bg-light p-4 border-top-0 d-flex justify-content-end align-items-center">
+                        <a asp-action="Index" class="btn btn-link text-decoration-none text-secondary fw-semibold me-3">Discard</a>
+                        <button type="submit" class="btn btn-primary px-4 py-2 shadow-sm fw-bold">
                             <i class="bi bi-check-circle me-2"></i>CREATE
                         </button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
 </div>
 
-
 <style>
     .admin-card {
-        border-radius: 16px;
+        border-radius: 12px;
     }
 
-    .form-control {
+    .form-control, .input-group-text {
         border-radius: 8px;
         font-size: 0.95rem;
         padding: 0.6rem 0.75rem;
     }
 
-    .input-group-text {
-        border-radius: 8px 0 0 8px;
+    .input-group > .form-control {
+        border-top-right-radius: 8px !important;
+        border-bottom-right-radius: 8px !important;
     }
 
-    .form-control:focus {
+    .input-group > .border-end-0 {
+        border-top-right-radius: 0 !important;
+        border-bottom-right-radius: 0 !important;
+    }
+
+    .form-control:focus, .btn-outline-secondary:focus {
         border-color: #0d6efd;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.05);
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.08);
+    }
+
+    .tracking-wider {
+        letter-spacing: 0.5px;
     }
 
     @@media (min-width: 768px) {
@@ -127,3 +131,17 @@
         }
     }
 </style>
+
+<script>
+    function togglePasswordVisibility(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.replace("bi-eye", "bi-eye-slash");
+        } else {
+            input.type = "password";
+            icon.classList.replace("bi-eye-slash", "bi-eye");
+        }
+    }
+</script>

@@ -8,7 +8,7 @@ namespace E_Commerce.Areas.Admin.ViewModels.ProductVM
 
         public string ProductName { get; set; } = null!;
 
-        public int CategoryId { get; set; } 
+        public int CategoryId { get; set; }
 
         public string? CategoryName { get; set; }
 

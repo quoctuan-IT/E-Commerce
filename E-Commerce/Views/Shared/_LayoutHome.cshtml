@@ -39,7 +39,7 @@
                             <li class="label1" data-label1="sale">
                                 <a asp-controller="Product"
                                    asp-action="Index">
-                                    Shop &nbsp;<i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                                    Shop
                                 </a>
                             </li>
                         </ul>
@@ -113,7 +113,7 @@
                 {
                     <li>
                         <div class="mtext-110 left-top-bar">
-                            Hi! <strong style="color: pink;">Phạm Quốc Tuấn ❤️</strong>.
+                            Hi, <strong style="color: pink;">@User.Identity.Name ❤️</strong>.
                         </div>
                     </li>
 
@@ -137,7 +137,7 @@
                 {
                     <li>
                         <div class="mtext-110 left-top-bar">
-                            Register to Order now!
+                            Sign in to Order now!
                         </div>
                     </li>
 
@@ -147,12 +147,6 @@
                                asp-action="Login"
                                class="flex-c-m p-lr-10 trans-04">
                                 Sign in &nbsp;<i class="fa fa-sign-in" aria-hidden="true"></i>
-                            </a>
-
-                            <a asp-controller="Account"
-                               asp-action="Register"
-                               class="flex-c-m p-lr-10 trans-04">
-                                Register &nbsp;<i class="fa fa-user-circle-o" aria-hidden="true"></i>
                             </a>
                         </div>
                     </li>
@@ -172,7 +166,7 @@
                     <a asp-controller="Product"
                        asp-action="Index"
                        class="label1 rs1" data-label1="sale">
-                        Shop &nbsp;<i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                        Shop
                     </a>
                 </li>
             </ul>
@@ -245,14 +239,6 @@
                                asp-action="Login"
                                class="mtext-110 cl2 hov-cl1 trans-04">
                                 Sign in &nbsp;<i class="fa fa-sign-in" aria-hidden="true"></i>
-                            </a>
-                        </li>
-
-                        <li class="p-b-13">
-                            <a asp-controller="Account"
-                               asp-action="Login"
-                               class="mtext-110 cl2 hov-cl1 trans-04">
-                                Register &nbsp;<i class="fa fa-user-circle-o" aria-hidden="true"></i>
                             </a>
                         </li>
                     }

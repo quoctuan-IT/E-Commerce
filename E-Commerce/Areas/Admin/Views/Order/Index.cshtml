@@ -5,98 +5,107 @@
     ViewData["Title"] = "Orders Management";
 }
 
-
 <div class="container-fluid p-0">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item">
-                        <a asp-controller="Dashboard"
-                           asp-action="Index">Admin</a>
-                    </li>
-
-                    <li class="breadcrumb-item active">Orders</li>
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Orders</li>
                 </ol>
             </nav>
         </div>
     </div>
 
     <div class="card admin-card border-0 shadow-sm overflow-hidden">
-
         <partial name="_Notification" />
 
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light">
+                <thead class="table-light border-bottom">
                     <tr>
-                        <th class="px-4 py-3 text-secondary small fw-bold text-uppercase">Order ID</th>
-                        <th class="py-3 text-secondary small fw-bold text-uppercase">Date</th>
-                        <th class="py-3 text-secondary small fw-bold text-uppercase">Payment</th>
-                        <th class="py-3 text-secondary small fw-bold text-uppercase">Items</th>
-                        <th class="py-3 text-secondary small fw-bold text-uppercase">Total</th>
-                        <th class="py-3 text-secondary small fw-bold text-uppercase">Status</th>
-                        <th class="py-3 text-secondary small fw-bold text-uppercase text-end px-4">Options</th>
+                        <th class="px-4 py-3 text-secondary small fw-bold text-uppercase" style="width: 12%">Order ID</th>
+                        <th class="py-3 text-secondary small fw-bold text-uppercase" style="width: 18%">Date</th>
+                        <th class="py-3 text-secondary small fw-bold text-uppercase" style="width: 20%">Payment</th>
+                        <th class="py-3 text-secondary small fw-bold text-uppercase" style="width: 12%">Items</th>
+                        <th class="py-3 text-secondary small fw-bold text-uppercase" style="width: 15%">Total</th>
+                        <th class="py-3 text-secondary small fw-bold text-uppercase" style="width: 13%">Status</th>
+                        <th class="py-3 text-secondary small fw-bold text-uppercase text-end px-4" style="width: 10%">Options</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach (var item in Model)
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="px-4 fw-bold text-primary">#@item.OrderId</td>
+                                <td class="text-muted small">@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    <div class="small fw-semibold text-dark">
+                                        <i class="bi bi-credit-card text-secondary me-1"></i> @(item.PaymentMethodName ?? "N/A")
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge rounded-pill bg-light text-dark border px-2 py-1 font-monospace">
+                                        @item.TotalItems Units
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-dark">$@item.TotalAmount.ToString("N2")</span>
+                                </td>
+                                <td>
+                                    @switch (item.OrderStatusName)
+                                    {
+                                        case "Processing":
+                                            <span class="badge status-badge bg-warning-subtle text-warning border border-warning-subtle-custom">
+                                                <i class="bi bi-clock-history me-1"></i> Processing
+                                            </span>
+                                            break;
+                                        case "Shipped":
+                                            <span class="badge status-badge bg-info-subtle text-info border border-info-subtle-custom">
+                                                <i class="bi bi-truck me-1"></i> Shipped
+                                            </span>
+                                            break;
+                                        case "Delivered":
+                                            <span class="badge status-badge bg-success-subtle text-success border border-success-subtle-custom">
+                                                <i class="bi bi-check2-circle me-1"></i> Delivered
+                                            </span>
+                                            break;
+                                        case "Cancelled":
+                                            <span class="badge status-badge bg-danger-subtle text-danger border border-danger-subtle-custom">
+                                                <i class="bi bi-x-circle me-1"></i> Cancelled
+                                            </span>
+                                            break;
+                                        default:
+                                            <span class="badge status-badge bg-secondary-subtle text-secondary border border-secondary-subtle">
+                                                <i class="bi bi-question-circle me-1"></i> Unknown
+                                            </span>
+                                            break;
+                                    }
+                                </td>
+                                <td class="text-end px-4">
+                                    <div class="d-flex justify-content-end gap-2">
+                                        <a asp-action="Detail" asp-route-orderId="@item.OrderId"
+                                           class="btn btn-sm btn-action-view transition-all">
+                                            <i class="bi bi-eye-fill"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-orderId="@item.OrderId"
+                                           class="btn btn-sm btn-action-delete transition-all"
+                                           onclick="return confirm('Are you sure you want to delete order #@item.OrderId?');">
+                                            <i class="bi bi-trash3-fill"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-                            <td class="px-4 fw-bold text-primary">#@item.OrderId</td>
-                            <td class="text-muted small">@item.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
-                            <td>
-                                <span class="small fw-semibold"><i class="bi bi-credit-card me-1"></i> @item.PaymentMethodName</span>
-                            </td>
-                            <td><span class="badge rounded-pill bg-light text-dark border">@item.TotalItems Units</span></td>
-                            <td><span class="fw-bold text-dark">$@item.TotalAmount.ToString("N2")</span></td>
-                            <td>
-                                @switch (item.OrderStatusName?.ToString())
-                                {
-                                    case "Processing":
-                                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2">
-                                            <i class="bi bi-clock-history me-1"></i> Processing
-                                        </span>
-                                        break;
-                                    case "Shipped":
-                                        <span class="badge bg-info-subtle text-info border border-info-subtle px-3 py-2">
-                                            <i class="bi bi-truck me-1"></i> Shipped
-                                        </span>
-                                        break;
-                                    case "Delivered":
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2">
-                                            <i class="bi bi-check2-circle me-1"></i> Delivered
-                                        </span>
-                                        break;
-                                    case "Cancelled":
-                                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2">
-                                            <i class="bi bi-x-circle me-1"></i> Cancelled
-                                        </span>
-                                        break;
-
-                                    default:
-                                        <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-2">
-                                            Unknown
-                                        </span>
-                                        break;
-                                }
-                            </td>
-                            <td class="text-end px-4">
-                                <div class="d-flex justify-content-end gap-2">
-                                    <a asp-action="Detail"
-                                       asp-route-orderId="@item.OrderId"
-                                       class="btn btn-sm btn-light border shadow-sm px-3 fw-bold text-primary">
-                                        <i class="bi bi-eye me-1"></i> View
-                                    </a>
-
-                                    <a asp-action="Delete"
-                                       asp-route-orderId="@item.OrderId"
-                                       class="btn btn-sm btn-outline-danger shadow-sm px-3 fw-bold"
-                                       onclick="return confirm('Are you sure to delete this Order?');">
-                                        <i class="bi bi-trash me-1"></i> Delete
-                                    </a>
-                                </div>
+                            <td colspan="7" class="text-center py-5 text-muted">
+                                <i class="bi bi-box-seam fs-1 d-block mb-2 text-secondary opacity-50"></i> No orders found.
                             </td>
                         </tr>
                     }
@@ -105,27 +114,106 @@
         </div>
 
         <div class="card-footer bg-white py-3 border-top">
-            <div class="d-flex justify-content-between align-items-center">
-                <p class="mb-0 text-muted small">Showing @Model.Count() orders</p>
+            <div class="text-muted small fw-medium">
+                Showing @(Model?.Count() ?? 0) orders
             </div>
         </div>
     </div>
 </div>
 
-
 <style>
-    .badge {
-        font-weight: 600;
-        letter-spacing: 0.3px;
+    .admin-card {
+        border-radius: 12px;
     }
 
     .table-hover tbody tr:hover {
-        background-color: rgba(0,0,0,0.01);
+        background-color: rgba(13, 110, 253, 0.015);
     }
 
-    .btn-light:hover {
+    .btn-action-view, .btn-action-delete {
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        border: 1px solid #dee2e6;
         background-color: #fff;
-        border-color: #0d6efd;
+    }
+
+    .btn-action-view {
         color: #0d6efd;
+    }
+
+        .btn-action-view:hover {
+            background-color: #f0f5ff;
+            border-color: #80b3ff;
+        }
+
+    .btn-action-delete {
+        color: #dc3545;
+    }
+
+        .btn-action-delete:hover {
+            background-color: #fff5f5;
+            border-color: #f5c2c7;
+        }
+
+    .status-badge {
+        padding: 0.5rem 0.75rem;
+        font-weight: 600;
+        font-size: 0.8rem;
+        letter-spacing: 0.3px;
+        border-radius: 6px;
+    }
+
+    .bg-warning-subtle {
+        background-color: #fff8e6 !important;
+        color: #b17a00 !important;
+    }
+
+    .border-warning-subtle-custom {
+        border-color: #ffe69c !important;
+    }
+
+    .bg-info-subtle {
+        background-color: #f0f9ff !important;
+        color: #007094 !important;
+    }
+
+    .border-info-subtle-custom {
+        border-color: #b9e6ff !important;
+    }
+
+    .bg-success-subtle {
+        background-color: #f0fdf4 !important;
+        color: #15803d !important;
+    }
+
+    .border-success-subtle-custom {
+        border-color: #bbf7d0 !important;
+    }
+
+    .bg-danger-subtle {
+        background-color: #fef2f2 !important;
+        color: #b91c1c !important;
+    }
+
+    .border-danger-subtle-custom {
+        border-color: #fecaca !important;
+    }
+
+    .px-2 {
+        padding-left: 0.6rem;
+        padding-right: 0.6rem;
+    }
+
+    .py-1 {
+        padding-top: 0.3rem;
+        padding-bottom: 0.3rem;
+    }
+
+    .transition-all {
+        transition: all 0.2s ease-in-out;
     }
 </style>

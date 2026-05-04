@@ -1,7 +1,7 @@
-﻿using E_Commerce.Models.DTOs;
+﻿using E_Commerce.Areas.Admin.ViewModels.UserVM;
+using E_Commerce.Models.DTOs;
 using E_Commerce.Models.Entities;
 using E_Commerce.Models.ViewModels.AccountVM;
-using E_Commerce.Areas.Admin.ViewModels.UserVM;
 using Microsoft.AspNetCore.Identity;
 
 namespace E_Commerce.Services.Interfaces

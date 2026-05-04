@@ -5,152 +5,132 @@
     ViewData["Title"] = "Order Details";
 }
 
-
-<div class="container-fluid">
+<div class="container-fluid p-0">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item">
-                        <a asp-controller="Dashboard"
-                           asp-action="Index">Admin</a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a asp-action="Index">Orders</a>
-                    </li>
-                    <li class="breadcrumb-item active">Details</li>
+                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Admin</a></li>
+                    <li class="breadcrumb-item"><a asp-action="Index">Orders</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Details</li>
                 </ol>
             </nav>
         </div>
-
-        <div class="d-flex gap-2">
-            <a asp-action="Index"
-               class="btn btn-outline-secondary shadow-sm">
+        <div>
+            <a asp-action="Index" class="btn btn-sm btn-outline-secondary px-3 fw-bold d-inline-flex align-items-center gap-1">
                 <i class="bi bi-arrow-left"></i> Back
             </a>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row g-4">
+        <!-- Sidebar: General & Shipping Information -->
         <div class="col-lg-4">
-            <div class="card admin-card border-0 shadow-sm mb-4">
+            <!-- General Info -->
+            <div class="card admin-card border-0 shadow-sm mb-4 overflow-hidden">
                 <div class="card-body p-4">
-                    <h6 class="text-primary fw-bold text-uppercase mb-3 small">General Information</h6>
+                    <h6 class="text-primary fw-bold text-uppercase mb-3 small tracking-wider">General Info</h6>
 
-                    <div class="mb-3 d-flex justify-content-between border-bottom pb-2">
+                    <div class="mb-3 d-flex justify-content-between align-items-center border-bottom pb-2">
                         <span class="text-muted small">Order ID:</span>
-                        <span class="fw-bold text-dark">@Model.OrderId</span>
+                        <span class="fw-bold text-dark font-monospace">#@Model.OrderId</span>
                     </div>
 
-                    <div class="mb-3 d-flex justify-content-between border-bottom pb-2">
+                    <div class="mb-3 d-flex justify-content-between align-items-center border-bottom pb-2">
                         <span class="text-muted small">Placed Date:</span>
-                        <span class="fw-bold text-dark">@Model.OrderDate.ToString("MMM dd, yyyy HH:mm")</span>
+                        <span class="fw-semibold text-dark small">@Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</span>
                     </div>
 
-                    <div class="mb-3 d-flex justify-content-between border-bottom pb-2 align-items-center">
+                    <div class="mb-3 d-flex justify-content-between align-items-center border-bottom pb-2">
                         <span class="text-muted small">Status:</span>
                         <div class="d-flex align-items-center gap-2">
-                            @switch (Model.OrderStatusName?.ToString())
+                            @switch (Model.OrderStatusName)
                             {
                                 case "Processing":
-                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-1">
-                                        <i class="bi bi-clock-history me-1"></i> Processing
-                                    </span>
+                                    <span class="badge status-badge bg-warning-subtle text-warning border border-warning-subtle-custom">Processing</span>
                                     break;
                                 case "Shipped":
-                                    <span class="badge bg-info-subtle text-info border border-info-subtle px-3 py-1">
-                                        <i class="bi bi-truck me-1"></i> Shipped
-                                    </span>
+                                    <span class="badge status-badge bg-info-subtle text-info border border-info-subtle-custom">Shipped</span>
                                     break;
                                 case "Delivered":
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-1">
-                                        <i class="bi bi-check2-circle me-1"></i> Delivered
-                                    </span>
+                                    <span class="badge status-badge bg-success-subtle text-success border border-success-subtle-custom">Delivered</span>
                                     break;
                                 case "Cancelled":
-                                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-1">
-                                        <i class="bi bi-x-circle me-1"></i> Cancelled
-                                    </span>
+                                    <span class="badge status-badge bg-danger-subtle text-danger border border-danger-subtle-custom">Cancelled</span>
                                     break;
-
                                 default:
-                                    <span class="badge bg-secondary-subtle text-secondary border border-secondary-subtle px-3 py-1">
-                                        Unknown
-                                    </span>
+                                    <span class="badge status-badge bg-secondary-subtle text-secondary border border-secondary-subtle">Unknown</span>
                                     break;
                             }
-
-                            <a asp-action="Update"
-                               asp-route-orderId="@Model.OrderId"
-                               class="btn btn-sm btn-outline-primary rounded-circle d-flex align-items-center justify-content-center"
-                               style="width: 28px; height: 28px; padding: 0;"
-                               title="Update Status">
-                                <i class="bi bi-pencil-fill" style="font-size: 0.75rem;"></i>
+                            <a asp-action="Update" asp-route-orderId="@Model.OrderId"
+                               class="btn-edit-status transition-all" title="Update Status">
+                                <i class="bi bi-pencil-fill"></i>
                             </a>
                         </div>
                     </div>
 
-                    <div class="d-flex justify-content-between">
-                        <span class="text-muted small">Payment:</span>
-                        <span class="fw-bold text-primary small"><i class="bi bi-wallet2 me-1"></i> @Model.PaymentMethodName</span>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-muted small">Payment Method:</span>
+                        <span class="fw-semibold text-dark small"><i class="bi bi-credit-card text-secondary me-1"></i>@Model.PaymentMethodName</span>
                     </div>
                 </div>
             </div>
 
-            <div class="card admin-card border-0 shadow-sm mb-4">
+            <!-- Shipping Details -->
+            <div class="card admin-card border-0 shadow-sm overflow-hidden">
                 <div class="card-body p-4">
-                    <h6 class="text-primary fw-bold text-uppercase mb-4 small">Shipping Details</h6>
+                    <h6 class="text-primary fw-bold text-uppercase mb-4 small tracking-wider">Shipping Details</h6>
 
-                    <div class="d-flex mb-3">
-                        <div class="bg-light rounded-circle p-2 text-primary me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                            <i class="bi bi-person"></i>
+                    <div class="d-flex mb-3 align-items-start">
+                        <div class="bg-light rounded-circle text-primary me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
+                            <i class="bi bi-person-fill"></i>
                         </div>
-
                         <div>
-                            <p class="small text-muted mb-0 fw-bold">RECIPIENT</p>
+                            <small class="text-muted d-block small fw-bold text-uppercase mb-0">Recipient</small>
                             <p class="mb-0 fw-semibold text-dark">@Model.UserName</p>
                         </div>
                     </div>
 
-                    <div class="d-flex mb-3">
-                        <div class="bg-light rounded-circle p-2 text-primary me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                            <i class="bi bi-telephone"></i>
+                    <div class="d-flex mb-3 align-items-start">
+                        <div class="bg-light rounded-circle text-primary me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
+                            <i class="bi bi-telephone-fill"></i>
                         </div>
-
                         <div>
-                            <p class="small text-muted mb-0 fw-bold">PHONE NUMBER</p>
-                            <p class="mb-0 fw-semibold text-dark">@Model.PhoneNumber</p>
+                            <small class="text-muted d-block small fw-bold text-uppercase mb-0">Phone Number</small>
+                            <p class="mb-0 fw-semibold text-dark font-monospace">@Model.PhoneNumber</p>
                         </div>
                     </div>
 
-                    <div class="d-flex">
-                        <div class="bg-light rounded-circle p-2 text-primary me-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
-                            <i class="bi bi-geo-alt"></i>
+                    <div class="d-flex align-items-start">
+                        <div class="bg-light rounded-circle text-primary me-3 d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
+                            <i class="bi bi-geo-alt-fill"></i>
                         </div>
-
                         <div>
-                            <p class="small text-muted mb-0 fw-bold">DELIVERY ADDRESS</p>
-                            <p class="mb-0 fw-semibold text-dark small">@Model.Address</p>
+                            <small class="text-muted d-block small fw-bold text-uppercase mb-0">Delivery Address</small>
+                            <p class="mb-0 fw-medium text-secondary small lh-base">@Model.Address</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Main Content: Items Summary -->
         <div class="col-lg-8">
-            <div class="card admin-card border-0 shadow-sm overflow-hidden">
-                <div class="card-header bg-white py-3 border-bottom-0">
-                    <h6 class="mb-0 fw-bold"><i class="bi bi-cart3 me-2 text-primary"></i>Items Summary</h6>
+            <div class="card admin-card border-0 shadow-sm overflow-hidden mb-4">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h6 class="mb-0 fw-bold text-dark d-flex align-items-center gap-2">
+                        <i class="bi bi-cart3 text-primary"></i> Items Summary
+                    </h6>
                 </div>
 
                 <div class="table-responsive">
                     <table class="table align-middle mb-0">
-                        <thead class="bg-light">
+                        <thead class="table-light">
                             <tr>
-                                <th class="px-4 py-3 text-secondary small fw-bold text-uppercase border-0">Product</th>
-                                <th class="py-3 text-secondary small fw-bold text-uppercase border-0 text-center">Price</th>
-                                <th class="py-3 text-secondary small fw-bold text-uppercase border-0 text-center">Qty</th>
-                                <th class="py-3 text-secondary small fw-bold text-uppercase border-0 text-end px-4">Subtotal</th>
+                                <th class="px-4 py-3 text-secondary small fw-bold text-uppercase" style="width: 50%">Product</th>
+                                <th class="py-3 text-secondary small fw-bold text-uppercase text-center" style="width: 18%">Price</th>
+                                <th class="py-3 text-secondary small fw-bold text-uppercase text-center" style="width: 12%">Quantity</th>
+                                <th class="py-3 text-secondary small fw-bold text-uppercase text-end px-4" style="width: 20%">Subtotal</th>
                             </tr>
                         </thead>
 
@@ -160,69 +140,156 @@
                                 <tr>
                                     <td class="px-4">
                                         <div class="d-flex align-items-center">
-                                            <img src="@item.Image"
-                                                 class="rounded-3 border me-3"
-                                                 style="width: 50px; height: 50px; object-fit: cover;" />
-                                            <div>
-                                                <span class="fw-bold text-dark d-block">@item.ProductName</span>
-                                                <small class="text-muted">ID: #@item.ProductId</small>
+                                            <img src="@item.Image" class="rounded border me-3 flex-shrink-0"
+                                                 style="width: 48px; height: 48px; object-fit: cover;" alt="@item.ProductName" />
+                                            <div class="text-truncate" style="max-width: 280px;">
+                                                <span class="fw-bold text-dark d-block text-truncate">@item.ProductName</span>
+                                                <small class="text-muted font-monospace">ID: #@item.ProductId</small>
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="text-center fw-semibold">$@item.UnitPrice.ToString("N2")</td>
+                                    <td class="text-center fw-medium text-dark">$@item.UnitPrice.ToString("N2")</td>
                                     <td class="text-center">
-                                        <span class="badge bg-light text-dark border fw-normal px-2">x @item.Quantity</span>
+                                        <span class="badge rounded-pill bg-light text-dark border px-2 py-1 fw-normal">@item.Quantity</span>
                                     </td>
                                     <td class="text-end px-4 fw-bold text-dark">$@item.SubTotal.ToString("N2")</td>
                                 </tr>
                             }
                         </tbody>
 
-                        <tfoot class="border-top">
+                        <tfoot class="table-light border-top">
                             <tr>
-                                <td colspan="3" class="text-end py-3 text-secondary fw-bold">Total Amount:</td>
-                                <td class="text-end px-4 py-3 text-primary h4 mb-0 fw-bold">$@Model.TotalAmount.ToString("N2")</td>
+                                <td colspan="3" class="text-end py-3 text-secondary fw-bold small text-uppercase">Total Amount:</td>
+                                <td class="text-end px-4 py-3 text-primary fs-5 fw-bold font-monospace">$@Model.TotalAmount.ToString("N2")</td>
                             </tr>
                         </tfoot>
                     </table>
                 </div>
             </div>
 
-            <div class="mt-4 p-4 rounded-4 bg-primary-subtle border border-primary-subtle">
-                <div class="d-flex">
-                    <i class="bi bi-info-circle-fill text-primary me-3 fs-4"></i>
-                    <div>
-                        <h6 class="fw-bold text-primary mb-1">System Tip:</h6>
-                        <p class="mb-0 small text-primary opacity-75">
-                            As an administrator, you can manage Products, Categories and handle User orders from the sidebar menu.
-                        </p>
-                    </div>
+            <!-- Tip Block -->
+            <div class="p-3 rounded-3 bg-primary-subtle border border-primary-subtle-custom d-flex align-items-start">
+                <i class="bi bi-info-circle-fill text-primary me-3 fs-5 mt-0"></i>
+                <div>
+                    <h6 class="fw-bold text-primary mb-1 small text-uppercase tracking-wider">System Tip</h6>
+                    <p class="mb-0 small text-primary opacity-85 lh-base">
+                        As an administrator, you can manage Products, Categories and handle User orders from the sidebar menu.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-
 <style>
     .admin-card {
         border-radius: 12px;
     }
 
-    .breadcrumb-item + .breadcrumb-item::before {
-        content: "\F285";
-        font-family: "bootstrap-icons";
-        font-size: 0.7rem;
+    .tracking-wider {
+        letter-spacing: 0.5px;
+    }
+
+    /* Edit Status Button Circular */
+    .btn-edit-status {
+        width: 26px;
+        height: 26px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        border: 1px solid #dee2e6;
+        background-color: #fff;
+        color: #0d6efd;
+        font-size: 0.75rem;
+    }
+
+        .btn-edit-status:hover {
+            background-color: #f0f5ff;
+            border-color: #80b3ff;
+        }
+
+    /* Custom Badge & Color States */
+    .status-badge {
+        padding: 0.4rem 0.6rem;
+        font-weight: 600;
+        font-size: 0.75rem;
+        letter-spacing: 0.2px;
+        border-radius: 6px;
+    }
+
+    .bg-warning-subtle {
+        background-color: #fff8e6 !important;
+        color: #b17a00 !important;
+    }
+
+    .border-warning-subtle-custom {
+        border-color: #ffe69c !important;
+    }
+
+    .bg-info-subtle {
+        background-color: #f0f9ff !important;
+        color: #007094 !important;
+    }
+
+    .border-info-subtle-custom {
+        border-color: #b9e6ff !important;
+    }
+
+    .bg-success-subtle {
+        background-color: #f0fdf4 !important;
+        color: #15803d !important;
+    }
+
+    .border-success-subtle-custom {
+        border-color: #bbf7d0 !important;
+    }
+
+    .bg-danger-subtle {
+        background-color: #fef2f2 !important;
+        color: #b91c1c !important;
+    }
+
+    .border-danger-subtle-custom {
+        border-color: #fecaca !important;
+    }
+
+    .bg-primary-subtle {
+        background-color: #f0f5ff !important;
+    }
+
+    .border-primary-subtle-custom {
+        border-color: #cfe2ff !important;
+    }
+
+    .pb-2 {
+        padding-bottom: 0.625rem;
+    }
+
+    .mb-3 {
+        margin-bottom: 0.875rem;
+    }
+
+    .p-3 {
+        padding: 0.875rem;
+    }
+
+    .me-1 {
+        margin-right: 0.375rem;
+    }
+
+    .transition-all {
+        transition: all 0.2s ease-in-out;
     }
 
     @@media print {
-        .btn, nav, .breadcrumb {
+        .btn, nav, .btn-edit-status, .bg-primary-subtle {
             display: none !important;
         }
 
         .card {
             box-shadow: none !important;
-            border: 1px solid #ddd !important;
+            border: 1px solid #dee2e6 !important;
         }
     }
 </style>

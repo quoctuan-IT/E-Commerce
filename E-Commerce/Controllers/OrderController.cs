@@ -47,7 +47,7 @@ namespace E_Commerce.Controllers
 
             var userId = _accountService.GetCurrentUserId(User);
             if (userId == null) return Unauthorized();
-            
+
             // Checkout
             if (await _orderService.CreateOrderAsync(userId, vm, Cart))
             {

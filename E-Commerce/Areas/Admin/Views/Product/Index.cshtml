@@ -5,82 +5,97 @@
     ViewData["Title"] = "Products Management";
 }
 
-
-<div class="container-fluid p-0">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container-fluid px-0">
+    <!-- Breadcrumb & Header Action -->
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
         <div>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index">Admin</a></li>
-                    <li class="breadcrumb-item active">Products</li>
+                    <li class="breadcrumb-item">
+                        <a asp-controller="Dashboard" asp-action="Index" class="text-decoration-none">Admin</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Products</li>
                 </ol>
             </nav>
         </div>
 
-        <a asp-action="Create" class="btn btn-primary d-flex align-items-center shadow-sm px-3 py-2">
+        <a asp-action="Create" class="btn btn-primary d-flex align-items-center shadow-sm px-3 py-2 btn-responsive">
             <i class="bi bi-plus-lg me-2"></i> <span>New Product</span>
         </a>
     </div>
 
-    <div class="card admin-card border-0 shadow-sm overflow-hidden">
-
+    <!-- Main Table Card -->
+    <div class="card admin-card border-0 shadow-sm overflow-hidden bg-white">
         <partial name="_Notification" />
 
         <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="bg-light">
+            <table class="table table-hover align-middle mb-0 text-nowrap">
+                <thead class="table-light border-bottom">
                     <tr>
                         <th class="px-4 py-3 text-secondary small fw-bold text-uppercase">Product</th>
                         <th class="py-3 text-secondary small fw-bold text-uppercase">Category</th>
                         <th class="py-3 text-secondary small fw-bold text-uppercase">Price</th>
                         <th class="py-3 text-secondary small fw-bold text-uppercase">Description</th>
-                        <th class="py-3 text-secondary small fw-bold text-uppercase text-end px-4">Actions</th>
+                        <th class="py-3 text-secondary small fw-bold text-uppercase text-end px-4" style="width: 15%">Actions</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach (var item in Model)
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="px-4">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-3 position-relative img-container">
+                                            <img src="@item.Image"
+                                                 alt="@item.ProductName"
+                                                 class="rounded-3 border shadow-sm"
+                                                 style="width: 48px; height: 48px; object-fit: cover;">
+                                            <span class="position-absolute top-0 start-0 translate-middle badge rounded-2 bg-dark border border-light small px-1 py-1" style="font-size: 0.65rem;">
+                                                #@item.ProductId
+                                            </span>
+                                        </div>
+                                        <div>
+                                            <div class="fw-bold text-dark text-truncate" style="max-width: 200px;" title="@item.ProductName">
+                                                @item.ProductName
+                                            </div>
+                                            <div class="text-muted small">SKU: PROD-@item.ProductId</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge bg-info-subtle text-info border border-info-subtle px-2 py-1 rounded-2 fw-medium">
+                                        @item.CategoryName
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-dark">$@item.UnitPrice.ToString("N2")</span>
+                                </td>
+                                <td>
+                                    <div class="text-muted small text-truncate" style="max-width: 250px;" title="@item.Description">
+                                        @(string.IsNullOrEmpty(item.Description) ? "No description available" : item.Description)
+                                    </div>
+                                </td>
+                                <td class="text-end px-4">
+                                    <div class="btn-group shadow-sm rounded-2 overflow-hidden">
+                                        <a asp-action="Update"
+                                           asp-route-productId="@item.ProductId"
+                                           class="btn btn-sm btn-outline-primary px-3 d-inline-flex align-items-center py-2">
+                                            <i class="bi bi-pencil-square me-1"></i> Edit
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
                     {
                         <tr>
-                            <td class="px-4">
-                                <div class="d-flex align-items-center">
-                                    <div class="me-3 position-relative">
-                                        <img src="@item.Image"
-                                             alt="@item.ProductName"
-                                             class="rounded-3 border shadow-sm"
-                                             style="width: 55px; height: 55px; object-fit: cover;">
-                                        <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-dark border border-light small" style="font-size: 0.6rem;">
-                                            #@item.ProductId
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <div class="fw-bold text-dark">@item.ProductName</div>
-                                        <div class="text-muted small text-truncate" style="max-width: 150px;">SKU: PROD-@item.ProductId</div>
-                                    </div>
-                                </div>
-                            </td>
-                            <td>
-                                <span class="badge bg-info-subtle text-info border border-info-subtle px-3">
-                                    @item.CategoryName
-                                </span>
-                            </td>
-                            <td>
-                                <span class="fw-bold text-dark">$@item.UnitPrice.ToString("N2")</span>
-                            </td>
-                            <td>
-                                <div class="text-muted small text-truncate" style="max-width: 200px;" title="@item.Description">
-                                    @item.Description
-                                </div>
-                            </td>
-                            <td class="text-end px-4">
-                                <div class="btn-group shadow-sm">
-                                    <a asp-action="Update"
-                                       asp-route-productId="@item.ProductId"
-                                       class="btn btn-sm btn-outline-primary px-3"
-                                       title="Edit Product">
-                                        <i class="bi bi-pencil me-1"></i> Edit
-                                    </a>
-                                </div>
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="bi bi-box-seam fs-1 d-block mb-2 text-opacity-25"></i>
+                                No products found.
                             </td>
                         </tr>
                     }
@@ -88,28 +103,44 @@
             </table>
         </div>
 
-        <div class="card-footer bg-white py-3 border-top-0">
+        <div class="card-footer bg-white py-3 border-top">
             <div class="d-flex justify-content-between align-items-center">
-                <span class="text-muted small">Showing @Model.Count() products</span>
+                <span class="text-muted small fw-medium">
+                    Total: <span class="text-dark fw-bold">@(Model?.Count() ?? 0)</span> products
+                </span>
             </div>
         </div>
     </div>
 </div>
 
-
 <style>
     .table td {
-        padding-top: 1rem;
-        padding-bottom: 1rem;
-        border-color: #f1f1f1;
+        padding-top: 0.85rem;
+        padding-bottom: 0.85rem;
     }
 
-    tr:hover img {
-        transform: scale(1.1);
+    .table tbody tr:hover {
+        background-color: rgba(13, 110, 253, 0.02);
+    }
+
+    .img-container img {
         transition: transform 0.2s ease-in-out;
     }
 
-    .btn-group .btn:hover {
-        z-index: 2;
+    tr:hover .img-container img {
+        transform: scale(1.08);
+    }
+
+    @@media (max-width: 575.98px) {
+        .btn-responsive span
+
+    {
+        display: none;
+    }
+
+    .btn-responsive i {
+        margin-right: 0 !important;
+    }
+
     }
 </style>

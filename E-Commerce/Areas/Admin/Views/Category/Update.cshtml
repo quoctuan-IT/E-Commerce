@@ -5,105 +5,73 @@
     ViewData["Title"] = "Update Category";
 }
 
-
-<div class="container-fluid">
+<div class="container-fluid px-0">
     <nav aria-label="breadcrumb" class="mb-4">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a asp-controller="Dashboard"
-                   asp-action="Index">Admin</a>
-            </li>
-
-            <li class="breadcrumb-item">
-                <a asp-action="Index">Categories</a>
-            </li>
-
-            <li class="breadcrumb-item active">Update</li>
+            <li class="breadcrumb-item"><a asp-controller="Dashboard" asp-action="Index" class="text-decoration-none">Admin</a></li>
+            <li class="breadcrumb-item"><a asp-action="Index" class="text-decoration-none">Categories</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Update</li>
         </ol>
     </nav>
 
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
-            <div class="card admin-card border-0 shadow-sm">
-
+        <div class="col-12 col-md-8 col-lg-6">
+            <div class="card admin-card border-0 shadow-sm bg-white">
                 <div class="card-header bg-white py-3 border-bottom">
                     <div class="d-flex align-items-center">
-                        <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center me-3"
-                             style="width: 45px; height: 45px;">
-                            <i class="bi bi-folder-plus fs-4"></i>
+                        <div class="bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                            <i class="bi bi-pencil-square fs-5"></i>
                         </div>
-
                         <h5 class="mb-0 fw-bold text-dark">Update Category</h5>
                     </div>
                 </div>
 
                 <form asp-action="Update" method="post">
                     <div class="card-body p-4">
-                        <div class="mb-4">
-                            <label asp-for="@Model.CategoryId" class="form-label text-secondary small fw-bold text-uppercase">
-                                ID <span class="text-danger">*</span>
-                            </label>
+                        <div class="mb-3">
+                            <label asp-for="CategoryId" class="form-label text-secondary small fw-bold text-uppercase">Category ID</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="bi bi-tag text-muted"></i></span>
-                                <input asp-for="@Model.CategoryId"
-                                       class="form-control form-control-lg fs-6" placeholder="e.g. Electronics, Fashion..." required autofocus readonly />
+                                <span class="input-group-text bg-light-subtle border-end-0"><i class="bi bi-hash text-muted"></i></span>
+                                <input asp-for="CategoryId" class="form-control border-start-0 bg-light" readonly />
                             </div>
+                        </div>
 
-                            <label asp-for="@Model.CategoryName" class="form-label text-secondary small fw-bold text-uppercase">
-                                Category Name <span class="text-danger">*</span>
-                            </label>
+                        <div class="mb-0">
+                            <label asp-for="CategoryName" class="form-label text-secondary small fw-bold text-uppercase">Category Name <span class="text-danger">*</span></label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light"><i class="bi bi-tag text-muted"></i></span>
-                                <input asp-for="@Model.CategoryName"
-                                       class="form-control form-control-lg fs-6" placeholder="e.g. Electronics, Fashion..." required autofocus />
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-tag text-muted"></i></span>
+                                <input asp-for="CategoryName" class="form-control border-start-0" placeholder="e.g. Electronics, Fashion..." required autofocus />
                             </div>
-
-                            <span asp-validation-for="@Model.CategoryName" class="text-danger small mt-1 d-block"></span>
+                            <span asp-validation-for="CategoryName" class="text-danger small mt-1 d-block"></span>
                             <div class="form-text text-muted small mt-2">
-                                <i class="bi bi-info-circle me-1"></i>
-                                Choose a unique and descriptive name for the category.
+                                <i class="bi bi-info-circle me-1"></i> Choose a unique and descriptive name for the category.
                             </div>
                         </div>
                     </div>
 
-                    <div class="card-footer bg-light p-4 border-0 text-end">
-                        <a asp-action="Index"
-                           class="btn btn-link text-decoration-none text-muted me-3 fw-bold border-dark">
-                            Cancel
-                        </a>
-
+                    <div class="card-footer bg-light p-4 border-0 d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-light border fw-semibold px-3 py-2">Cancel</a>
                         <button type="submit" class="btn btn-primary px-3 py-2 shadow-sm fw-bold">
                             UPDATE <i class="bi bi-check-lg ms-1"></i>
                         </button>
                     </div>
                 </form>
-
             </div>
         </div>
     </div>
 </div>
 
-
 <style>
-    .card {
-        border-radius: 12px;
-    }
-
-    .form-control:focus {
+    .input-group:focus-within .input-group-text,
+    .input-group:focus-within .form-control:not([readonly]) {
         border-color: #0d6efd;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
-    }
-
-    .input-group-text {
-        border-right: none;
-    }
-
-    .form-control {
-        border-left: none;
     }
 
     .input-group:focus-within .input-group-text {
-        border-color: #0d6efd;
         color: #0d6efd !important;
+    }
+
+    .form-control:focus {
+        box-shadow: none;
     }
 </style>
